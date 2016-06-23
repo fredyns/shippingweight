@@ -1,9 +1,8 @@
 <?php
-
 return [
-    'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
+    'class'    => 'yii\db\Connection',
+    'dsn'      => 'mysql:host=localhost;dbname=shippingweight',
     'username' => 'root',
-    'password' => '',
-    'charset' => 'utf8',
+    'password' => 'root',
+    'charset'  => 'utf8',
 ];

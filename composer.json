@@ -1,16 +1,13 @@
 {
-    "name": "yiisoft/yii2-app-basic",
-    "description": "Yii 2 Basic Project Template",
-    "keywords": ["yii2", "framework", "basic", "project template"],
+    "name": "fredyns/shippingweight",
+    "description": "Shipping Weight",
+    "keywords": ["yii2", "framework", "basic"],
     "homepage": "http://www.yiiframework.com/",
     "type": "project",
     "license": "BSD-3-Clause",
     "support": {
-        "issues": "https://github.com/yiisoft/yii2/issues?state=open",
-        "forum": "http://www.yiiframework.com/forum/",
-        "wiki": "http://www.yiiframework.com/wiki/",
-        "irc": "irc://irc.freenode.net/yii",
-        "source": "https://github.com/yiisoft/yii2"
+        "issues": "https://github.com/fredyns/shippingweight/issues?state=open",
+        "source": "https://github.com/fredyns/shippingweight"
     },
     "minimum-stability": "dev",
     "require": {
@@ -23,7 +20,13 @@
         "yiisoft/yii2-codeception": "*",
         "yiisoft/yii2-debug": "*",
         "yiisoft/yii2-gii": "*",
-        "yiisoft/yii2-faker": "*"
+        "yiisoft/yii2-faker": "*",
+        "dektrium/yii2-user": "0.9.*@dev",
+        "dmstr/yii2-adminlte-asset": "^2.3",
+        "schmunk42/yii2-giiant": "@dev",
+        "kartik-v/yii2-sortable": "^1.2",
+        "kartik-v/yii2-widgets": "^3.4",
+        "2amigos/yii2-ckeditor-widget": "^1.0"
     },
     "config": {
         "process-timeout": 1800
