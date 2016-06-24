@@ -38,17 +38,24 @@
                         'url'   => ['/user/admin/index'],
                     ],
                     [
-                        'label' => '___',
-                        'icon'  => 'fa fa-cubes',
-                        'url'   => '#',
-                        'items' => [
-                            [
-                                'label' => '___',
-                                'icon'  => 'fa fa-cubes',
-                                'url'   => ['/___'],
-                            ],
-                        ],
+                        'label' => 'Certificate',
+                        'icon'  => 'fa fa-certificate',
+                        'url'   => ['/certificate'],
                     ],
+                    /* /
+                      [
+                      'label' => '___',
+                      'icon'  => 'fa fa-cubes',
+                      'url'   => '#',
+                      'items' => [
+                      [
+                      'label' => '___',
+                      'icon'  => 'fa fa-cubes',
+                      'url'   => ['/___'],
+                      ],
+                      ],
+                      ],
+                      // */
                     ['label' => 'Menu Yii2', 'options' => ['class' => 'header']],
                     ['label' => 'Gii', 'icon' => 'fa fa-file-code-o', 'url' => ['/gii']],
                     ['label' => 'Debug', 'icon' => 'fa fa-dashboard', 'url' => ['/debug']],
