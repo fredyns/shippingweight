@@ -63,7 +63,6 @@ abstract class Certificate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['vgm_number', 'container_number'], 'required'],
             [['vgm_date', 'stack_at', 'download_at'], 'safe'],
             [['vgm_gross'], 'number'],
             [['shipper_address'], 'string'],
