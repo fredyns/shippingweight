@@ -5,9 +5,15 @@ namespace app\models;
 use Yii;
 use \app\models\base\Certificate as BaseCertificate;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
+use dosamigos\qrcode\QrCode;
 
 /**
  * This is the model class for table "certificate".
+ *
+ * @property string $pdfUrl
+ * @property string $qrUrl
+ * @property string $qrcode
  */
 class Certificate extends BaseCertificate
 {
@@ -36,6 +42,52 @@ class Certificate extends BaseCertificate
                 'vgm_date'   => 'VGM Date',
                 'vgm_gross'  => 'VGM Gross',
         ]);
+    }
+
+    /**
+     * generate URL to document printout
+     *
+     * @return string
+     */
+    public function getPdfUrl()
+    {
+        $url = [
+            '/certificate/view',
+            'id'               => $this->id,
+            'container_number' => $this->container_number,
+            'vgm_date'         => $this->vgm_date,
+            'vgm_gross'        => $this->vgm_gross,
+        ];
+
+        return Url::to($url);
+    }
+
+    /**
+     * generate URL to QRCode
+     *
+     * @return string
+     */
+    public function getQrUrl()
+    {
+        $url = [
+            '/certificate/qrcode',
+            'id'               => $this->id,
+            'container_number' => $this->container_number,
+            'vgm_date'         => $this->vgm_date,
+            'vgm_gross'        => $this->vgm_gross,
+        ];
+
+        return Url::to($url);
+    }
+
+    /**
+     * generate QRCode binaries
+     *
+     * @return mixed
+     */
+    public function getQrcode()
+    {
+        return QrCode::png($this->pdfUrl);
     }
 
 }
