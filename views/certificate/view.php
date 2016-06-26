@@ -30,8 +30,10 @@ $this->params['breadcrumbs'][] = 'View';
     <?php endif; ?>
 
     <h1>
-        <?= Yii::t('app', 'Certificate') ?>        <small>
-            <?= $model->id ?>        </small>
+        <?= Yii::t('app', 'Certificate') ?>
+        <small>
+            <?= $model->id ?>
+        </small>
     </h1>
 
 
@@ -70,12 +72,15 @@ $this->params['breadcrumbs'][] = 'View';
 
     <?php $this->beginBlock('app\models\Certificate'); ?>
 
+    <p>
+        <img src="<?= $model->qrUrl; ?>" />
+    </p>
 
     <?=
     DetailView::widget([
         'model'      => $model,
         'attributes' => [
-            'id',
+            //'id',
             [
                 'format'    => 'html',
                 'attribute' => 'shipper_id',
@@ -98,10 +103,6 @@ $this->params['breadcrumbs'][] = 'View';
             'job_order',
             'grossmass',
             'container_number',
-            'created_by',
-            'updated_by',
-            'created_at',
-            'updated_at',
         ],
     ]);
     ?>
@@ -126,11 +127,13 @@ $this->params['breadcrumbs'][] = 'View';
         [
             'id'           => 'relation-tabs',
             'encodeLabels' => false,
-            'items'        => [ [
+            'items'        => [
+                [
                     'label'   => '<b class=""># '.$model->id.'</b>',
                     'content' => $this->blocks['app\models\Certificate'],
                     'active'  => true,
-                ],]
+                ],
+            ]
         ]
     );
     ?>
