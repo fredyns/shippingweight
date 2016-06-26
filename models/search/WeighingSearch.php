@@ -5,12 +5,12 @@ namespace app\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Certificate;
+use app\models\Weighing;
 
 /**
-* CertificateSearch represents the model behind the search form about `app\models\Certificate`.
+* WeighingSearch represents the model behind the search form about `app\models\Weighing`.
 */
-class CertificateSearch extends Certificate
+class WeighingSearch extends Weighing
 {
 /**
 * @inheritdoc
@@ -18,9 +18,9 @@ class CertificateSearch extends Certificate
 public function rules()
 {
 return [
-[['id', 'shipper_id', 'shipment_id', 'weighing_id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['date', 'job_order', 'container_number'], 'safe'],
-            [['grossmass'], 'number'],
+[['id', 'measured_at', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['job_order', 'container_number', 'measurement_method', 'gatein_trackNumber', 'gateout_trackNumber'], 'safe'],
+            [['grossmass', 'gatein_grossmass', 'gateout_grossmass'], 'number'],
 ];
 }
 
@@ -42,7 +42,7 @@ return Model::scenarios();
 */
 public function search($params)
 {
-$query = Certificate::find();
+$query = Weighing::find();
 
 $dataProvider = new ActiveDataProvider([
 'query' => $query,
@@ -58,11 +58,10 @@ return $dataProvider;
 
 $query->andFilterWhere([
             'id' => $this->id,
-            'shipper_id' => $this->shipper_id,
-            'shipment_id' => $this->shipment_id,
-            'weighing_id' => $this->weighing_id,
-            'date' => $this->date,
+            'measured_at' => $this->measured_at,
             'grossmass' => $this->grossmass,
+            'gatein_grossmass' => $this->gatein_grossmass,
+            'gateout_grossmass' => $this->gateout_grossmass,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,
@@ -70,7 +69,10 @@ $query->andFilterWhere([
         ]);
 
         $query->andFilterWhere(['like', 'job_order', $this->job_order])
-            ->andFilterWhere(['like', 'container_number', $this->container_number]);
+            ->andFilterWhere(['like', 'container_number', $this->container_number])
+            ->andFilterWhere(['like', 'measurement_method', $this->measurement_method])
+            ->andFilterWhere(['like', 'gatein_trackNumber', $this->gatein_trackNumber])
+            ->andFilterWhere(['like', 'gateout_trackNumber', $this->gateout_trackNumber]);
 
 return $dataProvider;
 }

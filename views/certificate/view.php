@@ -30,10 +30,8 @@ $this->params['breadcrumbs'][] = 'View';
     <?php endif; ?>
 
     <h1>
-        <?= Yii::t('app', 'Certificate') ?>
-        <small>
-            <?= $model->id ?>
-        </small>
+        <?= Yii::t('app', 'Certificate') ?>        <small>
+            <?= $model->id ?>        </small>
     </h1>
 
 
@@ -49,8 +47,8 @@ $this->params['breadcrumbs'][] = 'View';
 
             <?=
             Html::a(
-                '<span class="glyphicon glyphicon-print"></span> '.'Print', [ 'pdf', 'id' => $model->id],
-                ['class' => 'btn btn-primary'])
+                '<span class="glyphicon glyphicon-copy"></span> '.'Copy',
+                ['create', 'id' => $model->id, 'Certificate' => $copyParams], ['class' => 'btn btn-success'])
             ?>
 
             <?=
@@ -72,35 +70,42 @@ $this->params['breadcrumbs'][] = 'View';
 
     <?php $this->beginBlock('app\models\Certificate'); ?>
 
-    <p>
-        <img src="<?= $model->qrUrl; ?>" />
-    </p>
 
     <?=
     DetailView::widget([
         'model'      => $model,
         'attributes' => [
-            //'id',
-            //'vgm_number',
+            'id',
             [
-                'attribute' => 'vgm_date',
-                'format'    => ['date', 'php:d M Y'],
+                'format'    => 'html',
+                'attribute' => 'shipper_id',
+                'value'     => ($model->getShipper()->one() ? Html::a($model->getShipper()->one()->name,
+                        ['shipper/view', 'id' => $model->getShipper()->one()->id,]) : '<span class="label label-warning">?</span>'),
             ],
-            'vgm_gross',
+            [
+                'format'    => 'html',
+                'attribute' => 'shipment_id',
+                'value'     => ($model->getShipment()->one() ? Html::a($model->getShipment()->one()->id,
+                        ['shipment/view', 'id' => $model->getShipment()->one()->id,]) : '<span class="label label-warning">?</span>'),
+            ],
+            [
+                'format'    => 'html',
+                'attribute' => 'weighing_id',
+                'value'     => ($model->getWeighing()->one() ? Html::a($model->getWeighing()->one()->id,
+                        ['weighing/view', 'id' => $model->getWeighing()->one()->id,]) : '<span class="label label-warning">?</span>'),
+            ],
+            'date',
+            'job_order',
+            'grossmass',
             'container_number',
-            //'booking_number',
-            'shipper_name',
-            //'shipper_address:ntext',
-            //'stack_at',
-            //'download_at',
-            //'dwelling_time:datetime',
-            //'created_by',
-            //'updated_by',
-            'created_at:datetime',
-        //'updated_at:datetime',
+            'created_by',
+            'updated_by',
+            'created_at',
+            'updated_at',
         ],
     ]);
     ?>
+
 
     <hr/>
 
@@ -121,15 +126,12 @@ $this->params['breadcrumbs'][] = 'View';
         [
             'id'           => 'relation-tabs',
             'encodeLabels' => false,
-            'items'        => [
-                [
+            'items'        => [ [
                     'label'   => '<b class=""># '.$model->id.'</b>',
                     'content' => $this->blocks['app\models\Certificate'],
                     'active'  => true,
-                ],
-            ]
+                ],]
         ]
     );
     ?>
-
 </div>

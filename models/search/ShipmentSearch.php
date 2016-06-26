@@ -5,12 +5,12 @@ namespace app\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Certificate;
+use app\models\Shipment;
 
 /**
-* CertificateSearch represents the model behind the search form about `app\models\Certificate`.
+* ShipmentSearch represents the model behind the search form about `app\models\Shipment`.
 */
-class CertificateSearch extends Certificate
+class ShipmentSearch extends Shipment
 {
 /**
 * @inheritdoc
@@ -18,9 +18,8 @@ class CertificateSearch extends Certificate
 public function rules()
 {
 return [
-[['id', 'shipper_id', 'shipment_id', 'weighing_id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['date', 'job_order', 'container_number'], 'safe'],
-            [['grossmass'], 'number'],
+[['id', 'shipper_id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['job_order', 'container_number', 'payment'], 'safe'],
 ];
 }
 
@@ -42,7 +41,7 @@ return Model::scenarios();
 */
 public function search($params)
 {
-$query = Certificate::find();
+$query = Shipment::find();
 
 $dataProvider = new ActiveDataProvider([
 'query' => $query,
@@ -59,10 +58,6 @@ return $dataProvider;
 $query->andFilterWhere([
             'id' => $this->id,
             'shipper_id' => $this->shipper_id,
-            'shipment_id' => $this->shipment_id,
-            'weighing_id' => $this->weighing_id,
-            'date' => $this->date,
-            'grossmass' => $this->grossmass,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,
@@ -70,7 +65,8 @@ $query->andFilterWhere([
         ]);
 
         $query->andFilterWhere(['like', 'job_order', $this->job_order])
-            ->andFilterWhere(['like', 'container_number', $this->container_number]);
+            ->andFilterWhere(['like', 'container_number', $this->container_number])
+            ->andFilterWhere(['like', 'payment', $this->payment]);
 
 return $dataProvider;
 }

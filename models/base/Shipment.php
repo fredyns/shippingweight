@@ -9,37 +9,39 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the base-model class for table "certificate".
+ * This is the base-model class for table "shipment".
  *
  * @property integer $id
  * @property integer $shipper_id
- * @property integer $shipment_id
- * @property integer $weighing_id
- * @property string $date
  * @property string $job_order
- * @property double $grossmass
  * @property string $container_number
+ * @property string $payment
  * @property integer $created_by
  * @property integer $updated_by
  * @property integer $created_at
  * @property integer $updated_at
  *
+ * @property \app\models\Certificate[] $certificates
  * @property \app\models\Shipper $shipper
- * @property \app\models\Shipment $shipment
- * @property \app\models\Weighing $weighing
  * @property string $aliasModel
  */
-abstract class Certificate extends \yii\db\ActiveRecord
+abstract class Shipment extends \yii\db\ActiveRecord
 {
 
 
 
     /**
+    * ENUM field values
+    */
+    const PAYMENT_SETTLED = 'settled';
+    const PAYMENT_PENDING = 'pending';
+    var $enum_labels = false;
+    /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'certificate';
+        return 'shipment';
     }
 
 
@@ -64,13 +66,15 @@ abstract class Certificate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['shipper_id', 'shipment_id', 'weighing_id'], 'integer'],
-            [['date'], 'safe'],
-            [['grossmass'], 'number'],
+            [['shipper_id'], 'integer'],
+            [['payment'], 'string'],
             [['job_order', 'container_number'], 'string', 'max' => 255],
             [['shipper_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipper::className(), 'targetAttribute' => ['shipper_id' => 'id']],
-            [['shipment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipment::className(), 'targetAttribute' => ['shipment_id' => 'id']],
-            [['weighing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Weighing::className(), 'targetAttribute' => ['weighing_id' => 'id']]
+            ['payment', 'in', 'range' => [
+                    self::PAYMENT_SETTLED,
+                    self::PAYMENT_PENDING,
+                ]
+            ]
         ];
     }
 
@@ -82,12 +86,9 @@ abstract class Certificate extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'shipper_id' => 'Shipper ID',
-            'shipment_id' => 'Shipment ID',
-            'weighing_id' => 'Weighing ID',
-            'date' => 'Date',
             'job_order' => 'Job Order',
-            'grossmass' => 'Grossmass',
             'container_number' => 'Container Number',
+            'payment' => 'Payment',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
             'created_at' => 'Created At',
@@ -98,28 +99,45 @@ abstract class Certificate extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getCertificates()
+    {
+        return $this->hasMany(\app\models\Certificate::className(), ['shipment_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getShipper()
     {
         return $this->hasOne(\app\models\Shipper::className(), ['id' => 'shipper_id']);
     }
 
+
+
+
     /**
-     * @return \yii\db\ActiveQuery
+     * get column payment enum value label
+     * @param string $value
+     * @return string
      */
-    public function getShipment()
-    {
-        return $this->hasOne(\app\models\Shipment::className(), ['id' => 'shipment_id']);
+    public static function getPaymentValueLabel($value){
+        $labels = self::optsPayment();
+        if(isset($labels[$value])){
+            return $labels[$value];
+        }
+        return $value;
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * column payment ENUM value labels
+     * @return array
      */
-    public function getWeighing()
+    public static function optsPayment()
     {
-        return $this->hasOne(\app\models\Weighing::className(), ['id' => 'weighing_id']);
+        return [
+            self::PAYMENT_SETTLED => self::PAYMENT_SETTLED,
+            self::PAYMENT_PENDING => self::PAYMENT_PENDING,
+        ];
     }
-
-
-
 
 }

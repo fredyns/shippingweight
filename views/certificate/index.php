@@ -23,18 +23,17 @@ else
 ?>
 <div class="giiant-crud certificate-index">
 
+    <?php //             echo $this->render('_search', ['model' =>$searchModel]);
+    ?>
+
+
     <?php
-    \yii\widgets\Pjax::begin([
-        'id'                 => 'pjax-main',
-        'enableReplaceState' => false,
-        'linkSelector'       => '#pjax-main ul.pagination a, th a',
-        'clientOptions'      => ['pjax:success' => 'function(){alert("yo")}'],
-    ])
+    \yii\widgets\Pjax::begin(['id'                 => 'pjax-main', 'enableReplaceState' => false, 'linkSelector'       => '#pjax-main ul.pagination a, th a',
+        'clientOptions'      => ['pjax:success' => 'function(){alert("yo")}']])
     ?>
 
     <h1>
-        <?= Yii::t('app', 'Certificates') ?>
-        <small>
+        <?= Yii::t('app', 'Certificates') ?>        <small>
             List
         </small>
     </h1>
@@ -44,6 +43,37 @@ else
             Html::a('<span class="glyphicon glyphicon-plus"></span> '.'New', ['create'], ['class' => 'btn btn-success'])
             ?>
         </div>
+
+        <div class="pull-right">
+
+            <?=
+            \yii\bootstrap\ButtonDropdown::widget(
+                [
+                    'id'          => 'giiant-relations',
+                    'encodeLabel' => false,
+                    'label'       => '<span class="glyphicon glyphicon-paperclip"></span> '.'Relations',
+                    'dropdown'    => [
+                        'options'      => [
+                            'class' => 'dropdown-menu-right'
+                        ],
+                        'encodeLabels' => false,
+                        'items'        => [ [
+                                'url'   => ['shipper/index'],
+                                'label' => '<i class="glyphicon glyphicon-arrow-right">&nbsp;'.'Shipper'.'</i>',
+                            ], [
+                                'url'   => ['shipment/index'],
+                                'label' => '<i class="glyphicon glyphicon-arrow-right">&nbsp;'.'Shipment'.'</i>',
+                            ], [
+                                'url'   => ['weighing/index'],
+                                'label' => '<i class="glyphicon glyphicon-arrow-right">&nbsp;'.'Weighing'.'</i>',
+                            ],]
+                    ],
+                    'options'     => [
+                        'class' => 'btn-default'
+                    ]
+                ]
+            );
+            ?>        </div>
     </div>
 
     <hr />
@@ -56,16 +86,15 @@ else
             'pager'            => [
                 'class'          => yii\widgets\LinkPager::className(),
                 'firstPageLabel' => 'First',
-                'lastPageLabel'  => 'Last',
-            ],
+                'lastPageLabel'  => 'Last'],
             'filterModel'      => $searchModel,
             'tableOptions'     => ['class' => 'table table-striped table-bordered table-hover'],
             'headerRowOptions' => ['class' => 'x'],
             'columns'          => [
                 [
                     'class'      => 'yii\grid\ActionColumn',
-                    'template'   => $actionColumnTemplateString,
                     'options'    => [],
+                    'template'   => $actionColumnTemplateString,
                     'urlCreator' => function($action, $model, $key, $index)
                 {
                     // using the column name as key, not mapping to 'id' like the standard generator
@@ -75,16 +104,57 @@ else
                 },
                     'contentOptions' => ['nowrap' => 'nowrap']
                 ],
-                'vgm_number',
-                'container_number',
-                'vgm_gross',
-                'vgm_date:date',
-                'shipper_name',
-            //'stack_at',
-            //'download_at',
-            //'shipper_address:ntext',
-            /* 'dwelling_time:datetime', */
-            /* 'booking_number', */
+                [
+                    'class'     => yii\grid\DataColumn::className(),
+                    'attribute' => 'shipper_id',
+                    'options'   => [],
+                    'value'     => function ($model)
+                {
+                    if ($rel = $model->getShipper()->one())
+                    {
+                        return Html::a($rel->name, ['shipper/view', 'id' => $rel->id,], ['data-pjax' => 0]);
+                    }
+                    else
+                    {
+                        return '';
+                    }
+                },
+                    'format' => 'raw',
+                ],
+                [
+                    'class'     => yii\grid\DataColumn::className(),
+                    'attribute' => 'shipment_id',
+                    'options'   => [],
+                    'value'     => function ($model)
+                {
+                    if ($rel = $model->getShipment()->one())
+                    {
+                        return Html::a($rel->job_order, ['shipment/view', 'id' => $rel->id,], ['data-pjax' => 0]);
+                    }
+                    else
+                    {
+                        return '';
+                    }
+                },
+                    'format' => 'raw',
+                ],
+                [
+                    'class'     => yii\grid\DataColumn::className(),
+                    'attribute' => 'weighing_id',
+                    'options'   => [],
+                    'value'     => function ($model)
+                {
+                    if ($rel = $model->getWeighing()->one())
+                    {
+                        return Html::a($rel->container_number, ['weighing/view', 'id' => $rel->id,], ['data-pjax' => 0]);
+                    }
+                    else
+                    {
+                        return '';
+                    }
+                },
+                    'format' => 'raw',
+                ],
             ],
         ]);
         ?>

@@ -19,6 +19,7 @@ use Yii;
  * @property string $bio
  *
  * @property \app\models\User $user
+ * @property \app\models\Shipper[] $shippers
  * @property string $aliasModel
  */
 abstract class Profile extends \yii\db\ActiveRecord
@@ -73,6 +74,14 @@ abstract class Profile extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(\app\models\User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getShippers()
+    {
+        return $this->hasMany(\app\models\Shipper::className(), ['user_id' => 'user_id']);
     }
 
 

@@ -38,6 +38,21 @@
                         'url'   => ['/user/admin/index'],
                     ],
                     [
+                        'label' => 'Shipper',
+                        'icon'  => 'fa fa-certificate',
+                        'url'   => ['/shipper'],
+                    ],
+                    [
+                        'label' => 'Shipment',
+                        'icon'  => 'fa fa-certificate',
+                        'url'   => ['/shipment'],
+                    ],
+                    [
+                        'label' => 'Weighing',
+                        'icon'  => 'fa fa-certificate',
+                        'url'   => ['/weighing'],
+                    ],
+                    [
                         'label' => 'Certificate',
                         'icon'  => 'fa fa-certificate',
                         'url'   => ['/certificate'],

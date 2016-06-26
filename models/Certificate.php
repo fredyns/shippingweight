@@ -25,22 +25,8 @@ class Certificate extends BaseCertificate
     {
         return ArrayHelper::merge(parent::rules(),
                 [
-                [['vgm_date', 'vgm_gross', 'container_number'], 'required'],
-                [['vgm_date'], 'date', 'format' => 'php:Y-m-d'],
-                [['vgm_number'], 'unique'],
-        ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return ArrayHelper::merge(parent::attributeLabels(),
-                [
-                'vgm_number' => 'VGM Number',
-                'vgm_date'   => 'VGM Date',
-                'vgm_gross'  => 'VGM Gross',
+                [['container_number'], 'required'],
+                [['date'], 'date', 'format' => 'php:Y-m-d'],
         ]);
     }
 
@@ -55,8 +41,8 @@ class Certificate extends BaseCertificate
             '/certificate/pdf',
             'id'               => $this->id,
             'container_number' => $this->container_number,
-            'vgm_date'         => $this->vgm_date,
-            'vgm_gross'        => $this->vgm_gross,
+            'grossmass'        => $this->grossmass,
+            'date'             => $this->date,
         ];
 
         return Url::to($url);
@@ -73,8 +59,8 @@ class Certificate extends BaseCertificate
             '/certificate/qrcode',
             'id'               => $this->id,
             'container_number' => $this->container_number,
-            'vgm_date'         => $this->vgm_date,
-            'vgm_gross'        => $this->vgm_gross,
+            'grossmass'        => $this->grossmass,
+            'date'             => $this->date,
         ];
 
         return Url::to($url);

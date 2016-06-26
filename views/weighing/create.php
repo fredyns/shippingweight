@@ -4,17 +4,17 @@ use yii\helpers\Html;
 
 /**
 * @var yii\web\View $this
-* @var app\models\Certificate $model
+* @var app\models\Weighing $model
 */
 
 $this->title = 'Create';
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Certificates'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Weighings'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="giiant-crud certificate-create">
+<div class="giiant-crud weighing-create">
 
     <h1>
-        <?= Yii::t('app', 'Certificate') ?>        <small>
+        <?= Yii::t('app', 'Weighing') ?>        <small>
                         <?= $model->id ?>        </small>
     </h1>
 

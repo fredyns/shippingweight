@@ -4,18 +4,18 @@ use yii\helpers\Html;
 
 /**
 * @var yii\web\View $this
-* @var app\models\Certificate $model
+* @var app\models\Shipment $model
 */
 
-$this->title = Yii::t('app', 'Certificate') . $model->id . ', ' . 'Edit';
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Certificates'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Shipment') . $model->id . ', ' . 'Edit';
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Shipments'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => (string)$model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Edit';
 ?>
-<div class="giiant-crud certificate-update">
+<div class="giiant-crud shipment-update">
 
     <h1>
-        <?= Yii::t('app', 'Certificate') ?>
+        <?= Yii::t('app', 'Shipment') ?>
         <small>
                         <?= $model->id ?>        </small>
     </h1>
