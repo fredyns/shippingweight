@@ -49,6 +49,12 @@ $this->params['breadcrumbs'][] = 'View';
 
             <?=
             Html::a(
+                '<span class="glyphicon glyphicon-print"></span> '.'Print', [ 'pdf', 'id' => $model->id],
+                ['class' => 'btn btn-primary'])
+            ?>
+
+            <?=
+            Html::a(
                 '<span class="glyphicon glyphicon-plus"></span> '.'New', ['create'], ['class' => 'btn btn-success'])
             ?>
         </div>
@@ -66,6 +72,9 @@ $this->params['breadcrumbs'][] = 'View';
 
     <?php $this->beginBlock('app\models\Certificate'); ?>
 
+    <p>
+        <img src="<?= $model->qrUrl; ?>" />
+    </p>
 
     <?=
     DetailView::widget([
@@ -92,7 +101,6 @@ $this->params['breadcrumbs'][] = 'View';
         ],
     ]);
     ?>
-
 
     <hr/>
 
@@ -123,4 +131,5 @@ $this->params['breadcrumbs'][] = 'View';
         ]
     );
     ?>
+
 </div>

@@ -52,7 +52,7 @@ class Certificate extends BaseCertificate
     public function getPdfUrl()
     {
         $url = [
-            '/certificate/view',
+            '/certificate/pdf',
             'id'               => $this->id,
             'container_number' => $this->container_number,
             'vgm_date'         => $this->vgm_date,
