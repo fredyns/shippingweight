@@ -18,10 +18,11 @@ class CertificateController extends \app\controllers\base\CertificateController
      */
     public function actionQrcode($id)
     {
-        $model = $this->findModel($id);
+        $model                       = $this->findModel($id);
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
 
         header('Content-Type: image/png');
-        header('Content-Disposition: attachment; filename=VGM-"'.$model->id.'.png"');
+        header("Content-Disposition: inline; filename=vgm-".$model->id.".png;");
 
         return $model->qrcode;
     }
@@ -47,6 +48,8 @@ class CertificateController extends \app\controllers\base\CertificateController
     {
         $model   = $this->findModel($id);
         $content = $this->renderPartial('pdf', ['model' => $model]);
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
 
         // setup kartik\mpdf\Pdf component
         $pdf = new Pdf([
