@@ -33,29 +33,32 @@ use yii\web\JsExpression;
 
         <p>
 
-            <?=
-                $form
-                ->field($model, 'user_id')
-                ->widget(Select2::classname(),
-                    [
-                    'initValueText' => ($model->userAccount) ? $model->userAccount->username : '-',
-                    'options'       => ['placeholder' => 'Search for a options ...'],
-                    'pluginOptions' => [
-                        'allowClear'         => true,
-                        'minimumInputLength' => 2,
-                        'language'           => [
-                            'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+            <?php
+            if (Yii::$app->user->identity->isAdmin == FALSE)
+            {
+                echo $form
+                    ->field($model, 'user_id')
+                    ->widget(Select2::classname(),
+                        [
+                        'initValueText' => ($model->userAccount) ? $model->userAccount->username : '-',
+                        'options'       => ['placeholder' => 'Search for a options ...'],
+                        'pluginOptions' => [
+                            'allowClear'         => true,
+                            'minimumInputLength' => 2,
+                            'language'           => [
+                                'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+                            ],
+                            'ajax'               => [
+                                'url'      => Url::to(['/user-account/options']),
+                                'dataType' => 'json',
+                                'data'     => new JsExpression('function(params) { return {term:params.term}; }')
+                            ],
+                            'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
+                            'templateResult'     => new JsExpression('function(selection) { return selection.text; }'),
+                            'templateSelection'  => new JsExpression('function(selection) { return selection.text; }'),
                         ],
-                        'ajax'               => [
-                            'url'      => Url::to(['/user-account/options']),
-                            'dataType' => 'json',
-                            'data'     => new JsExpression('function(params) { return {term:params.term}; }')
-                        ],
-                        'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
-                        'templateResult'     => new JsExpression('function(selection) { return selection.text; }'),
-                        'templateSelection'  => new JsExpression('function(selection) { return selection.text; }'),
-                    ],
-            ]);
+                ]);
+            }
             ?>
 
             <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>

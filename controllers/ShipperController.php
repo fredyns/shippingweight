@@ -27,12 +27,9 @@ class ShipperController extends \app\controllers\base\ShipperController
 
         $model = new ShipperForm();
 
-        if (Yii::$app->user->isGuest == FALSE)
+        if (Yii::$app->user->identity->isAdmin == FALSE)
         {
-            if (Yii::$app->user->identity->isAdmin == FALSE)
-            {
-                $model->user_id = Yii::$app->user->id;
-            }
+            $model->user_id = Yii::$app->user->id;
         }
 
         try
