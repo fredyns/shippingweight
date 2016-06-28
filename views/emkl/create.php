@@ -4,18 +4,18 @@ use yii\helpers\Html;
 
 /**
 * @var yii\web\View $this
-* @var app\models\Certificate $model
+* @var app\models\Emkl $model
 */
 
 $this->title = 'Create';
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Certificates'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Emkls'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="giiant-crud certificate-create">
+<div class="giiant-crud emkl-create">
 
     <h1>
-        <?= Yii::t('app', 'Certificate') ?>        <small>
-                        <?= $model->id ?>        </small>
+        <?= Yii::t('app', 'Emkl') ?>        <small>
+                        <?= $model->name ?>        </small>
     </h1>
 
     <div class="clearfix crud-navigation">

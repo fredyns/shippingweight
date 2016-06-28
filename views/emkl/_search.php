@@ -5,12 +5,12 @@ use yii\widgets\ActiveForm;
 
 /**
 * @var yii\web\View $this
-* @var app\models\search\ShipmentSearch $model
+* @var app\models\search\EmklSearch $model
 * @var yii\widgets\ActiveForm $form
 */
 ?>
 
-<div class="shipment-search">
+<div class="emkl-search">
 
     <?php $form = ActiveForm::begin([
     'action' => ['index'],
@@ -19,19 +19,15 @@ use yii\widgets\ActiveForm;
 
     		<?= $form->field($model, 'id') ?>
 
-		<?= $form->field($model, 'shipper_id') ?>
+		<?= $form->field($model, 'name') ?>
 
-		<?= $form->field($model, 'container_number') ?>
+		<?= $form->field($model, 'address') ?>
 
-		<?= $form->field($model, 'container_status') ?>
+		<?= $form->field($model, 'phone') ?>
 
-		<?= $form->field($model, 'payment_status') ?>
+		<?= $form->field($model, 'npwp') ?>
 
-		<?php // echo $form->field($model, 'payment_bill') ?>
-
-		<?php // echo $form->field($model, 'payment_date') ?>
-
-		<?php // echo $form->field($model, 'payment_by') ?>
+		<?php // echo $form->field($model, 'email') ?>
 
 		<?php // echo $form->field($model, 'created_by') ?>
 

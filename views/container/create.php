@@ -4,17 +4,17 @@ use yii\helpers\Html;
 
 /**
 * @var yii\web\View $this
-* @var app\models\Shipment $model
+* @var app\models\Container $model
 */
 
 $this->title = 'Create';
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Shipments'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Containers'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="giiant-crud shipment-create">
+<div class="giiant-crud container-create">
 
     <h1>
-        <?= Yii::t('app', 'Shipment') ?>        <small>
+        <?= Yii::t('app', 'Container') ?>        <small>
                         <?= $model->id ?>        </small>
     </h1>
 

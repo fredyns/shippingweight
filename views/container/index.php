@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /**
 * @var yii\web\View $this
 * @var yii\data\ActiveDataProvider $dataProvider
-    * @var app\models\search\ShipmentSearch $searchModel
+    * @var app\models\search\ContainerSearch $searchModel
 */
 
 
@@ -19,7 +19,7 @@ Yii::$app->view->params['pageButtons'] = Html::a('<span class="glyphicon glyphic
     $actionColumnTemplateString = "{view} {update} {delete}";
 }
 ?>
-<div class="giiant-crud shipment-index">
+<div class="giiant-crud container-index">
 
     <?php //             echo $this->render('_search', ['model' =>$searchModel]);
         ?>
@@ -28,7 +28,7 @@ Yii::$app->view->params['pageButtons'] = Html::a('<span class="glyphicon glyphic
     <?php \yii\widgets\Pjax::begin(['id'=>'pjax-main', 'enableReplaceState'=> false, 'linkSelector'=>'#pjax-main ul.pagination a, th a', 'clientOptions' => ['pjax:success'=>'function(){alert("yo")}']]) ?>
 
     <h1>
-        <?= Yii::t('app', 'Shipments') ?>        <small>
+        <?= Yii::t('app', 'Containers') ?>        <small>
             List
         </small>
     </h1>
@@ -39,7 +39,7 @@ Yii::$app->view->params['pageButtons'] = Html::a('<span class="glyphicon glyphic
 
         <div class="pull-right">
 
-                                                                                
+                                                    
             <?= 
             \yii\bootstrap\ButtonDropdown::widget(
             [
@@ -52,9 +52,6 @@ Yii::$app->view->params['pageButtons'] = Html::a('<span class="glyphicon glyphic
             ],
             'encodeLabels' => false,
             'items' => [            [
-                'url' => ['certificate/index'],
-                'label' => '<i class="glyphicon glyphicon-arrow-right">&nbsp;' . 'Certificate' . '</i>',
-            ],            [
                 'url' => ['shipper/index'],
                 'label' => '<i class="glyphicon glyphicon-arrow-right">&nbsp;' . 'Shipper' . '</i>',
             ],]
@@ -106,22 +103,28 @@ Yii::$app->view->params['pageButtons'] = Html::a('<span class="glyphicon glyphic
 			    },
 			    'format' => 'raw',
 			],
-			'payment_bill',
+			'number',
+			'bill',
 			'payment_by',
-			[
-			                'attribute'=>'container_status',
+			'billed_by',
+			'verified_by',
+			'checked_by',
+			/*'sentOwner_by',*/
+			/*'sentShipper_by',*/
+			/*'billed_at',*/
+			/*'checked_at',*/
+			/*'verified_at',*/
+			/*'sentOwner_at',*/
+			/*'sentShipper_at',*/
+			/*[
+			                'attribute'=>'status',
 			                'value' => function ($model) {
-			                    return app\models\Shipment::getContainerStatusValueLabel($model->container_status);
+			                    return app\models\Container::getStatusValueLabel($model->status);
 			                }    
-			            ],
-			[
-			                'attribute'=>'payment_status',
-			                'value' => function ($model) {
-			                    return app\models\Shipment::getPaymentStatusValueLabel($model->payment_status);
-			                }    
-			            ],
-			'payment_date',
-			'container_number',
+			            ],*/
+			/*'certificate_file:ntext',*/
+			/*'grossmass',*/
+			/*'weighing_date',*/
         ],
         ]); ?>
     </div>

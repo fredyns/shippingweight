@@ -18,8 +18,8 @@ class WeighingSearch extends Weighing
 public function rules()
 {
 return [
-[['id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['container_number', 'date', 'job_order', 'emkl_name', 'emkl_email', 'gatein_trackNumber', 'gateout_trackNumber'], 'safe'],
+[['id', 'container_id', 'emkl_id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['container_number', 'job_order', 'stack_datetime', 'gatein_tracknumber', 'gateout_tracknumber'], 'safe'],
             [['grossmass', 'gatein_grossmass', 'gateout_grossmass'], 'number'],
 ];
 }
@@ -58,8 +58,10 @@ return $dataProvider;
 
 $query->andFilterWhere([
             'id' => $this->id,
-            'date' => $this->date,
+            'container_id' => $this->container_id,
             'grossmass' => $this->grossmass,
+            'stack_datetime' => $this->stack_datetime,
+            'emkl_id' => $this->emkl_id,
             'gatein_grossmass' => $this->gatein_grossmass,
             'gateout_grossmass' => $this->gateout_grossmass,
             'created_by' => $this->created_by,
@@ -70,10 +72,8 @@ $query->andFilterWhere([
 
         $query->andFilterWhere(['like', 'container_number', $this->container_number])
             ->andFilterWhere(['like', 'job_order', $this->job_order])
-            ->andFilterWhere(['like', 'emkl_name', $this->emkl_name])
-            ->andFilterWhere(['like', 'emkl_email', $this->emkl_email])
-            ->andFilterWhere(['like', 'gatein_trackNumber', $this->gatein_trackNumber])
-            ->andFilterWhere(['like', 'gateout_trackNumber', $this->gateout_trackNumber]);
+            ->andFilterWhere(['like', 'gatein_tracknumber', $this->gatein_tracknumber])
+            ->andFilterWhere(['like', 'gateout_tracknumber', $this->gateout_tracknumber]);
 
 return $dataProvider;
 }

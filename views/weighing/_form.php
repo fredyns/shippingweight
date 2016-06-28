@@ -31,15 +31,15 @@ use yii\helpers\StringHelper;
             
 			<?= $form->field($model, 'id')->textInput() ?>
 			<?= $form->field($model, 'container_number')->textInput(['maxlength' => true]) ?>
-			<?= $form->field($model, 'date')->textInput() ?>
+			<?= $form->field($model, 'container_id')->textInput() ?>
 			<?= $form->field($model, 'grossmass')->textInput() ?>
 			<?= $form->field($model, 'job_order')->textInput(['maxlength' => true]) ?>
-			<?= $form->field($model, 'emkl_name')->textInput(['maxlength' => true]) ?>
-			<?= $form->field($model, 'emkl_email')->textInput(['maxlength' => true]) ?>
+			<?= $form->field($model, 'stack_datetime')->textInput() ?>
+			<?= $form->field($model, 'emkl_id')->textInput() ?>
 			<?= $form->field($model, 'gatein_grossmass')->textInput() ?>
-			<?= $form->field($model, 'gatein_trackNumber')->textInput(['maxlength' => true]) ?>
+			<?= $form->field($model, 'gatein_tracknumber')->textInput(['maxlength' => true]) ?>
 			<?= $form->field($model, 'gateout_grossmass')->textInput() ?>
-			<?= $form->field($model, 'gateout_trackNumber')->textInput(['maxlength' => true]) ?>
+			<?= $form->field($model, 'gateout_tracknumber')->textInput(['maxlength' => true]) ?>
 			<?= $form->field($model, 'created_by')->textInput() ?>
 			<?= $form->field($model, 'updated_by')->textInput() ?>
 			<?= $form->field($model, 'created_at')->textInput() ?>

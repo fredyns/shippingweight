@@ -39,7 +39,7 @@ Yii::$app->view->params['pageButtons'] = Html::a('<span class="glyphicon glyphic
 
         <div class="pull-right">
 
-                                                    
+                        
             <?= 
             \yii\bootstrap\ButtonDropdown::widget(
             [
@@ -51,10 +51,7 @@ Yii::$app->view->params['pageButtons'] = Html::a('<span class="glyphicon glyphic
             'class' => 'dropdown-menu-right'
             ],
             'encodeLabels' => false,
-            'items' => [            [
-                'url' => ['certificate/index'],
-                'label' => '<i class="glyphicon glyphicon-arrow-right">&nbsp;' . 'Certificate' . '</i>',
-            ],]
+            'items' => []
             ],
             'options' => [
             'class' => 'btn-default'
@@ -90,16 +87,16 @@ Yii::$app->view->params['pageButtons'] = Html::a('<span class="glyphicon glyphic
             },
             'contentOptions' => ['nowrap'=>'nowrap']
         ],
-			'date',
+			'container_number',
+			'container_id',
+			'emkl_id',
 			'grossmass',
 			'gatein_grossmass',
 			'gateout_grossmass',
-			'container_number',
-			'job_order',
-			'emkl_name',
-			/*'emkl_email:email',*/
-			/*'gatein_trackNumber',*/
-			/*'gateout_trackNumber',*/
+			'stack_datetime',
+			/*'job_order',*/
+			/*'gatein_tracknumber',*/
+			/*'gateout_tracknumber',*/
         ],
         ]); ?>
     </div>

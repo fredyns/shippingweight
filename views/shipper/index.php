@@ -39,7 +39,7 @@ Yii::$app->view->params['pageButtons'] = Html::a('<span class="glyphicon glyphic
 
         <div class="pull-right">
 
-                                                                                                            
+                                                                                
             <?= 
             \yii\bootstrap\ButtonDropdown::widget(
             [
@@ -52,11 +52,8 @@ Yii::$app->view->params['pageButtons'] = Html::a('<span class="glyphicon glyphic
             ],
             'encodeLabels' => false,
             'items' => [            [
-                'url' => ['certificate/index'],
-                'label' => '<i class="glyphicon glyphicon-arrow-right">&nbsp;' . 'Certificate' . '</i>',
-            ],            [
-                'url' => ['shipment/index'],
-                'label' => '<i class="glyphicon glyphicon-arrow-right">&nbsp;' . 'Shipment' . '</i>',
+                'url' => ['container/index'],
+                'label' => '<i class="glyphicon glyphicon-arrow-right">&nbsp;' . 'Container' . '</i>',
             ],            [
                 'url' => ['profile/index'],
                 'label' => '<i class="glyphicon glyphicon-arrow-right">&nbsp;' . 'Profile' . '</i>',

@@ -13,21 +13,19 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property integer $id
  * @property string $container_number
- * @property string $date
+ * @property integer $container_id
  * @property double $grossmass
  * @property string $job_order
- * @property string $emkl_name
- * @property string $emkl_email
+ * @property string $stack_datetime
+ * @property integer $emkl_id
  * @property double $gatein_grossmass
- * @property string $gatein_trackNumber
+ * @property string $gatein_tracknumber
  * @property double $gateout_grossmass
- * @property string $gateout_trackNumber
+ * @property string $gateout_tracknumber
  * @property integer $created_by
  * @property integer $updated_by
  * @property integer $created_at
  * @property integer $updated_at
- *
- * @property \app\models\Certificate[] $certificates
  * @property string $aliasModel
  */
 abstract class Weighing extends \yii\db\ActiveRecord
@@ -65,9 +63,12 @@ abstract class Weighing extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date'], 'safe'],
+            [['container_number'], 'required'],
+            [['container_id', 'emkl_id'], 'integer'],
             [['grossmass', 'gatein_grossmass', 'gateout_grossmass'], 'number'],
-            [['container_number', 'job_order', 'emkl_name', 'emkl_email', 'gatein_trackNumber', 'gateout_trackNumber'], 'string', 'max' => 255]
+            [['stack_datetime'], 'safe'],
+            [['container_number'], 'string', 'max' => 64],
+            [['job_order', 'gatein_tracknumber', 'gateout_tracknumber'], 'string', 'max' => 255]
         ];
     }
 
@@ -79,28 +80,20 @@ abstract class Weighing extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'container_number' => 'Container Number',
-            'date' => 'Date',
+            'container_id' => 'Container ID',
             'grossmass' => 'Grossmass',
             'job_order' => 'Job Order',
-            'emkl_name' => 'Emkl Name',
-            'emkl_email' => 'Emkl Email',
+            'stack_datetime' => 'Stack Datetime',
+            'emkl_id' => 'Emkl ID',
             'gatein_grossmass' => 'Gatein Grossmass',
-            'gatein_trackNumber' => 'Gatein Track Number',
+            'gatein_tracknumber' => 'Gatein Tracknumber',
             'gateout_grossmass' => 'Gateout Grossmass',
-            'gateout_trackNumber' => 'Gateout Track Number',
+            'gateout_tracknumber' => 'Gateout Tracknumber',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCertificates()
-    {
-        return $this->hasMany(\app\models\Certificate::className(), ['weighing_id' => 'id']);
     }
 
 

@@ -33,14 +33,23 @@ AppAsset::register($this);
                 ],
             ]);
 
+            echo Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-left'],
+                'items'   => [
+                    ['label' => 'Home', 'url' => ['/site/index']],
+                    ['label' => 'Shipper', 'url' => ['/shipper']],
+                    ['label' => 'Container', 'url' => ['/container']],
+                    ['label' => 'Weighing', 'url' => ['/weighing']],
+                    ['label' => 'EMKL', 'url' => ['/emkl']],
+                    ['label' => 'About', 'url' => ['/site/about']],
+                ],
+            ]);
+
             if (Yii::$app->user->isGuest)
             {
                 echo Nav::widget([
                     'options' => ['class' => 'navbar-nav navbar-right'],
                     'items'   => [
-                        ['label' => 'Home', 'url' => ['/site/index']],
-                        ['label' => 'About', 'url' => ['/site/about']],
-                        //['label' => 'Contact', 'url' => ['/site/contact']],
                         ['label' => 'Login', 'url' => ['/user/security/login']],
                         ['label' => 'Register', 'url' => ['/user/registration/register']],
                     ],
@@ -51,9 +60,6 @@ AppAsset::register($this);
                 echo Nav::widget([
                     'options' => ['class' => 'navbar-nav navbar-right'],
                     'items'   => [
-                        ['label' => 'Home', 'url' => ['/site/index']],
-                        ['label' => 'About', 'url' => ['/site/about']],
-                        //['label' => 'Contact', 'url' => ['/site/contact']],
                         ['label' => 'My Profile', 'url' => ['/user/settings/profile']],
                         '<li>'
                         .Html::beginForm(['/user/security/logout'], 'post', ['class' => 'navbar-form'])

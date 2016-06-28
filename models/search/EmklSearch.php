@@ -5,12 +5,12 @@ namespace app\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Shipment;
+use app\models\Emkl;
 
 /**
-* ShipmentSearch represents the model behind the search form about `app\models\Shipment`.
+* EmklSearch represents the model behind the search form about `app\models\Emkl`.
 */
-class ShipmentSearch extends Shipment
+class EmklSearch extends Emkl
 {
 /**
 * @inheritdoc
@@ -18,8 +18,8 @@ class ShipmentSearch extends Shipment
 public function rules()
 {
 return [
-[['id', 'shipper_id', 'payment_bill', 'payment_by', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['container_number', 'container_status', 'payment_status', 'payment_date'], 'safe'],
+[['id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['name', 'address', 'phone', 'npwp', 'email'], 'safe'],
 ];
 }
 
@@ -41,7 +41,7 @@ return Model::scenarios();
 */
 public function search($params)
 {
-$query = Shipment::find();
+$query = Emkl::find();
 
 $dataProvider = new ActiveDataProvider([
 'query' => $query,
@@ -57,19 +57,17 @@ return $dataProvider;
 
 $query->andFilterWhere([
             'id' => $this->id,
-            'shipper_id' => $this->shipper_id,
-            'payment_bill' => $this->payment_bill,
-            'payment_date' => $this->payment_date,
-            'payment_by' => $this->payment_by,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'container_number', $this->container_number])
-            ->andFilterWhere(['like', 'container_status', $this->container_status])
-            ->andFilterWhere(['like', 'payment_status', $this->payment_status]);
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'address', $this->address])
+            ->andFilterWhere(['like', 'phone', $this->phone])
+            ->andFilterWhere(['like', 'npwp', $this->npwp])
+            ->andFilterWhere(['like', 'email', $this->email]);
 
 return $dataProvider;
 }

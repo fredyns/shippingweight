@@ -21,23 +21,23 @@ use yii\widgets\ActiveForm;
 
 		<?= $form->field($model, 'container_number') ?>
 
-		<?= $form->field($model, 'date') ?>
+		<?= $form->field($model, 'container_id') ?>
 
 		<?= $form->field($model, 'grossmass') ?>
 
 		<?= $form->field($model, 'job_order') ?>
 
-		<?php // echo $form->field($model, 'emkl_name') ?>
+		<?php // echo $form->field($model, 'stack_datetime') ?>
 
-		<?php // echo $form->field($model, 'emkl_email') ?>
+		<?php // echo $form->field($model, 'emkl_id') ?>
 
 		<?php // echo $form->field($model, 'gatein_grossmass') ?>
 
-		<?php // echo $form->field($model, 'gatein_trackNumber') ?>
+		<?php // echo $form->field($model, 'gatein_tracknumber') ?>
 
 		<?php // echo $form->field($model, 'gateout_grossmass') ?>
 
-		<?php // echo $form->field($model, 'gateout_trackNumber') ?>
+		<?php // echo $form->field($model, 'gateout_tracknumber') ?>
 
 		<?php // echo $form->field($model, 'created_by') ?>
 

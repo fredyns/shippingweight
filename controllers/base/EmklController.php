@@ -4,8 +4,8 @@
 
 namespace app\controllers\base;
 
-use app\models\Shipment;
-    use app\models\search\ShipmentSearch;
+use app\models\Emkl;
+    use app\models\search\EmklSearch;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\helpers\Url;
@@ -13,9 +13,9 @@ use yii\filters\AccessControl;
 use dmstr\bootstrap\Tabs;
 
 /**
-* ShipmentController implements the CRUD actions for Shipment model.
+* EmklController implements the CRUD actions for Emkl model.
 */
-class ShipmentController extends Controller
+class EmklController extends Controller
 {
 /**
 * @var boolean whether to enable CSRF validation for the actions in this controller.
@@ -25,12 +25,12 @@ public $enableCsrfValidation = false;
 
 
 /**
-* Lists all Shipment models.
+* Lists all Emkl models.
 * @return mixed
 */
 public function actionIndex()
 {
-    $searchModel  = new ShipmentSearch;
+    $searchModel  = new EmklSearch;
     $dataProvider = $searchModel->search($_GET);
 
 Tabs::clearLocalStorage();
@@ -45,7 +45,7 @@ return $this->render('index', [
 }
 
 /**
-* Displays a single Shipment model.
+* Displays a single Emkl model.
 * @param integer $id
 *
 * @return mixed
@@ -62,13 +62,13 @@ return $this->render('view', [
 }
 
 /**
-* Creates a new Shipment model.
+* Creates a new Emkl model.
 * If creation is successful, the browser will be redirected to the 'view' page.
 * @return mixed
 */
 public function actionCreate()
 {
-$model = new Shipment;
+$model = new Emkl;
 
 try {
 if ($model->load($_POST) && $model->save()) {
@@ -84,7 +84,7 @@ return $this->render('create', ['model' => $model]);
 }
 
 /**
-* Updates an existing Shipment model.
+* Updates an existing Emkl model.
 * If update is successful, the browser will be redirected to the 'view' page.
 * @param integer $id
 * @return mixed
@@ -103,7 +103,7 @@ return $this->render('update', [
 }
 
 /**
-* Deletes an existing Shipment model.
+* Deletes an existing Emkl model.
 * If deletion is successful, the browser will be redirected to the 'index' page.
 * @param integer $id
 * @return mixed
@@ -134,15 +134,15 @@ return $this->redirect(['index']);
 }
 
 /**
-* Finds the Shipment model based on its primary key value.
+* Finds the Emkl model based on its primary key value.
 * If the model is not found, a 404 HTTP exception will be thrown.
 * @param integer $id
-* @return Shipment the loaded model
+* @return Emkl the loaded model
 * @throws HttpException if the model cannot be found
 */
 protected function findModel($id)
 {
-if (($model = Shipment::findOne($id)) !== null) {
+if (($model = Emkl::findOne($id)) !== null) {
 return $model;
 } else {
 throw new HttpException(404, 'The requested page does not exist.');
