@@ -58,6 +58,9 @@ $config = [
             'class'                  => 'dektrium\user\Module',
             'enableUnconfirmedLogin' => TRUE,
             'admins'                 => ['admin', 'fredy.ns'],
+            'modelMap'               => [
+                'User' => 'app\models\User',
+            ],
         ],
     ],
     'params'     => $params,
