@@ -21,11 +21,17 @@ use yii\widgets\ActiveForm;
 
 		<?= $form->field($model, 'shipper_id') ?>
 
-		<?= $form->field($model, 'job_order') ?>
-
 		<?= $form->field($model, 'container_number') ?>
 
-		<?= $form->field($model, 'payment') ?>
+		<?= $form->field($model, 'container_status') ?>
+
+		<?= $form->field($model, 'payment_status') ?>
+
+		<?php // echo $form->field($model, 'payment_bill') ?>
+
+		<?php // echo $form->field($model, 'payment_date') ?>
+
+		<?php // echo $form->field($model, 'payment_by') ?>
 
 		<?php // echo $form->field($model, 'created_by') ?>
 

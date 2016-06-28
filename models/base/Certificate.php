@@ -16,7 +16,6 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $shipment_id
  * @property integer $weighing_id
  * @property string $date
- * @property string $job_order
  * @property double $grossmass
  * @property string $container_number
  * @property integer $created_by
@@ -67,7 +66,7 @@ abstract class Certificate extends \yii\db\ActiveRecord
             [['shipper_id', 'shipment_id', 'weighing_id'], 'integer'],
             [['date'], 'safe'],
             [['grossmass'], 'number'],
-            [['job_order', 'container_number'], 'string', 'max' => 255],
+            [['container_number'], 'string', 'max' => 255],
             [['shipper_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipper::className(), 'targetAttribute' => ['shipper_id' => 'id']],
             [['shipment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipment::className(), 'targetAttribute' => ['shipment_id' => 'id']],
             [['weighing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Weighing::className(), 'targetAttribute' => ['weighing_id' => 'id']]
@@ -85,7 +84,6 @@ abstract class Certificate extends \yii\db\ActiveRecord
             'shipment_id' => 'Shipment ID',
             'weighing_id' => 'Weighing ID',
             'date' => 'Date',
-            'job_order' => 'Job Order',
             'grossmass' => 'Grossmass',
             'container_number' => 'Container Number',
             'created_by' => 'Created By',

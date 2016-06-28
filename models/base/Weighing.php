@@ -12,11 +12,12 @@ use yii\behaviors\TimestampBehavior;
  * This is the base-model class for table "weighing".
  *
  * @property integer $id
- * @property string $job_order
  * @property string $container_number
- * @property string $measurement_method
- * @property integer $measured_at
+ * @property string $date
  * @property double $grossmass
+ * @property string $job_order
+ * @property string $emkl_name
+ * @property string $emkl_email
  * @property double $gatein_grossmass
  * @property string $gatein_trackNumber
  * @property double $gateout_grossmass
@@ -34,12 +35,6 @@ abstract class Weighing extends \yii\db\ActiveRecord
 
 
 
-    /**
-    * ENUM field values
-    */
-    const MEASUREMENT_METHOD_1 = '1';
-    const MEASUREMENT_METHOD_2 = '2';
-    var $enum_labels = false;
     /**
      * @inheritdoc
      */
@@ -70,15 +65,9 @@ abstract class Weighing extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['measurement_method'], 'string'],
-            [['measured_at'], 'integer'],
+            [['date'], 'safe'],
             [['grossmass', 'gatein_grossmass', 'gateout_grossmass'], 'number'],
-            [['job_order', 'container_number', 'gatein_trackNumber', 'gateout_trackNumber'], 'string', 'max' => 255],
-            ['measurement_method', 'in', 'range' => [
-                    self::MEASUREMENT_METHOD_1,
-                    self::MEASUREMENT_METHOD_2,
-                ]
-            ]
+            [['container_number', 'job_order', 'emkl_name', 'emkl_email', 'gatein_trackNumber', 'gateout_trackNumber'], 'string', 'max' => 255]
         ];
     }
 
@@ -89,11 +78,12 @@ abstract class Weighing extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'job_order' => 'Job Order',
             'container_number' => 'Container Number',
-            'measurement_method' => 'Measurement Method',
-            'measured_at' => 'Measured At',
+            'date' => 'Date',
             'grossmass' => 'Grossmass',
+            'job_order' => 'Job Order',
+            'emkl_name' => 'Emkl Name',
+            'emkl_email' => 'Emkl Email',
             'gatein_grossmass' => 'Gatein Grossmass',
             'gatein_trackNumber' => 'Gatein Track Number',
             'gateout_grossmass' => 'Gateout Grossmass',
@@ -115,30 +105,5 @@ abstract class Weighing extends \yii\db\ActiveRecord
 
 
 
-
-    /**
-     * get column measurement_method enum value label
-     * @param string $value
-     * @return string
-     */
-    public static function getMeasurementMethodValueLabel($value){
-        $labels = self::optsMeasurementMethod();
-        if(isset($labels[$value])){
-            return $labels[$value];
-        }
-        return $value;
-    }
-
-    /**
-     * column measurement_method ENUM value labels
-     * @return array
-     */
-    public static function optsMeasurementMethod()
-    {
-        return [
-            self::MEASUREMENT_METHOD_1 => self::MEASUREMENT_METHOD_1,
-            self::MEASUREMENT_METHOD_2 => self::MEASUREMENT_METHOD_2,
-        ];
-    }
 
 }

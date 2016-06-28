@@ -27,8 +27,6 @@ use yii\widgets\ActiveForm;
 
 		<?= $form->field($model, 'date') ?>
 
-		<?php // echo $form->field($model, 'job_order') ?>
-
 		<?php // echo $form->field($model, 'grossmass') ?>
 
 		<?php // echo $form->field($model, 'container_number') ?>

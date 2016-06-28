@@ -19,7 +19,7 @@ public function rules()
 {
 return [
 [['id', 'shipper_id', 'shipment_id', 'weighing_id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['date', 'job_order', 'container_number'], 'safe'],
+            [['date', 'container_number'], 'safe'],
             [['grossmass'], 'number'],
 ];
 }
@@ -69,8 +69,7 @@ $query->andFilterWhere([
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'job_order', $this->job_order])
-            ->andFilterWhere(['like', 'container_number', $this->container_number]);
+        $query->andFilterWhere(['like', 'container_number', $this->container_number]);
 
 return $dataProvider;
 }

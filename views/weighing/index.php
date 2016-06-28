@@ -90,18 +90,14 @@ Yii::$app->view->params['pageButtons'] = Html::a('<span class="glyphicon glyphic
             },
             'contentOptions' => ['nowrap'=>'nowrap']
         ],
-			[
-			                'attribute'=>'measurement_method',
-			                'value' => function ($model) {
-			                    return app\models\Weighing::getMeasurementMethodValueLabel($model->measurement_method);
-			                }    
-			            ],
-			'measured_at',
+			'date',
 			'grossmass',
 			'gatein_grossmass',
 			'gateout_grossmass',
-			'job_order',
 			'container_number',
+			'job_order',
+			'emkl_name',
+			/*'emkl_email:email',*/
 			/*'gatein_trackNumber',*/
 			/*'gateout_trackNumber',*/
         ],

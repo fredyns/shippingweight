@@ -19,15 +19,17 @@ use yii\widgets\ActiveForm;
 
     		<?= $form->field($model, 'id') ?>
 
-		<?= $form->field($model, 'job_order') ?>
-
 		<?= $form->field($model, 'container_number') ?>
 
-		<?= $form->field($model, 'measurement_method') ?>
+		<?= $form->field($model, 'date') ?>
 
-		<?= $form->field($model, 'measured_at') ?>
+		<?= $form->field($model, 'grossmass') ?>
 
-		<?php // echo $form->field($model, 'grossmass') ?>
+		<?= $form->field($model, 'job_order') ?>
+
+		<?php // echo $form->field($model, 'emkl_name') ?>
+
+		<?php // echo $form->field($model, 'emkl_email') ?>
 
 		<?php // echo $form->field($model, 'gatein_grossmass') ?>
 

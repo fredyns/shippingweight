@@ -13,9 +13,12 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property integer $id
  * @property integer $shipper_id
- * @property string $job_order
  * @property string $container_number
- * @property string $payment
+ * @property string $container_status
+ * @property string $payment_status
+ * @property integer $payment_bill
+ * @property string $payment_date
+ * @property integer $payment_by
  * @property integer $created_by
  * @property integer $updated_by
  * @property integer $created_at
@@ -33,8 +36,10 @@ abstract class Shipment extends \yii\db\ActiveRecord
     /**
     * ENUM field values
     */
-    const PAYMENT_SETTLED = 'settled';
-    const PAYMENT_PENDING = 'pending';
+    const CONTAINER_STATUS_NEW = 'new';
+    const CONTAINER_STATUS_CERTIFIED = 'certified';
+    const PAYMENT_STATUS_BILLED = 'billed';
+    const PAYMENT_STATUS_PAID = 'paid';
     var $enum_labels = false;
     /**
      * @inheritdoc
@@ -66,13 +71,19 @@ abstract class Shipment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['shipper_id'], 'integer'],
-            [['payment'], 'string'],
-            [['job_order', 'container_number'], 'string', 'max' => 255],
+            [['shipper_id', 'payment_bill', 'payment_by'], 'integer'],
+            [['container_status', 'payment_status'], 'string'],
+            [['payment_date'], 'safe'],
+            [['container_number'], 'string', 'max' => 255],
             [['shipper_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipper::className(), 'targetAttribute' => ['shipper_id' => 'id']],
-            ['payment', 'in', 'range' => [
-                    self::PAYMENT_SETTLED,
-                    self::PAYMENT_PENDING,
+            ['container_status', 'in', 'range' => [
+                    self::CONTAINER_STATUS_NEW,
+                    self::CONTAINER_STATUS_CERTIFIED,
+                ]
+            ],
+            ['payment_status', 'in', 'range' => [
+                    self::PAYMENT_STATUS_BILLED,
+                    self::PAYMENT_STATUS_PAID,
                 ]
             ]
         ];
@@ -86,9 +97,12 @@ abstract class Shipment extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'shipper_id' => 'Shipper ID',
-            'job_order' => 'Job Order',
             'container_number' => 'Container Number',
-            'payment' => 'Payment',
+            'container_status' => 'Container Status',
+            'payment_status' => 'Payment Status',
+            'payment_bill' => 'Payment Bill',
+            'payment_date' => 'Payment Date',
+            'payment_by' => 'Payment By',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
             'created_at' => 'Created At',
@@ -116,12 +130,12 @@ abstract class Shipment extends \yii\db\ActiveRecord
 
 
     /**
-     * get column payment enum value label
+     * get column container_status enum value label
      * @param string $value
      * @return string
      */
-    public static function getPaymentValueLabel($value){
-        $labels = self::optsPayment();
+    public static function getContainerStatusValueLabel($value){
+        $labels = self::optsContainerStatus();
         if(isset($labels[$value])){
             return $labels[$value];
         }
@@ -129,14 +143,39 @@ abstract class Shipment extends \yii\db\ActiveRecord
     }
 
     /**
-     * column payment ENUM value labels
+     * column container_status ENUM value labels
      * @return array
      */
-    public static function optsPayment()
+    public static function optsContainerStatus()
     {
         return [
-            self::PAYMENT_SETTLED => self::PAYMENT_SETTLED,
-            self::PAYMENT_PENDING => self::PAYMENT_PENDING,
+            self::CONTAINER_STATUS_NEW => self::CONTAINER_STATUS_NEW,
+            self::CONTAINER_STATUS_CERTIFIED => self::CONTAINER_STATUS_CERTIFIED,
+        ];
+    }
+
+    /**
+     * get column payment_status enum value label
+     * @param string $value
+     * @return string
+     */
+    public static function getPaymentStatusValueLabel($value){
+        $labels = self::optsPaymentStatus();
+        if(isset($labels[$value])){
+            return $labels[$value];
+        }
+        return $value;
+    }
+
+    /**
+     * column payment_status ENUM value labels
+     * @return array
+     */
+    public static function optsPaymentStatus()
+    {
+        return [
+            self::PAYMENT_STATUS_BILLED => self::PAYMENT_STATUS_BILLED,
+            self::PAYMENT_STATUS_PAID => self::PAYMENT_STATUS_PAID,
         ];
     }
 

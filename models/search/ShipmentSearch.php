@@ -18,8 +18,8 @@ class ShipmentSearch extends Shipment
 public function rules()
 {
 return [
-[['id', 'shipper_id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['job_order', 'container_number', 'payment'], 'safe'],
+[['id', 'shipper_id', 'payment_bill', 'payment_by', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['container_number', 'container_status', 'payment_status', 'payment_date'], 'safe'],
 ];
 }
 
@@ -58,15 +58,18 @@ return $dataProvider;
 $query->andFilterWhere([
             'id' => $this->id,
             'shipper_id' => $this->shipper_id,
+            'payment_bill' => $this->payment_bill,
+            'payment_date' => $this->payment_date,
+            'payment_by' => $this->payment_by,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'job_order', $this->job_order])
-            ->andFilterWhere(['like', 'container_number', $this->container_number])
-            ->andFilterWhere(['like', 'payment', $this->payment]);
+        $query->andFilterWhere(['like', 'container_number', $this->container_number])
+            ->andFilterWhere(['like', 'container_status', $this->container_status])
+            ->andFilterWhere(['like', 'payment_status', $this->payment_status]);
 
 return $dataProvider;
 }

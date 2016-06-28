@@ -106,13 +106,21 @@ Yii::$app->view->params['pageButtons'] = Html::a('<span class="glyphicon glyphic
 			    },
 			    'format' => 'raw',
 			],
+			'payment_bill',
+			'payment_by',
 			[
-			                'attribute'=>'payment',
+			                'attribute'=>'container_status',
 			                'value' => function ($model) {
-			                    return app\models\Shipment::getPaymentValueLabel($model->payment);
+			                    return app\models\Shipment::getContainerStatusValueLabel($model->container_status);
 			                }    
 			            ],
-			'job_order',
+			[
+			                'attribute'=>'payment_status',
+			                'value' => function ($model) {
+			                    return app\models\Shipment::getPaymentStatusValueLabel($model->payment_status);
+			                }    
+			            ],
+			'payment_date',
 			'container_number',
         ],
         ]); ?>
