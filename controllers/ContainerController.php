@@ -112,7 +112,7 @@ class ContainerController extends \app\controllers\base\ContainerController
 
             if ($permit == FALSE)
             {
-                throw new HttpException(404, 'It is not yours to delete.');
+                throw new HttpException(404, 'This container is not yours to delete.');
             }
 
             if ($registerOnly == FALSE)

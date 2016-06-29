@@ -58,6 +58,8 @@ abstract class Emkl extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['id'], 'required'],
+            [['id'], 'integer'],
             [['address'], 'string'],
             [['name', 'phone', 'npwp', 'email'], 'string', 'max' => 255]
         ];
