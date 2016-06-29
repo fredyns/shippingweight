@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\GridView;
+use app\widget\ContainerMenu;
 
 /**
  * @var yii\web\View $this
@@ -114,30 +115,31 @@ else
                 'grossmass',
                 [
                     'attribute' => 'status',
+                    'format'    => 'html',
                     'value'     => function ($model)
                     {
-                        return app\models\Container::getStatusValueLabel($model->status);
+                        return ContainerMenu::widget(['model' => $model]);
                     }
+                    ],
+                    [
+                        'class'      => 'yii\grid\ActionColumn',
+                        'options'    => [],
+                        'template'   => $actionColumnTemplateString,
+                        'urlCreator' => function($action, $model, $key, $index)
+                    {
+                        // using the column name as key, not mapping to 'id' like the standard generator
+                        $params    = is_array($key) ? $key : [$model->primaryKey()[0] => (string) $key];
+                        $params[0] = \Yii::$app->controller->id ? \Yii::$app->controller->id.'/'.$action : $action;
+                        return Url::toRoute($params);
+                    },
+                        'contentOptions' => ['nowrap' => 'nowrap']
+                    ],
                 ],
-                [
-                    'class'      => 'yii\grid\ActionColumn',
-                    'options'    => [],
-                    'template'   => $actionColumnTemplateString,
-                    'urlCreator' => function($action, $model, $key, $index)
-                {
-                    // using the column name as key, not mapping to 'id' like the standard generator
-                    $params    = is_array($key) ? $key : [$model->primaryKey()[0] => (string) $key];
-                    $params[0] = \Yii::$app->controller->id ? \Yii::$app->controller->id.'/'.$action : $action;
-                    return Url::toRoute($params);
-                },
-                    'contentOptions' => ['nowrap' => 'nowrap']
-                ],
-            ],
-        ]);
-        ?>
+            ]);
+            ?>
+        </div>
+
     </div>
 
-</div>
 
-
-<?php \yii\widgets\Pjax::end() ?>
+    <?php \yii\widgets\Pjax::end() ?>

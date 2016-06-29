@@ -6,6 +6,7 @@ use yii\grid\GridView;
 use yii\widgets\DetailView;
 use yii\widgets\Pjax;
 use dmstr\bootstrap\Tabs;
+use app\widget\ContainerMenu;
 
 /**
  * @var yii\web\View $this
@@ -53,10 +54,8 @@ $this->params['breadcrumbs'][] = 'View';
                 ['create', 'id' => $model->id, 'ContainerForm' => $copyParams], ['class' => 'btn btn-success'])
             ?>
 
-            <?=
-            Html::a(
-                '<span class="glyphicon glyphicon-plus"></span> '.'New', ['create'], ['class' => 'btn btn-success'])
-            ?>
+            <?= ContainerMenu::widget(['model' => $model]); ?>
+
         </div>
 
         <div class="pull-right">
@@ -113,6 +112,7 @@ $this->params['breadcrumbs'][] = 'View';
         'data-method'  => 'post',
     ]);
     ?>
+
     <?php $this->endBlock(); ?>
 
     <?php $this->beginBlock('ContainerInfo'); ?>
