@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use app\models\base\Shipper as BaseShipper;
 
 /**
@@ -31,6 +32,20 @@ class Shipper extends BaseShipper
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    /**
+     * Preparing option data for forms
+     *
+     * @return array
+     */
+    static function options()
+    {
+        $query = static::find()
+            ->where(['user_id' => Yii::$app->user->id])
+            ->all();
+
+        return ArrayHelper::map($query, 'id', 'name');
     }
 
     /**

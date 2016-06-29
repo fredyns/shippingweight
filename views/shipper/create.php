@@ -13,10 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="giiant-crud shipper-create">
 
     <h1>
-        <?= Yii::t('app', 'Shipper') ?>
-        <small>
-            <?= $model->name ?>
-        </small>
+        New  <?= Yii::t('app', 'Shipper') ?>
     </h1>
 
     <hr />

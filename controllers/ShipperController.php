@@ -67,9 +67,9 @@ class ShipperController extends \app\controllers\base\ShipperController
         $model = $this->findForm($id);
         $owned = ($model->user_id == Yii::$app->user->id);
 
-        if ($owned == FALSE)
+        if ($owned == FALSE && Yii::$app->user->identity->isAdmin == FALSE)
         {
-            throw new HttpException(404, 'It is not yours to delete.');
+            throw new HttpException(404, 'It is not yours to update.');
         }
 
         if ($model->load($_POST) && $model->save())
@@ -88,12 +88,13 @@ class ShipperController extends \app\controllers\base\ShipperController
     {
         try
         {
-            $model = $this->findModel($id);
-            $login = (Yii::$app->user->isGuest == FALSE);
-            $owned = ($model->user_id == Yii::$app->user->id);
-            $empty = (count($model->containers) == 0);
+            $model  = $this->findModel($id);
+            $login  = (Yii::$app->user->isGuest == FALSE);
+            $owned  = ($model->user_id == Yii::$app->user->id);
+            $permit = ($owned OR Yii::$app->user->identity->isAdmin);
+            $empty  = (count($model->containers) == 0);
 
-            if ($login && $owned && $empty)
+            if ($login && $permit && $empty)
             {
                 $model->delete();
             }
@@ -103,7 +104,7 @@ class ShipperController extends \app\controllers\base\ShipperController
                 throw new HttpException(404, 'You have to login.');
             }
 
-            if ($owned == FALSE)
+            if ($permit == FALSE)
             {
                 throw new HttpException(404, 'It is not yours to delete.');
             }
@@ -141,6 +142,35 @@ class ShipperController extends \app\controllers\base\ShipperController
         {
             return $this->redirect(['index']);
         }
+    }
+
+    /**
+     * Provide data for Depdrop options
+     * @param type $selected
+     *
+     * @return mixed
+     */
+    public function actionDepdropOptions($selected = 0)
+    {
+        echo \app\helpers\DepdropHelper::getOptionData([
+            'modelClass' => Shipper::className(),
+            'parents'    => [
+                'user_id' => function($value)
+                {
+                    if (Yii::$app->user->isGuest)
+                    {
+                        return 0;
+                    }
+                    elseif (Yii::$app->user->identity->isAdmin)
+                    {
+                        return ($value > 0) ? $value : "";
+                    }
+
+                    return Yii::$app->user->id;
+                },
+            ],
+            'selected' => $selected,
+        ]);
     }
 
     protected function findForm($id)

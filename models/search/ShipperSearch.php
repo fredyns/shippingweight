@@ -44,7 +44,7 @@ class ShipperSearch extends Shipper
     public function search($params)
     {
         $query = Shipper::find()
-            ->with('userAccount');
+            ->joinWith('userAccount');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

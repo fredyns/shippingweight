@@ -86,7 +86,8 @@ else
                         return '';
                     }
                 },
-                    'format' => 'raw',
+                    'format'  => 'raw',
+                    'visible' => Yii::$app->user->identity->isAdmin,
                 ],
                 'name',
                 'email:email',

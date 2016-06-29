@@ -37,10 +37,26 @@ AppAsset::register($this);
                 'options' => ['class' => 'navbar-nav navbar-left'],
                 'items'   => [
                     ['label' => 'Home', 'url' => ['/site/index']],
-                    ['label' => 'Shipper', 'url' => ['/shipper']],
-                    ['label' => 'Container', 'url' => ['/container']],
-                    ['label' => 'Weighing', 'url' => ['/weighing']],
-                    ['label' => 'EMKL', 'url' => ['/emkl']],
+                    [
+                        'label'   => 'Shipper',
+                        'url'     => ['/shipper'],
+                        'visible' => (Yii::$app->user->isGuest == FALSE),
+                    ],
+                    [
+                        'label'   => 'Container',
+                        'url'     => ['/container'],
+                        'visible' => (Yii::$app->user->isGuest == FALSE),
+                    ],
+                    [
+                        'label'   => 'Weighing',
+                        'url'     => ['/weighing'],
+                        'visible' => Yii::$app->user->identity->isAdmin,
+                    ],
+                    [
+                        'label'   => 'EMKL',
+                        'url'     => ['/emkl'],
+                        'visible' => Yii::$app->user->identity->isAdmin,
+                    ],
                     ['label' => 'About', 'url' => ['/site/about']],
                 ],
             ]);

@@ -49,12 +49,6 @@ $this->params['breadcrumbs'][] = 'View';
 
             <?=
             Html::a(
-                '<span class="glyphicon glyphicon-copy"></span> '.'Copy',
-                ['create', 'id' => $model->id, 'Shipper' => $copyParams], ['class' => 'btn btn-success'])
-            ?>
-
-            <?=
-            Html::a(
                 '<span class="glyphicon glyphicon-plus"></span> '.'New', ['create'], ['class' => 'btn btn-success'])
             ?>
         </div>
@@ -88,24 +82,6 @@ $this->params['breadcrumbs'][] = 'View';
             'cp',
             'phone',
             'email:email',
-            [
-                'attribute' => 'created_by',
-                'visible'   => (Yii::$app->user->identity->isAdmin),
-            ],
-            [
-                'attribute' => 'updated_by',
-                'visible'   => (Yii::$app->user->identity->isAdmin),
-            ],
-            [
-                'attribute' => 'created_at',
-                'format'    => 'datetime',
-                'visible'   => (Yii::$app->user->identity->isAdmin),
-            ],
-            [
-                'attribute' => 'updated_at',
-                'format'    => 'datetime',
-                'visible'   => (Yii::$app->user->identity->isAdmin),
-            ],
         ],
     ]);
     ?>
@@ -202,6 +178,50 @@ $this->params['breadcrumbs'][] = 'View';
     <?php $this->endBlock() ?>
 
 
+    <?php $this->beginBlock('ShipperInfo'); ?>
+
+
+    <?=
+    DetailView::widget([
+        'model'      => $model,
+        'attributes' => [
+            [
+                'attribute' => 'created_by',
+                'visible'   => (Yii::$app->user->identity->isAdmin),
+            ],
+            [
+                'attribute' => 'updated_by',
+                'visible'   => (Yii::$app->user->identity->isAdmin),
+            ],
+            [
+                'attribute' => 'created_at',
+                'format'    => 'datetime',
+                'visible'   => (Yii::$app->user->identity->isAdmin),
+            ],
+            [
+                'attribute' => 'updated_at',
+                'format'    => 'datetime',
+                'visible'   => (Yii::$app->user->identity->isAdmin),
+            ],
+        ],
+    ]);
+    ?>
+
+
+    <hr/>
+
+    <?=
+    Html::a('<span class="glyphicon glyphicon-trash"></span> '.'Delete', ['delete', 'id' => $model->id],
+        [
+        'class'        => 'btn btn-danger',
+        'data-confirm' => ''.'Are you sure to delete this item?'.'',
+        'data-method'  => 'post',
+    ]);
+    ?>
+
+    <?php $this->endBlock(); ?>
+
+
     <?=
     Tabs::widget(
         [
@@ -217,6 +237,12 @@ $this->params['breadcrumbs'][] = 'View';
                     'content' => $this->blocks['Containers'],
                     'label'   => '<small>Containers <span class="badge badge-default">'.count($model->getContainers()->asArray()->all()).'</span></small>',
                     'active'  => false,
+                ],
+                [
+                    'content' => $this->blocks['ShipperInfo'],
+                    'label'   => '<small>Info</small>',
+                    'active'  => false,
+                    'visible' => (Yii::$app->user->identity->isAdmin),
                 ],
             ]
         ]
