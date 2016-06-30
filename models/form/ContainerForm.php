@@ -94,4 +94,31 @@ class ContainerForm extends Container
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return ArrayHelper::merge(parent::scenarios(),
+                [
+                'register' => ['shipper_id', 'number'],
+                'payment'  => ['bill'],
+        ]);
+    }
+
+    public function paying()
+    {
+        $this->load($_POST);
+
+        if ($this->validate())
+        {
+            return FALSE;
+        }
+
+        $this->billed_by = Yii::$app->user->id;
+        $this->billed_at = time();
+
+        return $this->save(FALSE);
+    }
+
 }

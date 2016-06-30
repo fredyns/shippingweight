@@ -1,7 +1,12 @@
 <?php
+
+use yii\helpers\Html;
+use yii\helpers\Url;
+
 /* @var $this yii\web\View */
 
-$this->title = 'BKIVGM.com';
+$this->title    = 'BKIVGM.com';
+$certificateUrl = Url::to(['/certificate/pdf']);
 ?>
 <div class="site-index">
 
@@ -11,6 +16,26 @@ $this->title = 'BKIVGM.com';
         <p class="lead">Verified Gross Mass oleh Badan Klasifikasi Indonesia</p>
 
     </div>
+
+    <form action="<?= $certificateUrl ?>" method="get">
+        <div class="row">
+            <div class="col-lg-6 col-md-offset-3">
+                <div class="input-group">
+                    <input name="container_number" type="text" class="form-control input-lg" placeholder="isikan nomor container">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default btn-lg" type="submit">
+                            <span class="glyphicon glyphicon-scale"></span> Check
+                        </button>
+                    </span>
+                </div><!-- /input-group -->
+            </div><!-- /.col-lg-6 -->
+        </div><!-- /.row -->
+    </form>
+
+    <br/>
+    <br/>
+    <br/>
+    <br/>
 
     <div class="body-content">
 

@@ -3,28 +3,30 @@
 namespace app\controllers;
 
 use kartik\mpdf\Pdf;
+use yii\web\Controller;
+use dosamigos\qrcode\QrCode;
 
 /**
  * This is the class for controller "CertificateController".
  */
-class CertificateController extends \app\controllers\base\CertificateController
+class CertificateController extends Controller
 {
 
     /**
      * generate qrcode
      *
-     * @param int $id
+     * @param string $container_number
      * @return mixed
      */
-    public function actionQrcode($id)
+    public function actionQrcode($container_number = 0)
     {
-        $model                       = $this->findModel($id);
+        //$model                       = $this->findModel($id);
         \Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
 
         header('Content-Type: image/png');
-        header("Content-Disposition: inline; filename=vgm-".$model->id.".png;");
+        header("Content-Disposition: inline; filename=vgm-".$container_number.".png;");
 
-        return $model->qrcode;
+        return QrCode::png($container_number);
     }
 
     /**
@@ -44,37 +46,46 @@ class CertificateController extends \app\controllers\base\CertificateController
      *
      * @return string
      */
-    public function actionPdf($id = 0)
+    public function actionPdf($container_number = 0)
     {
-        $model   = $this->findModel($id);
+        $model = [
+            'container_number' => $container_number,
+            'vgmGrossmass'     => '30000',
+            'vgmDate'          => '2016-07-01',
+            'shipperName'      => '<i class="sample-text">shipper name belong here</i>',
+            'shipperCompany'   => '<i class="sample-text">shipper company belong here</i>',
+            'shipperEmail'     => '<i class="sample-text">shipper email belong here</i>',
+            'issuerName'       => 'Badan Klasifikasi Indonesia',
+        ];
+
+        if (strpos($container_number, 'view') !== FALSE)
+        {
+            return $this->render('pdf', ['model' => $model]);
+        }
+
         $content = $this->renderPartial('pdf', ['model' => $model]);
+        $css     = $this->renderPartial('pdf.css');
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
 
         // setup kartik\mpdf\Pdf component
         $pdf = new Pdf([
+            'options'         => ['title' => 'VGM Certificate by BKI'],
+            'filename'        => 'vgm-'.$container_number.'.pdf',
             // set to use core fonts only
-            'mode'        => Pdf::MODE_CORE,
+            'mode'            => Pdf::MODE_CORE,
             // A4 paper format
-            'format'      => Pdf::FORMAT_A4,
+            'format'          => Pdf::FORMAT_A4,
             // portrait orientation
-            'orientation' => Pdf::ORIENT_PORTRAIT,
+            'orientation'     => Pdf::ORIENT_PORTRAIT,
             // stream to browser inline
-            'destination' => Pdf::DEST_BROWSER,
+            'destination'     => Pdf::DEST_BROWSER,
             // your html content input
-            'content'     => $content,
-            // format content from your own css file if needed or use the
-            // enhanced bootstrap css built by Krajee for mPDF formatting
-            'cssFile'     => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
-            // any css to be embedded if required
-            'cssInline'   => '.kv-heading-1{font-size:18px}',
-            // set mPDF properties on the fly
-            'options'     => ['title' => 'BKI VGM'],
-            // call mPDF methods on the fly
-            'methods'     => [
-                'SetHeader' => ['Verified Gross Mass'],
-                'SetFooter' => ['{PAGENO}'],
-            ]
+            'content'         => $content,
+            'cssInline'       => $css,
+            'marginTop'       => 10,
+            'defaultFontSize' => 12,
+            'marginFooter'    => 15,
         ]);
 
         // return the pdf output as per the destination setting

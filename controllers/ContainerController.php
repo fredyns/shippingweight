@@ -33,6 +33,8 @@ class ContainerController extends \app\controllers\base\ContainerController
             $model->user_id = Yii::$app->user->id;
         }
 
+        $model->setScenario('register');
+
         try
         {
             if ($model->load($_POST) && $model->save())
@@ -74,6 +76,8 @@ class ContainerController extends \app\controllers\base\ContainerController
         {
             throw new HttpException(404, 'This Container has already Verified.');
         }
+
+        $model->setScenario('register');
 
         if ($model->load($_POST) && $model->save())
         {
@@ -148,6 +152,90 @@ class ContainerController extends \app\controllers\base\ContainerController
         {
             return $this->redirect(['index']);
         }
+    }
+
+    /**
+     * bill payment
+     *
+     * @param int $id
+     * @return mixed
+     * @throws HttpException
+     */
+    public function actionPayment($id)
+    {
+        if (Yii::$app->user->isGuest)
+        {
+            throw new HttpException(404, 'You have to login.');
+        }
+
+        $model        = $this->findForm($id);
+        $permit       = (Yii::$app->user->identity->isAdmin);
+        $registerOnly = ($model->status == Container::STATUS_REGISTERED);
+
+        // black list
+
+        if ($permit == FALSE)
+        {
+            throw new HttpException(404, 'Who are you?');
+        }
+
+        if ($registerOnly == FALSE)
+        {
+            throw new HttpException(404, 'This Container has already Paid.');
+        }
+
+        $model->setScenario('payment');
+
+        if ($model->paying())
+        {
+            return $this->redirect(Url::previous());
+        }
+        else
+        {
+            return $this->render('payment', [
+                    'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionCheck($id)
+    {
+        //cek login
+
+        if (Yii::$app->user->isGuest)
+        {
+            throw new HttpException(404, 'You have to login.');
+        }
+
+        // buka data
+
+        $model = $this->findModel($id);
+        $owned = ($model->shipper->user_id == Yii::$app->user->id);
+
+        // cek user
+
+        if ($owned == FALSE && Yii::$app->user->identity->isAdmin == FALSE)
+        {
+            throw new HttpException(404, 'This Container is not yours to check.');
+        }
+
+        // cek status barang
+
+        if ($model->status == Container::STATUS_REGISTERED)
+        {
+            throw new HttpException(404, 'This Container is not yet paid.');
+        }
+        elseif ($model->status == Container::STATUS_VERIFIED)
+        {
+            throw new HttpException(404, 'This Container is already Verified.');
+        }
+        elseif ($model->status != Container::STATUS_READY)
+        {
+            throw new HttpException(404, 'This Container is not ready.');
+        }
+
+        // tarik data
+        // olah data
     }
 
     protected function findForm($id)
