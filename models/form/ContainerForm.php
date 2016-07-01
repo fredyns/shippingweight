@@ -108,13 +108,17 @@ class ContainerForm extends Container
 
     public function paying()
     {
-        $this->load($_POST);
-
-        if ($this->validate())
+        if ($this->load($_POST) == FALSE)
         {
             return FALSE;
         }
 
+        if ($this->validate() == FALSE)
+        {
+            return FALSE;
+        }
+
+        $this->status    = static::STATUS_READY;
         $this->billed_by = Yii::$app->user->id;
         $this->billed_at = time();
 

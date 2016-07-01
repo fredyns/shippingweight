@@ -33,6 +33,13 @@ AppAsset::register($this);
                 ],
             ]);
 
+            $isAdmin = FALSE;
+
+            if (Yii::$app->user->isGuest == FALSE)
+            {
+                $isAdmin = Yii::$app->user->identity->isAdmin;
+            }
+
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-left'],
                 'items'   => [
@@ -50,12 +57,12 @@ AppAsset::register($this);
                     [
                         'label'   => 'Weighing',
                         'url'     => ['/weighing'],
-                        'visible' => Yii::$app->user->identity->isAdmin,
+                        'visible' => $isAdmin,
                     ],
                     [
                         'label'   => 'EMKL',
                         'url'     => ['/emkl'],
-                        'visible' => Yii::$app->user->identity->isAdmin,
+                        'visible' => $isAdmin,
                     ],
                     ['label' => 'About', 'url' => ['/site/about']],
                 ],

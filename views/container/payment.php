@@ -51,6 +51,7 @@ $this->params['breadcrumbs'][] = 'Payment';
                         ['shipper/view', 'id' => $model->getShipper()->one()->id,]) : '<span class="label label-warning">?</span>'),
             ],
             'number',
+            'status',
         ],
     ]);
     ?>

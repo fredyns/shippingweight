@@ -50,8 +50,8 @@ class CertificateController extends Controller
     {
         $model = [
             'container_number' => $container_number,
-            'vgmGrossmass'     => '30000',
-            'vgmDate'          => '2016-07-01',
+            'vgmGrossmass'     => '<i class="sample-text">mass</i>',
+            'vgmDate'          => '<i class="sample-text">date</i>',
             'shipperName'      => '<i class="sample-text">shipper name belong here</i>',
             'shipperCompany'   => '<i class="sample-text">shipper company belong here</i>',
             'shipperEmail'     => '<i class="sample-text">shipper email belong here</i>',
