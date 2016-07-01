@@ -15,7 +15,6 @@ use app\behaviors\ShipperBehavior;
  */
 class ContainerForm extends Container
 {
-    public $user_id;
     public $shipper_address;
     public $shipper_email;
 
@@ -24,11 +23,10 @@ class ContainerForm extends Container
      */
     public function behaviors()
     {
-        return [
-            [
-                'class' => ShipperBehavior::className(),
-            ],
-        ];
+        return ArrayHelper::merge(
+                parent::behaviors(), [
+                [ 'class' => ShipperBehavior::className()],
+        ]);
     }
 
     /**
@@ -38,14 +36,27 @@ class ContainerForm extends Container
     {
         return [
             /* default value */
-            [['user_id'], 'default', 'value' => Yii::$app->user->id],
             [['bill'], 'default', 'value' => 60000],
             [['status'], 'default', 'value' => static::STATUS_REGISTERED],
             /* required */
-            [['user_id', 'shipper_id', 'number'], 'required'],
+            [['shipper_id', 'number', 'booking_number'], 'required'],
+            [
+                ['shipper_address', 'shipper_email'],
+                'required',
+                'when' => function ($model, $attribute)
+            {
+                return (is_numeric($model->shipper_id) == FALSE);
+            },
+                'whenClient' => "
+                    function (attribute, value) {
+                        shipperInput = $('#containerform-shipper_id').val();
+                        
+                        return (shipperInput && isNaN(shipperInput));
+                    }",
+            ],
             /* optional */
             /* field type */
-            [['user_id', 'bill'], 'integer'],
+            [['bill'], 'integer'],
             [['status', 'certificate_file', 'shipper_address', 'shipper_email'], 'string'],
             [['grossmass'], 'number'],
             [['weighing_date'], 'date', 'format' => 'php:Y-m-d'],
@@ -60,6 +71,7 @@ class ContainerForm extends Container
                 },
             ],
             ['shipper_email', 'email'],
+            [['shipper_email'], 'string', 'max' => 255],
             /* value limitation */
             ['status', 'in', 'range' => [
                     static::STATUS_REGISTERED,
@@ -101,11 +113,17 @@ class ContainerForm extends Container
     {
         return ArrayHelper::merge(parent::scenarios(),
                 [
-                'register' => ['shipper_id', 'number'],
-                'payment'  => ['bill'],
+                'create'  => ['shipper_id', 'shipper_address', 'shipper_email', 'booking_number', 'number'],
+                'update'  => ['shipper_id', 'shipper_address', 'shipper_email', 'booking_number', 'number'],
+                'payment' => ['bill'],
         ]);
     }
 
+    /**
+     * confirm payment
+     *
+     * @return boolean
+     */
     public function paying()
     {
         if ($this->load($_POST) == FALSE)

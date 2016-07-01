@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use kartik\mpdf\Pdf;
 use yii\web\Controller;
+use app\models\Certificate;
 use dosamigos\qrcode\QrCode;
 
 /**
@@ -15,30 +16,27 @@ class CertificateController extends Controller
     /**
      * generate qrcode
      *
-     * @param string $container_number
+     * @param string $id
      * @return mixed
      */
-    public function actionQrcode($container_number = 0)
+    public function actionQrcode($id = 0, $container_number = 'trial')
     {
-        //$model                       = $this->findModel($id);
         \Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
 
+        $model = Certificate::findOne($id);
+
+        if ($model)
+        {
+            header('Content-Type: image/png');
+            header("Content-Disposition: inline; filename=vgm-".$model->number.".png;");
+
+            return $model->qrcode;
+        }
+
         header('Content-Type: image/png');
-        header("Content-Disposition: inline; filename=vgm-".$container_number.".png;");
+        header("Content-Disposition: inline; filename=trial-".$container_number.".png;");
 
-        return QrCode::png($container_number);
-    }
-
-    /**
-     * Displays QRCode Image.
-     *
-     * @return string
-     */
-    public function actionQrimage($id = 0)
-    {
-        $model = $this->findModel($id);
-
-        return '<pre><img src="'.$model->qrUrl.'" /></pre>';
+        return QrCode::png($container_number.'(trial)');
     }
 
     /**
@@ -46,17 +44,25 @@ class CertificateController extends Controller
      *
      * @return string
      */
-    public function actionPdf($container_number = 0)
+    public function actionPdf($id = 0, $container_number = 0)
     {
-        $model = [
-            'container_number' => $container_number,
-            'vgmGrossmass'     => '<i class="sample-text">mass</i>',
-            'vgmDate'          => '<i class="sample-text">date</i>',
-            'shipperName'      => '<i class="sample-text">shipper name belong here</i>',
-            'shipperCompany'   => '<i class="sample-text">shipper company belong here</i>',
-            'shipperEmail'     => '<i class="sample-text">shipper email belong here</i>',
-            'issuerName'       => 'Badan Klasifikasi Indonesia',
-        ];
+        $model = Certificate::findOne($id);
+
+        if (empty($model))
+        {
+            $model = [
+                'id'             => '0',
+                'number'         => $container_number,
+                'booking_number' => '<i class="sample-text">booking number</i>',
+                'grossmass'      => '<i class="sample-text">mass</i>',
+                'weighing_date'  => '<i class="sample-text">date</i>',
+                'shipper'        => [
+                    'name'    => '<i class="sample-text">shipper name belong here</i>',
+                    'address' => '<i class="sample-text">shipper company belong here</i>',
+                    'email'   => '<i class="sample-text">shipper email belong here</i>',
+                ],
+            ];
+        }
 
         if (strpos($container_number, 'view') !== FALSE)
         {

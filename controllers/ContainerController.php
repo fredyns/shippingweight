@@ -19,21 +19,14 @@ class ContainerController extends \app\controllers\base\ContainerController
      */
     public function actionCreate()
     {
-        $login = (Yii::$app->user->isGuest == FALSE);
-
-        if ($login == FALSE)
+        if (Yii::$app->user->isGuest)
         {
             throw new HttpException(404, 'You have to login.');
         }
 
         $model = new ContainerForm();
 
-        if (Yii::$app->user->identity->isAdmin == FALSE)
-        {
-            $model->user_id = Yii::$app->user->id;
-        }
-
-        $model->setScenario('register');
+        $model->setScenario('create');
 
         try
         {
@@ -49,8 +42,10 @@ class ContainerController extends \app\controllers\base\ContainerController
         catch (\Exception $e)
         {
             $msg = (isset($e->errorInfo[2])) ? $e->errorInfo[2] : $e->getMessage();
+
             $model->addError('_exception', $msg);
         }
+
         return $this->render('create', ['model' => $model]);
     }
 
@@ -69,7 +64,7 @@ class ContainerController extends \app\controllers\base\ContainerController
 
         if ($owned == FALSE && Yii::$app->user->identity->isAdmin == FALSE)
         {
-            throw new HttpException(404, 'It is not yours to update.');
+            throw new HttpException(404, 'This Container is not yours to update.');
         }
 
         if ($model->status == Container::STATUS_VERIFIED)
@@ -77,7 +72,7 @@ class ContainerController extends \app\controllers\base\ContainerController
             throw new HttpException(404, 'This Container has already Verified.');
         }
 
-        $model->setScenario('register');
+        $model->setScenario('update');
 
         if ($model->load($_POST) && $model->save())
         {
@@ -121,7 +116,7 @@ class ContainerController extends \app\controllers\base\ContainerController
 
             if ($registerOnly == FALSE)
             {
-                throw new HttpException(404, 'This shipper has containers.');
+                throw new HttpException(404, 'This container alrady paid or verified.');
             }
 
             throw new HttpException(404, 'Unknown error.');
@@ -129,7 +124,9 @@ class ContainerController extends \app\controllers\base\ContainerController
         catch (\Exception $e)
         {
             $msg = (isset($e->errorInfo[2])) ? $e->errorInfo[2] : $e->getMessage();
+
             \Yii::$app->getSession()->addFlash('error', $msg);
+
             return $this->redirect(Url::previous());
         }
 
@@ -143,6 +140,7 @@ class ContainerController extends \app\controllers\base\ContainerController
         elseif (isset(\Yii::$app->session['__crudReturnUrl']) && \Yii::$app->session['__crudReturnUrl'] != '/')
         {
             Url::remember(null);
+
             $url                                   = \Yii::$app->session['__crudReturnUrl'];
             \Yii::$app->session['__crudReturnUrl'] = null;
 

@@ -6,6 +6,7 @@ use Yii;
 use yii\helpers\Url;
 use yii\web\HttpException;
 use app\models\form\ShipperForm;
+use app\models\Shipper;
 
 /**
  * This is the class for controller "ShipperController".

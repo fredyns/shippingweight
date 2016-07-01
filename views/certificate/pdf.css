@@ -25,7 +25,13 @@
     font-family: 'Arial';
     text-decoration: underline;
     text-align: center;
-
+    margin-bottom: 0;
+}
+#certificate_number{
+    font-weight: bold;
+    font-family: 'Arial';
+    text-align: center;
+    margin-top: 0;
 }
 .detail-title {
     margin-top: 5px;

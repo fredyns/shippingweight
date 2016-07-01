@@ -29,7 +29,7 @@ $certificateUrl = Url::to(['/certificate/pdf']);
                     </span>
                 </div><!-- /input-group -->
                 <div style="text-align: center; color: gray; ">
-                    <i> masa ujicoba</i>
+                    <i> masa uji coba</i>
                 </div>
             </div><!-- /.col-lg-6 -->
         </div><!-- /.row -->

@@ -39,10 +39,15 @@ class Shipper extends BaseShipper
      *
      * @return array
      */
-    static function options()
+    static function options($user_id = null)
     {
+        if (empty($user_id))
+        {
+            $user_id = Yii::$app->user->id;
+        }
+
         $query = static::find()
-            ->where(['user_id' => Yii::$app->user->id])
+            ->where(['user_id' => $user_id])
             ->all();
 
         return ArrayHelper::map($query, 'id', 'name');

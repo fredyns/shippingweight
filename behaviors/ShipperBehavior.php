@@ -22,7 +22,6 @@ use app\models\Shipper;
  */
 class ShipperBehavior extends AttributeBehavior
 {
-    public $userAttribute           = 'user_id';
     public $shipperAttribute        = 'shipper_id';
     public $shipperAddressAttribute = 'shipper_address';
     public $shipperEmailAttribute   = 'shipper_email';
@@ -64,8 +63,14 @@ class ShipperBehavior extends AttributeBehavior
         }
         else
         {
-            $user_id = (Yii::$app->user->identity->isAdmin) ?
-                ArrayHelper::getValue($this->owner, $this->userAttribute) : Yii::$app->user->id;
+            if ($this->owner->isNewRecord)
+            {
+                $user_id = Yii::$app->user->id;
+            }
+            else
+            {
+                $user_id = ArrayHelper::getValue($this->owner, 'created_by', 0);
+            }
 
             $model = new Shipper([
                 'user_id' => $user_id,

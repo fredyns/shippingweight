@@ -6,7 +6,7 @@ use \dmstr\bootstrap\Tabs;
 use yii\helpers\StringHelper;
 use app\models\Shipper;
 use yii\helpers\Url;
-use kartik\select2\Select2;
+use kartik\widgets\Select2;
 use kartik\depdrop\DepDrop;
 use yii\web\JsExpression;
 
@@ -35,79 +35,61 @@ use yii\web\JsExpression;
         <p>
 
             <?php
-            // input untuk admin
-            if (Yii::$app->user->identity->isAdmin == FALSE)
+            if (Yii::$app->user->identity->isAdmin)
             {
-                echo $form
-                    ->field($model, 'user_id')
-                    ->widget(Select2::classname(),
-                        [
-                        'initValueText' => ($model->userAccount) ? $model->userAccount->username : '-',
-                        'options'       => ['placeholder' => 'Search for a options ...'],
-                        'pluginOptions' => [
-                            'allowClear'         => true,
-                            'minimumInputLength' => 2,
-                            'language'           => [
-                                'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
-                            ],
-                            'ajax'               => [
-                                'url'      => Url::to(['/user-account/options']),
-                                'dataType' => 'json',
-                                'data'     => new JsExpression('function(params) { return {term:params.term}; }')
-                            ],
-                            'escapeMarkup'       => new JsExpression('function (markup) { return markup; }'),
-                            'templateResult'     => new JsExpression('function(selection) { return selection.text; }'),
-                            'templateSelection'  => new JsExpression('function(selection) { return selection.text; }'),
-                        ],
-                ]);
+                $userName = '-';
 
-                echo $form
-                    ->field($model, 'shipper_id')
-                    ->widget(DepDrop::classname(),
-                        [
-                        'data'           => [],
-                        'type'           => DepDrop::TYPE_SELECT2,
-                        'select2Options' => [
-                            'pluginOptions' => [
-                                'multiple'           => FALSE,
-                                'allowClear'         => TRUE,
-                                'tags'               => TRUE,
-                                'maximumInputLength' => 255, /* shipper name maxlength */
-                            ],
-                        ],
-                        'pluginOptions'  => [
-                            'initialize'  => TRUE,
-                            'placeholder' => 'Select or type options',
-                            'depends'     => ['containerform-user_id'],
-                            'url'         => Url::to([
-                                '/shipper/depdrop-options',
-                                'selected' => $model->shipper_id,
-                            ]),
-                            'loadingText' => 'Loading options ...',
-                        ],
-                ]);
-            }
-            // input untuk user EMKL
-            else
-            {
-                echo $form
-                    ->field($model, 'shipper_id')
-                    ->widget(Select2::classname(),
-                        [
-                        'data'          => Shipper::options(),
-                        'pluginOptions' =>
-                        [
-                            'placeholder'        => 'Select or type option',
-                            'multiple'           => FALSE,
-                            'allowClear'         => TRUE,
-                            'tags'               => TRUE,
-                            'maximumInputLength' => 255, /* option name maxlength */
-                        ],
-                ]);
+                if ($model->isNewRecord)
+                {
+                    $userName = Yii::$app->user->identity->username;
+                }
+                elseif ($model->shipper)
+                {
+                    if ($model->shipper->userAccount)
+                    {
+                        $userName = $model->shipper->userAccount->username;
+                    }
+                }
+
+                echo <<<HTML
+            <div class="form-group field-containerform-user">
+                <label class="control-label col-sm-3" for="containerform-user">
+                    User Name
+                </label>
+                <div class="col-sm-6">
+                    <input value="{$userName}" type="text" id="user" class="form-control" name="user" readonly="readonly" disabled="disabled">
+                </div>
+            </div>
+HTML;
             }
             ?>
 
+            <?php
+            $userScope_id = ($model->isNewRecord) ? Yii::$app->user->id : $model->created_by;
+
+            echo $form
+                ->field($model, 'shipper_id')
+                ->widget(Select2::classname(),
+                    [
+                    'data'          => Shipper::options($userScope_id),
+                    'pluginOptions' =>
+                    [
+                        'placeholder'        => 'Select or type option',
+                        'multiple'           => FALSE,
+                        'allowClear'         => TRUE,
+                        'tags'               => TRUE,
+                        'maximumInputLength' => 255, /* option name maxlength */
+                    ],
+            ]);
+            ?>
+
+            <?= $form->field($model, 'shipper_address')->textarea(['rows' => 6]) ?>
+
+            <?= $form->field($model, 'shipper_email')->textInput(['maxlength' => true]) ?>
+
             <?= $form->field($model, 'number')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model, 'booking_number')->textInput(['maxlength' => true]) ?>
 
         </p>
         <?php $this->endBlock(); ?>
@@ -115,7 +97,8 @@ use yii\web\JsExpression;
         <?=
         Tabs::widget([
             'encodeLabels' => false,
-            'items'        => [ [
+            'items'        => [
+                [
                     'label'   => Yii::t('app', StringHelper::basename('app\models\Container')),
                     'content' => $this->blocks['main'],
                     'active'  => true,
@@ -144,3 +127,47 @@ use yii\web\JsExpression;
 
 </div>
 
+<script>
+
+    function shipper_check()
+    {
+        shipperInput = $('#containerform-shipper_id').val();
+
+        if (shipperInput && isNaN(shipperInput))
+        {
+            shipperDetail_show();
+        } else
+        {
+            shipperDetail_hide();
+        }
+    }
+
+    function shipperDetail_show()
+    {
+        $('.field-containerform-shipper_address').show('blind');
+        $('.field-containerform-shipper_email').show('blind');
+    }
+
+    function shipperDetail_hide()
+    {
+        $('.field-containerform-shipper_address').hide('blind');
+        $('.field-containerform-shipper_email').hide('blind');
+    }
+
+</script>
+
+<?php
+$js = <<<JS
+
+	$(function () {
+        $('.field-containerform-shipper_address').hide();
+        $('.field-containerform-shipper_email').hide();
+
+        $('select').on('select2:select', function (evt) {
+            shipper_check();
+        });
+	});
+
+JS;
+
+$this->registerJs($js, \yii\web\View::POS_READY);

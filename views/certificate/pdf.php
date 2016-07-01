@@ -2,11 +2,13 @@
 
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
+use app\models\Certificate;
 
 $headerImageUrl  = Url::to(['/image/bki-logo-sm.jpg']);
 $headerQrcodeUrl = Url::to([
         '/certificate/qrcode',
-        'container_number' => ArrayHelper::getValue($model, 'container_number', 'xxxxx'),
+        'id'               => ArrayHelper::getValue($model, 'id', '0'),
+        'container_number' => ArrayHelper::getValue($model, 'number', 'xxxxx'),
     ]);
 ?>
 
@@ -41,7 +43,11 @@ $headerQrcodeUrl = Url::to([
         <div id="title">
             DECLARATION OF WEIGHT
         </div>
+        <div id="certificate_number">
+            <?= ArrayHelper::getValue($model, 'certificate_number', '0126-x-SMC/I054-L02/P9/'.date('y')); ?>
+        </div>
 
+        <br/>
         <br/>
 
         <div id="detail">
@@ -49,11 +55,20 @@ $headerQrcodeUrl = Url::to([
             <table border="0" cellspacing="5" cellpadding="3">
                 <tr>
                     <td>
+                        Booking Number
+                    </td>
+                    <td>: &nbsp;</td>
+                    <td>
+                        <?= ArrayHelper::getValue($model, 'booking_number', '............'); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         Container Number
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?= ArrayHelper::getValue($model, 'container_number', '............'); ?>
+                        <b><?= ArrayHelper::getValue($model, 'number', '............'); ?></b>
                     </td>
                 </tr>
                 <tr>
@@ -80,7 +95,23 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?= ArrayHelper::getValue($model, 'vgmGrossmass', '............'); ?> Kg.
+                        <?php
+                        if ($model instanceof Certificate)
+                        {
+                            if ($model->status == Certificate::STATUS_VERIFIED)
+                            {
+                                echo '<b>'.($model->grossmass * 1000).'</b> Kgm';
+                            }
+                            else
+                            {
+                                echo '<i>unverified</i>';
+                            }
+                        }
+                        else
+                        {
+                            echo ArrayHelper::getValue($model, 'grossmass', '............');
+                        }
+                        ?>
                     </td>
                 </tr>
                 <tr>
@@ -89,7 +120,28 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?= ArrayHelper::getValue($model, 'vgmDate', '............'); ?>
+                        <?php
+                        if ($model instanceof Certificate)
+                        {
+                            if ($model->status == Certificate::STATUS_VERIFIED)
+                            {
+                                if ($model->weighing_date)
+                                {
+                                    $date = DateTime::createFromFormat('Y-m-d', $model->weighing_date);
+
+                                    echo $date->format('F yS, Y');
+                                }
+                            }
+                            else
+                            {
+                                echo '<i>unverified</i>';
+                            }
+                        }
+                        else
+                        {
+                            echo ArrayHelper::getValue($model, 'weighing_date', '............');
+                        }
+                        ?>
                     </td>
                 </tr>
                 <tr>
@@ -105,16 +157,16 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?= ArrayHelper::getValue($model, 'shipperName', '............'); ?>
+                        <?= ArrayHelper::getValue($model, 'shipper.name', '............'); ?>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Company
+                        Address
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?= ArrayHelper::getValue($model, 'shipperCompany', '............'); ?>
+                        <?= ArrayHelper::getValue($model, 'shipper.address', '............'); ?>
                     </td>
                 </tr>
                 <tr>
@@ -123,7 +175,7 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?= ArrayHelper::getValue($model, 'shipperEmail', '............'); ?>
+                        <?= ArrayHelper::getValue($model, 'shipper.email', '............'); ?>
                     </td>
                 </tr>
                 <tr>
@@ -139,7 +191,7 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?= ArrayHelper::getValue($model, 'issuerName', 'BKI'); ?>
+                        Badan Klasifikasi Indonesia
                     </td>
                 </tr>
                 <tr>
@@ -182,13 +234,15 @@ $headerQrcodeUrl = Url::to([
                 </td>
                 <td width="30%" align="center">
                     <p align="center">
-                        Head of Branch Office
+                        Inspector
                     </p>
                     <br/>
                     <br/>
                     <br/>
                     <p align="center">
-                        S u d i b y o
+                        <u>Y o h a n i s</u>
+                        <br/>
+                        NIP: 69408-KI
                     </p>
                 </td>
             </tr>
@@ -205,11 +259,13 @@ $headerQrcodeUrl = Url::to([
                     BKI is not responsible for the cargo of the container
                 </li>
                 <li>
-                    BKI shall be free from all risk
+                    BKI shall be free from all risk and responsibilities
+                    including but not limited, the status/legality, condition and
+                    quality of the cargo inside the container
                 </li>
                 <li>
                     The gross mass declared on this document is
-                    the “verified Gross mass” as obtained by using method 2
+                    the “Verified Gross Mass” as obtained by using method 2
                 </li>
             </ol>
         </div>

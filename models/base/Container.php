@@ -14,12 +14,14 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $id
  * @property integer $shipper_id
  * @property string $number
+ * @property string $booking_number
  * @property string $status
  * @property integer $bill
  * @property double $grossmass
  * @property string $weighing_date
+ * @property integer $certificate_sequence
+ * @property string $certificate_number
  * @property string $certificate_file
- * @property integer $payment_by
  * @property integer $billed_by
  * @property integer $verified_by
  * @property integer $checked_by
@@ -82,11 +84,11 @@ abstract class Container extends \yii\db\ActiveRecord
     {
         return [
             [['shipper_id', 'number'], 'required'],
-            [['shipper_id', 'bill', 'payment_by', 'billed_by', 'verified_by', 'checked_by', 'sentOwner_by', 'sentShipper_by', 'billed_at', 'checked_at', 'verified_at', 'sentOwner_at', 'sentShipper_at'], 'integer'],
+            [['shipper_id', 'bill', 'certificate_sequence', 'billed_by', 'verified_by', 'checked_by', 'sentOwner_by', 'sentShipper_by', 'billed_at', 'checked_at', 'verified_at', 'sentOwner_at', 'sentShipper_at'], 'integer'],
             [['status', 'certificate_file'], 'string'],
             [['grossmass'], 'number'],
             [['weighing_date'], 'safe'],
-            [['number'], 'string', 'max' => 64],
+            [['number', 'booking_number', 'certificate_number'], 'string', 'max' => 64],
             [['shipper_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipper::className(), 'targetAttribute' => ['shipper_id' => 'id']],
             ['status', 'in', 'range' => [
                     self::STATUS_REGISTERED,
@@ -107,12 +109,14 @@ abstract class Container extends \yii\db\ActiveRecord
             'id' => 'ID',
             'shipper_id' => 'Shipper ID',
             'number' => 'Number',
+            'booking_number' => 'Booking Number',
             'status' => 'Status',
             'bill' => 'Bill',
             'grossmass' => 'Grossmass',
             'weighing_date' => 'Weighing Date',
+            'certificate_sequence' => 'Certificate Sequence',
+            'certificate_number' => 'Certificate Number',
             'certificate_file' => 'Certificate File',
-            'payment_by' => 'Payment By',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
             'billed_by' => 'Billed By',

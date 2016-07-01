@@ -3,7 +3,6 @@
 namespace app\models;
 
 use Yii;
-use \app\models\base\Certificate as BaseCertificate;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use dosamigos\qrcode\QrCode;
@@ -15,20 +14,8 @@ use dosamigos\qrcode\QrCode;
  * @property string $qrUrl
  * @property string $qrcode
  */
-class Certificate extends BaseCertificate
+class Certificate extends Container
 {
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return ArrayHelper::merge(parent::rules(),
-                [
-                [['container_number'], 'required'],
-                [['date'], 'date', 'format' => 'php:Y-m-d'],
-        ]);
-    }
 
     /**
      * generate URL to document printout
@@ -40,9 +27,9 @@ class Certificate extends BaseCertificate
         $url = [
             '/certificate/pdf',
             'id'               => $this->id,
-            'container_number' => $this->container_number,
+            'container_number' => $this->number,
             'grossmass'        => $this->grossmass,
-            'date'             => $this->date,
+            'weighing_date'    => $this->weighing_date,
         ];
 
         return Url::to($url);
@@ -59,8 +46,6 @@ class Certificate extends BaseCertificate
             '/certificate/qrcode',
             'id'               => $this->id,
             'container_number' => $this->container_number,
-            'grossmass'        => $this->grossmass,
-            'date'             => $this->date,
         ];
 
         return Url::to($url);
