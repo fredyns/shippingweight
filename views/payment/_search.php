@@ -21,15 +21,11 @@ use yii\widgets\ActiveForm;
 
 		<?= $form->field($model, 'customer_id') ?>
 
-		<?= $form->field($model, 'customer_name') ?>
-
-		<?= $form->field($model, 'customer_phone') ?>
-
 		<?= $form->field($model, 'container_list') ?>
 
-		<?php // echo $form->field($model, 'note') ?>
+		<?= $form->field($model, 'note') ?>
 
-		<?php // echo $form->field($model, 'subtotal') ?>
+		<?= $form->field($model, 'subtotal') ?>
 
 		<?php // echo $form->field($model, 'discount') ?>
 

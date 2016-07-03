@@ -13,8 +13,6 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property integer $id
  * @property integer $customer_id
- * @property string $customer_name
- * @property string $customer_phone
  * @property string $container_list
  * @property string $note
  * @property integer $subtotal
@@ -78,7 +76,7 @@ abstract class Payment extends \yii\db\ActiveRecord
         return [
             [['customer_id', 'subtotal', 'discount', 'total', 'paid_by', 'cancel_by', 'paid_at', 'cancel_at'], 'integer'],
             [['status'], 'string'],
-            [['customer_name', 'customer_phone', 'container_list', 'note'], 'string', 'max' => 255],
+            [['container_list', 'note'], 'string', 'max' => 255],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             ['status', 'in', 'range' => [
                     self::STATUS_BILLED,
@@ -97,8 +95,6 @@ abstract class Payment extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'customer_id' => 'Customer ID',
-            'customer_name' => 'Customer Name',
-            'customer_phone' => 'Customer Phone',
             'container_list' => 'Container List',
             'note' => 'Note',
             'subtotal' => 'Subtotal',

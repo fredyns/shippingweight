@@ -19,7 +19,7 @@ public function rules()
 {
 return [
 [['id', 'customer_id', 'subtotal', 'discount', 'total', 'created_by', 'updated_by', 'paid_by', 'cancel_by', 'created_at', 'updated_at', 'paid_at', 'cancel_at'], 'integer'],
-            [['customer_name', 'customer_phone', 'container_list', 'note', 'status'], 'safe'],
+            [['container_list', 'note', 'status'], 'safe'],
 ];
 }
 
@@ -71,9 +71,7 @@ $query->andFilterWhere([
             'cancel_at' => $this->cancel_at,
         ]);
 
-        $query->andFilterWhere(['like', 'customer_name', $this->customer_name])
-            ->andFilterWhere(['like', 'customer_phone', $this->customer_phone])
-            ->andFilterWhere(['like', 'container_list', $this->container_list])
+        $query->andFilterWhere(['like', 'container_list', $this->container_list])
             ->andFilterWhere(['like', 'note', $this->note])
             ->andFilterWhere(['like', 'status', $this->status]);
 
