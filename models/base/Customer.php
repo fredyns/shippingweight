@@ -59,8 +59,7 @@ abstract class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['id', 'user_id'], 'integer'],
+            [['user_id'], 'integer'],
             [['name', 'phone'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Profile::className(), 'targetAttribute' => ['user_id' => 'user_id']]
         ];
