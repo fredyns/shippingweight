@@ -16,6 +16,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $number
  * @property string $booking_number
  * @property string $status
+ * @property integer $payment_id
  * @property integer $bill
  * @property double $grossmass
  * @property string $weighing_date
@@ -38,6 +39,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $updated_at
  *
  * @property \app\models\Shipper $shipper
+ * @property \app\models\Payment $payment
  * @property string $aliasModel
  */
 abstract class Container extends \yii\db\ActiveRecord
@@ -84,12 +86,13 @@ abstract class Container extends \yii\db\ActiveRecord
     {
         return [
             [['shipper_id', 'number'], 'required'],
-            [['shipper_id', 'bill', 'certificate_sequence', 'billed_by', 'verified_by', 'checked_by', 'sentOwner_by', 'sentShipper_by', 'billed_at', 'checked_at', 'verified_at', 'sentOwner_at', 'sentShipper_at'], 'integer'],
+            [['shipper_id', 'payment_id', 'bill', 'certificate_sequence', 'billed_by', 'verified_by', 'checked_by', 'sentOwner_by', 'sentShipper_by', 'billed_at', 'checked_at', 'verified_at', 'sentOwner_at', 'sentShipper_at'], 'integer'],
             [['status', 'certificate_file'], 'string'],
             [['grossmass'], 'number'],
             [['weighing_date'], 'safe'],
             [['number', 'booking_number', 'certificate_number'], 'string', 'max' => 64],
             [['shipper_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipper::className(), 'targetAttribute' => ['shipper_id' => 'id']],
+            [['payment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Payment::className(), 'targetAttribute' => ['payment_id' => 'id']],
             ['status', 'in', 'range' => [
                     self::STATUS_REGISTERED,
                     self::STATUS_READY,
@@ -111,6 +114,7 @@ abstract class Container extends \yii\db\ActiveRecord
             'number' => 'Number',
             'booking_number' => 'Booking Number',
             'status' => 'Status',
+            'payment_id' => 'Payment ID',
             'bill' => 'Bill',
             'grossmass' => 'Grossmass',
             'weighing_date' => 'Weighing Date',
@@ -140,6 +144,14 @@ abstract class Container extends \yii\db\ActiveRecord
     public function getShipper()
     {
         return $this->hasOne(\app\models\Shipper::className(), ['id' => 'shipper_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPayment()
+    {
+        return $this->hasOne(\app\models\Payment::className(), ['id' => 'payment_id']);
     }
 
 
