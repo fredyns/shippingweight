@@ -13,6 +13,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property integer $id
  * @property string $name
+ * @property string $address
  * @property string $phone
  * @property integer $user_id
  * @property integer $created_by
@@ -59,6 +60,7 @@ abstract class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['address'], 'string'],
             [['user_id'], 'integer'],
             [['name', 'phone'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Profile::className(), 'targetAttribute' => ['user_id' => 'user_id']]
@@ -73,6 +75,7 @@ abstract class Customer extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
+            'address' => 'Address',
             'phone' => 'Phone',
             'user_id' => 'User ID',
             'created_by' => 'Created By',

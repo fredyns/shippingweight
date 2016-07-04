@@ -75,8 +75,8 @@ abstract class Payment extends \yii\db\ActiveRecord
     {
         return [
             [['customer_id', 'subtotal', 'discount', 'total', 'paid_by', 'cancel_by', 'paid_at', 'cancel_at'], 'integer'],
-            [['status'], 'string'],
-            [['container_list', 'note'], 'string', 'max' => 255],
+            [['note', 'status'], 'string'],
+            [['container_list'], 'string', 'max' => 255],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             ['status', 'in', 'range' => [
                     self::STATUS_BILLED,
