@@ -51,27 +51,29 @@ class TPKS
         $credentials = Yii::$app->params['tpks_username'].':'.Yii::$app->params['tpks_password'];
 
         curl_setopt($curl, CURLOPT_URL, $uri);
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
         curl_setopt($curl, CURLOPT_USERPWD, $credentials); //Your credentials goes here
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //IMP if the url has https and you don't want to verify source certificate
+        //curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //IMP if the url has https and you don't want to verify source certificate
 
-        $response = curl_exec($curl);
+        $rawResponse = curl_exec($curl);
 
         curl_close($curl);
 
-        if (empty($response))
+        if (empty($rawResponse))
         {
             throw new HttpException(404, 'TPKS server is not responding.');
         }
 
-        if (strpos($response, 'xml') !== FALSE)
+        if (strpos($rawResponse, 'xml') !== FALSE)
         {
-            $xml      = simplexml_load_string($response);
+            $xml      = simplexml_load_string($rawResponse);
             $response = json_encode($xml);
         }
-
-        $response = json_decode($response, TRUE);
+        else
+        {
+            $response = json_decode($rawResponse, TRUE);
+        }
 
         if (is_array($response) == FALSE)
         {
@@ -85,7 +87,7 @@ class TPKS
 
         if ($response['status'] == FALSE)
         {
-            $message = ArrayHelper::getValue($response, 'msg', 'Data not found.');
+            $message = 'TPKS: '.ArrayHelper::getValue($response, 'error', 'Data not found.');
 
             throw new HttpException(404, $message);
         }

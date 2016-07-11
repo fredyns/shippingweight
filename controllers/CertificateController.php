@@ -2,10 +2,13 @@
 
 namespace app\controllers;
 
+use DateTime;
+use yii\helpers\ArrayHelper;
 use kartik\mpdf\Pdf;
 use yii\web\Controller;
 use app\models\Certificate;
 use dosamigos\qrcode\QrCode;
+use app\libraries\TPKS;
 
 /**
  * This is the class for controller "CertificateController".
@@ -46,25 +49,11 @@ class CertificateController extends Controller
      */
     public function actionPdf($id = 0, $container_number = 0)
     {
-        $model = Certificate::findOne($id);
+        $viewing          = 0;
+        $container_number = str_replace('view', '', $container_number, $viewing);
+        $model            = $this->findVGM($id, $container_number);
 
-        if (empty($model))
-        {
-            $model = [
-                'id'             => '0',
-                'number'         => $container_number,
-                'booking_number' => '<i class="sample-text">booking number</i>',
-                'grossmass'      => '<i class="sample-text">mass</i>',
-                'weighing_date'  => '<i class="sample-text">date</i>',
-                'shipper'        => [
-                    'name'    => '<i class="sample-text">shipper name belong here</i>',
-                    'address' => '<i class="sample-text">shipper company belong here</i>',
-                    'email'   => '<i class="sample-text">shipper email belong here</i>',
-                ],
-            ];
-        }
-
-        if (strpos($container_number, 'view') !== FALSE)
+        if ($viewing)
         {
             return $this->render('pdf', ['model' => $model]);
         }
@@ -96,6 +85,76 @@ class CertificateController extends Controller
 
         // return the pdf output as per the destination setting
         return $pdf->render();
+    }
+
+    public function findVGM($id = null, $containerNumber = null)
+    {
+        $model = null;
+
+        if ($id)
+        {
+            $model = Certificate::findOne($id);
+        }
+        elseif ($containerNumber)
+        {
+            try
+            {
+                $vgm       = TPKS::container($containerNumber);
+                $model     = [
+                    'id'             => '0',
+                    'number'         => $containerNumber,
+                    'booking_number' => ArrayHelper::getValue(
+                        $vgm, 'JOB_ORDER_NO', '<i class="sample-text">booking number</i>'
+                    ),
+                    'grossmass'      => '<i class="sample-text">mass</i>',
+                    'weighing_date'  => '<i class="sample-text">date</i>',
+                    'shipper'        => [
+                        'name'    => '<i class="sample-text">shipper name belong here</i>',
+                        'address' => '<i class="sample-text">shipper company belong here</i>',
+                        'email'   => '<i class="sample-text">shipper email belong here</i>',
+                    ],
+                ];
+                $grossmass = ArrayHelper::getValue($vgm, 'GROSS_KG');
+                $verfTime  = ArrayHelper::getValue($vgm, 'GROSS_VERIFIED_TIME');
+
+                if ($grossmass)
+                {
+                    $model['grossmass'] = number_format($grossmass, 0, '.', ',').' KGM';
+                }
+
+                if ($verfTime)
+                {
+                    $date = DateTime::createFromFormat('d-m-Y H:i:s', $verfTime);
+
+                    if ($date)
+                    {
+                        $model['weighing_date'] = $date->format('M jS, Y');
+                    }
+                }
+            }
+            catch (Exception $exc)
+            {
+
+            }
+        }
+
+        if (!$model)
+        {
+            $model = [
+                'id'             => '0',
+                'number'         => $containerNumber,
+                'booking_number' => '<i class="sample-text">booking number</i>',
+                'grossmass'      => '<i class="sample-text">mass</i>',
+                'weighing_date'  => '<i class="sample-text">date</i>',
+                'shipper'        => [
+                    'name'    => '<i class="sample-text">shipper name belong here</i>',
+                    'address' => '<i class="sample-text">shipper company belong here</i>',
+                    'email'   => '<i class="sample-text">shipper email belong here</i>',
+                ],
+            ];
+        }
+
+        return $model;
     }
 
 }
