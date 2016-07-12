@@ -40,8 +40,6 @@ $certificateUrl = Url::to(['/certificate/pdf']);
     <br/>
     <br/>
 
-    <p><?= Yii::$app->name ?></p>
-
     <div class="body-content">
 
         <div class="row">

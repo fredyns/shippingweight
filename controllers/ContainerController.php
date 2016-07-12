@@ -3,10 +3,19 @@
 namespace app\controllers;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\HttpException;
 use app\models\Container;
+use app\models\Weighing;
 use app\models\form\ContainerForm;
+use app\libraries\TPKS;
+use yii\base\UserException;
+use yii\web\NotFoundHttpException;
+use yii\web\ServerErrorHttpException;
+use yii\web\UnprocessableEntityHttpException;
+use yii\web\UnauthorizedHttpException;
+use yii\web\GoneHttpException;
 
 /**
  * This is the class for controller "ContainerController".
@@ -27,6 +36,11 @@ class ContainerController extends \app\controllers\base\ContainerController
         $model = new ContainerForm();
 
         $model->setScenario('create');
+
+        /**
+         * selama trial status container "ready" agar langsung bisa cetak VGM
+         */
+        $model->status = Container::STATUS_READY;
 
         try
         {
@@ -64,7 +78,7 @@ class ContainerController extends \app\controllers\base\ContainerController
 
         if ($owned == FALSE && Yii::$app->user->identity->isAdmin == FALSE)
         {
-            throw new HttpException(404, 'This Container is not yours to update.');
+            throw new UnauthorizedHttpException('This Container is not yours to update.');
         }
 
         if ($model->status == Container::STATUS_VERIFIED)
@@ -202,7 +216,7 @@ class ContainerController extends \app\controllers\base\ContainerController
 
         if (Yii::$app->user->isGuest)
         {
-            throw new HttpException(404, 'You have to login.');
+            throw new UnauthorizedHttpException('You have to login.');
         }
 
         // buka data
@@ -214,26 +228,59 @@ class ContainerController extends \app\controllers\base\ContainerController
 
         if ($owned == FALSE && Yii::$app->user->identity->isAdmin == FALSE)
         {
-            throw new HttpException(404, 'This Container is not yours to check.');
+            throw new UnauthorizedHttpException('This Container is not yours to check.');
         }
 
         // cek status barang
 
         if ($model->status == Container::STATUS_REGISTERED)
         {
-            throw new HttpException(404, 'This Container is not yet paid.');
+            throw new UserException('This Container is not yet paid.');
         }
         elseif ($model->status == Container::STATUS_VERIFIED)
         {
-            throw new HttpException(404, 'This Container is already Verified.');
+            throw new GoneHttpException('This Container is already Verified.');
         }
         elseif ($model->status != Container::STATUS_READY)
         {
             throw new HttpException(404, 'This Container is not ready.');
         }
 
-        // tarik data
-        // olah data
+        try
+        {
+            $model = $this->findModel($id);
+
+            $model->checkVGM();
+        }
+        catch (\Exception $e)
+        {
+            $msg = (isset($e->errorInfo[2])) ? $e->errorInfo[2] : $e->getMessage();
+
+            \Yii::$app->getSession()->addFlash('error', $msg);
+
+            return $this->redirect(Url::previous());
+        }
+
+        // TODO: improve detection
+        $isPivot = strstr('$id', ',');
+
+        if ($isPivot == true)
+        {
+            return $this->redirect(Url::previous());
+        }
+        elseif (isset(\Yii::$app->session['__crudReturnUrl']) && \Yii::$app->session['__crudReturnUrl'] != '/')
+        {
+            Url::remember(null);
+
+            $url                                   = \Yii::$app->session['__crudReturnUrl'];
+            \Yii::$app->session['__crudReturnUrl'] = null;
+
+            return $this->redirect($url);
+        }
+        else
+        {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
     }
 
     protected function findForm($id)

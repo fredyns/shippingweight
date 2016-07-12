@@ -50,7 +50,7 @@ class ContainerForm extends Container
                 'whenClient' => "
                     function (attribute, value) {
                         shipperInput = $('#containerform-shipper_id').val();
-                        
+
                         return (shipperInput && isNaN(shipperInput));
                     }",
             ],

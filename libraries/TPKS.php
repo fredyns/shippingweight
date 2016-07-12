@@ -5,7 +5,10 @@ namespace app\libraries;
 use Yii;
 use DateTime;
 use yii\helpers\ArrayHelper;
-use yii\web\HttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\ServerErrorHttpException;
+use yii\web\UnprocessableEntityHttpException;
+use yii\base\UserException;
 
 /**
  * Description of TPKS
@@ -43,7 +46,7 @@ class TPKS
      *
      * @param string $uri
      * @return array
-     * @throws HttpException
+     * @throws \Exception
      */
     public static function curl($uri)
     {
@@ -62,7 +65,7 @@ class TPKS
 
         if (empty($rawResponse))
         {
-            throw new HttpException(404, 'TPKS server is not responding.');
+            throw new ServerErrorHttpException('TPKS server is not responding.');
         }
 
         if (strpos($rawResponse, 'xml') !== FALSE)
@@ -77,19 +80,19 @@ class TPKS
 
         if (is_array($response) == FALSE)
         {
-            throw new HttpException(404, 'Response error.');
+            throw new UnprocessableEntityHttpException('Response error.');
         }
 
         if (isset($response['status']) == FALSE)
         {
-            throw new HttpException(404, 'Response format error.');
+            throw new UnprocessableEntityHttpException('Response format error.');
         }
 
         if ($response['status'] == FALSE)
         {
             $message = 'TPKS: '.ArrayHelper::getValue($response, 'error', 'Data not found.');
 
-            throw new HttpException(404, $message);
+            throw new UserException($message);
         }
 
         return $response;
@@ -102,7 +105,7 @@ class TPKS
      * @param string $name
      * @param boolean $firstRow
      * @return array
-     * @throws HttpException
+     * @throws NotFoundHttpException
      */
     public static function getData($uri, $name, $firstRow = FALSE)
     {
@@ -115,7 +118,7 @@ class TPKS
         // cek listing
         if (empty($list) OR is_array($list) == FALSE)
         {
-            throw new HttpException(404, 'Data empty.');
+            throw new NotFoundHttpException(404, 'Data empty.');
         }
 
         // returning first row only
@@ -134,7 +137,6 @@ class TPKS
      * @param DateTime $from
      * @param DateTime $to
      * @return array
-     * @throws HttpException
      */
     public static function containerList(DateTime $from, DateTime $to)
     {
@@ -154,7 +156,6 @@ class TPKS
      *
      * @param string $number
      * @return array
-     * @throws HttpException
      */
     public static function container($number)
     {

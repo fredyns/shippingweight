@@ -11,6 +11,12 @@ use \app\models\base\CertificateCounter as BaseCertificateCounter;
 class CertificateCounter extends BaseCertificateCounter
 {
 
+    /**
+     * generate new certificate sequence
+     * save last sequence number
+     *
+     * @return integer
+     */
     public static function newSequence()
     {
         $year  = date('Y');
@@ -31,6 +37,28 @@ class CertificateCounter extends BaseCertificateCounter
         $model->save(FALSE);
 
         return $model->published;
+    }
+
+    /**
+     * generate new certificate number
+     *
+     * @return integer
+     */
+    public static function newNumber($sequence = null)
+    {
+        /*
+         * format: '0126-x-SMC/I054-L02/P9/'.date('y')
+         */
+
+        if (empty($sequence))
+        {
+            $sequence = static::newSequence();
+        }
+
+        $year   = date('y');
+        $number = "0126-{$sequence}-SMC/I054-L02/P9/{$year}";
+
+        return $number;
     }
 
 }
