@@ -4,18 +4,13 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use app\models\Certificate;
 
-$headerImageUrl  = Url::to(['/image/bki-logo-sm.jpg']);
-$headerQrcodeUrl = Url::to([
-        '/certificate/qrcode',
-        'id'               => ArrayHelper::getValue($model, 'id', '0'),
-        'container_number' => ArrayHelper::getValue($model, 'number', 'xxxxx'),
-    ]);
+$headerImageUrl = Url::to(['/image/bki-logo-sm.jpg']);
 ?>
 
 <div id="page-1">
 
     <div id="qrcode">
-        <img src="<?= $headerQrcodeUrl; ?>" width="120px"/>
+        <img src="<?= $model->qrUrl; ?>" width="135px"/>
     </div>
 
     <div class="header">
@@ -44,7 +39,7 @@ $headerQrcodeUrl = Url::to([
             DECLARATION OF WEIGHT
         </div>
         <div id="certificate_number">
-            <?= ArrayHelper::getValue($model, 'certificate_number', '0126-x-SMC/I054-L02/P9/'.date('y')); ?>
+            <?= ($model->status == Certificate::STATUS_VERIFIED) ? $model->certificate_number : '<i>Pending</i>'; ?>
         </div>
 
         <br/>
@@ -59,7 +54,7 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?= ArrayHelper::getValue($model, 'booking_number', '............'); ?>
+                        <?= $model->booking_number; ?>
                     </td>
                 </tr>
                 <tr>
@@ -68,7 +63,7 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <b><?= ArrayHelper::getValue($model, 'number', '............'); ?></b>
+                        <b><?= $model->number; ?></b>
                     </td>
                 </tr>
                 <tr>
@@ -96,20 +91,17 @@ $headerQrcodeUrl = Url::to([
                     <td>: &nbsp;</td>
                     <td>
                         <?php
-                        if ($model instanceof Certificate)
+                        if ($model->status == Certificate::STATUS_VERIFIED)
                         {
-                            if ($model->status == Certificate::STATUS_VERIFIED)
-                            {
-                                echo '<b>'.($model->grossmass * 1000).'</b> Kgm';
-                            }
-                            else
-                            {
-                                echo '<i>unverified</i>';
-                            }
+                            echo '<b>'.$model->grossmass.'</b> KGM';
+                        }
+                        elseif ($model->grossmass)
+                        {
+                            echo '<i>pending</i>';
                         }
                         else
                         {
-                            echo ArrayHelper::getValue($model, 'grossmass', '............');
+                            echo '<i>unverified</i>';
                         }
                         ?>
                     </td>
@@ -121,25 +113,18 @@ $headerQrcodeUrl = Url::to([
                     <td>: &nbsp;</td>
                     <td>
                         <?php
-                        if ($model instanceof Certificate)
+                        if ($model->status == Certificate::STATUS_VERIFIED)
                         {
-                            if ($model->status == Certificate::STATUS_VERIFIED)
+                            if ($model->weighing_date)
                             {
-                                if ($model->weighing_date)
-                                {
-                                    $date = DateTime::createFromFormat('Y-m-d', $model->weighing_date);
+                                $date = DateTime::createFromFormat('Y-m-d', $model->weighing_date);
 
-                                    echo $date->format('F yS, Y');
-                                }
-                            }
-                            else
-                            {
-                                echo '<i>unverified</i>';
+                                echo $date->format('F yS, Y');
                             }
                         }
                         else
                         {
-                            echo ArrayHelper::getValue($model, 'weighing_date', '............');
+                            echo '<i>unverified</i>';
                         }
                         ?>
                     </td>
@@ -157,7 +142,7 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?= ArrayHelper::getValue($model, 'shipper.name', '............'); ?>
+                        <?= ArrayHelper::getValue($model, 'shipper.name', '-'); ?>
                     </td>
                 </tr>
                 <tr>
@@ -166,7 +151,7 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?= ArrayHelper::getValue($model, 'shipper.address', '............'); ?>
+                        <?= ArrayHelper::getValue($model, 'shipper.address', '-'); ?>
                     </td>
                 </tr>
                 <tr>
@@ -175,7 +160,7 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?= ArrayHelper::getValue($model, 'shipper.email', '............'); ?>
+                        <?= ArrayHelper::getValue($model, 'shipper.email', '-'); ?>
                     </td>
                 </tr>
                 <tr>

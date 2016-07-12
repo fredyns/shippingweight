@@ -32,7 +32,7 @@ class Certificate extends Container
             'weighing_date'    => $this->weighing_date,
         ];
 
-        return Url::to($url);
+        return Url::to($url, TRUE);
     }
 
     /**
@@ -45,7 +45,7 @@ class Certificate extends Container
         $url = [
             '/certificate/qrcode',
             'id'               => $this->id,
-            'container_number' => $this->container_number,
+            'container_number' => $this->number,
         ];
 
         return Url::to($url);

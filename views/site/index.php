@@ -6,7 +6,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 
 $this->title    = 'BKIVGM.com';
-$certificateUrl = Url::to(['/certificate/pdf']);
+$certificateUrl = Url::to(['/certificate/pdf-sample']);
 ?>
 <div class="site-index">
 

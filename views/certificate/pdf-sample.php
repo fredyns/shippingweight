@@ -27,7 +27,9 @@ $headerQrcodeUrl = Url::to([
                 </td>
                 <td>
                     <div id="header-title" style="">
-                        PT. BIRO KLASIFIKASI INDONESIA (Persero)
+                        <b>
+                            PT. BIRO KLASIFIKASI INDONESIA (Persero)
+                        </b>
                     </div>
                 </td>
             </tr>
@@ -41,10 +43,12 @@ $headerQrcodeUrl = Url::to([
         <br/>
 
         <div id="title">
-            DECLARATION OF WEIGHT
+            <b>
+                DECLARATION OF WEIGHT
+            </b>
         </div>
         <div id="certificate_number">
-            <?= ArrayHelper::getValue($model, 'certificate_number', '0126-x-SMC/I054-L02/P9/'.date('y')); ?>
+            ( S A M P L E &nbsp; &nbsp; D O C U M E N T )
         </div>
 
         <br/>
