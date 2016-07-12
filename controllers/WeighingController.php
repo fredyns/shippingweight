@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 
 /**
  * This is the class for controller "WeighingController".
@@ -10,14 +11,22 @@ use Yii;
 class WeighingController extends \app\controllers\base\WeighingController
 {
 
-    public function init()
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
     {
-        if (Yii::$app->user->identity->isAdmin == FALSE)
-        {
-            throw new HttpException(404, 'Who are you?');
-        }
-
-        return parent::init();
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
+        ];
     }
 
 }

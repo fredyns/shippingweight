@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use yii\filters\AccessControl;
 use app\models\Customer;
 use yii\db\Query;
 
@@ -10,6 +11,24 @@ use yii\db\Query;
  */
 class CustomerController extends \app\controllers\base\CustomerController
 {
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
+        ];
+    }
 
     /**
      * provide data for select2 options

@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\HttpException;
@@ -26,14 +27,19 @@ class ContainerController extends \app\controllers\base\ContainerController
     /**
      * @inheritdoc
      */
-    public function actionIndex()
+    public function behaviors()
     {
-        if (Yii::$app->user->isGuest)
-        {
-            throw new HttpException(404, 'You have to login.');
-        }
-
-        return parent::actionIndex();
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -41,11 +47,6 @@ class ContainerController extends \app\controllers\base\ContainerController
      */
     public function actionCreate()
     {
-        if (Yii::$app->user->isGuest)
-        {
-            throw new HttpException(404, 'You have to login.');
-        }
-
         $model = new ContainerForm();
 
         $model->setScenario('create');
@@ -81,11 +82,6 @@ class ContainerController extends \app\controllers\base\ContainerController
      */
     public function actionUpdate($id)
     {
-        if (Yii::$app->user->isGuest)
-        {
-            throw new HttpException(404, 'You have to login.');
-        }
-
         $model = $this->findForm($id);
         $owned = ($model->shipper->user_id == Yii::$app->user->id);
 
@@ -188,11 +184,6 @@ class ContainerController extends \app\controllers\base\ContainerController
      */
     public function actionPayment($id)
     {
-        if (Yii::$app->user->isGuest)
-        {
-            throw new HttpException(404, 'You have to login.');
-        }
-
         $model        = $this->findForm($id);
         $permit       = (Yii::$app->user->identity->isAdmin);
         $registerOnly = ($model->status == Container::STATUS_REGISTERED);
@@ -225,13 +216,6 @@ class ContainerController extends \app\controllers\base\ContainerController
 
     public function actionCheck($id)
     {
-        //cek login
-
-        if (Yii::$app->user->isGuest)
-        {
-            throw new UnauthorizedHttpException('You have to login.');
-        }
-
         // buka data
 
         $model = $this->findModel($id);

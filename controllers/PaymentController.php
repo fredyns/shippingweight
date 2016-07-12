@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 use app\models\form\PaymentForm;
 use app\models\search\PaymentContainer;
 
@@ -15,13 +16,26 @@ class PaymentController extends \app\controllers\base\PaymentController
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function actionCreate()
     {
-        if (Yii::$app->user->isGuest)
-        {
-            throw new HttpException(404, 'You have to login.');
-        }
-
         if (Yii::$app->user->identity->isAdmin == FALSE)
         {
             throw new HttpException(404, 'You are not permitted.');
@@ -85,11 +99,6 @@ class PaymentController extends \app\controllers\base\PaymentController
      */
     public function actionUpdate($id)
     {
-        if (Yii::$app->user->isGuest)
-        {
-            throw new HttpException(404, 'You have to login.');
-        }
-
         if (Yii::$app->user->identity->isAdmin == FALSE)
         {
             throw new HttpException(404, 'You are not permitted.');
@@ -114,11 +123,6 @@ class PaymentController extends \app\controllers\base\PaymentController
      */
     public function actionDelete($id)
     {
-        if (Yii::$app->user->isGuest)
-        {
-            throw new HttpException(404, 'You have to login.');
-        }
-
         $permit = (Yii::$app->user->identity->isAdmin);
 
         if ($permit == FALSE)

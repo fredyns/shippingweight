@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\HttpException;
 use app\models\form\ShipperForm;
@@ -17,15 +18,26 @@ class ShipperController extends \app\controllers\base\ShipperController
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function actionCreate()
     {
-        $login = (Yii::$app->user->isGuest == FALSE);
-
-        if ($login == FALSE)
-        {
-            throw new HttpException(404, 'You have to login.');
-        }
-
         $model = new ShipperForm();
 
         if (Yii::$app->user->identity->isAdmin == FALSE)
@@ -58,13 +70,6 @@ class ShipperController extends \app\controllers\base\ShipperController
      */
     public function actionUpdate($id)
     {
-        $login = (Yii::$app->user->isGuest == FALSE);
-
-        if ($login == FALSE)
-        {
-            throw new HttpException(404, 'You have to login.');
-        }
-
         $model = $this->findForm($id);
         $owned = ($model->user_id == Yii::$app->user->id);
 
