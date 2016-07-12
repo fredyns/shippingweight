@@ -47,7 +47,7 @@ class CertificateController extends Controller
      *
      * @return string
      */
-    public function actionPdf($id = 0, $container_number = 0)
+    public function actionPdf($id = null, $container_number = null)
     {
         $viewing          = 0;
         $container_number = str_replace('view', '', $container_number, $viewing);
@@ -60,6 +60,46 @@ class CertificateController extends Controller
 
         $content = $this->renderPartial('pdf', ['model' => $model]);
         $css     = $this->renderPartial('pdf.css');
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+
+        // setup kartik\mpdf\Pdf component
+        $pdf = new Pdf([
+            'options'         => ['title' => 'VGM Certificate by BKI'],
+            'filename'        => 'vgm-'.$container_number.'.pdf',
+            // set to use core fonts only
+            'mode'            => Pdf::MODE_CORE,
+            // A4 paper format
+            'format'          => Pdf::FORMAT_A4,
+            // portrait orientation
+            'orientation'     => Pdf::ORIENT_PORTRAIT,
+            // stream to browser inline
+            'destination'     => Pdf::DEST_BROWSER,
+            // your html content input
+            'content'         => $content,
+            'cssInline'       => $css,
+            'marginTop'       => 10,
+            'defaultFontSize' => 12,
+            'marginFooter'    => 15,
+        ]);
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
+    }
+
+    public function actionPdfSample($container_number = 0)
+    {
+        $viewing          = 0;
+        $container_number = str_replace('view', '', $container_number, $viewing);
+        $model            = $this->findVGM(null, $container_number);
+
+        if ($viewing)
+        {
+            return $this->render('pdf', ['model' => $model]);
+        }
+
+        $content = $this->renderPartial('pdf-sample', ['model' => $model]);
+        $css     = $this->renderPartial('pdf-sample.css');
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
 

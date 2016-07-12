@@ -84,26 +84,32 @@ class ContainerMenu extends \yii\jui\Widget
             if ($permit)
             {
                 echo Html::a(
-                    '<span class="glyphicon glyphicon-print"></span> Print',
+                    '<span class="glyphicon glyphicon-print"></span> Print VGM',
                     [
-                    '/container/print',
-                    'id' => $this->model->id,
-                    ], [
-                    'class' => 'btn btn-success',
+                    '/certificate/pdf',
+                    'id'               => $this->model->id,
+                    'container_number' => $this->model->number,
+                    ],
+                    [
+                    'class'  => 'btn btn-success',
+                    'title'  => 'cetak sertifikat VGM',
+                    'target' => '_blank',
                     ]
                 )
                 .'&nbsp;';
 
-                echo Html::a(
-                    '<span class="glyphicon glyphicon-send"></span> Send',
-                    [
-                    '/container/send',
-                    'id' => $this->model->id,
-                    ], [
-                    'class' => 'btn btn-info',
-                    ]
-                )
-                .'&nbsp;';
+                /* /
+                  echo Html::a(
+                  '<span class="glyphicon glyphicon-send"></span> Send VGM',
+                  [
+                  '/container/send',
+                  'id' => $this->model->id,
+                  ], [
+                  'class' => 'btn btn-info',
+                  ]
+                  )
+                  .'&nbsp;';
+                  // */
             }
             else
             {
