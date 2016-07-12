@@ -26,6 +26,19 @@ class ContainerController extends \app\controllers\base\ContainerController
     /**
      * @inheritdoc
      */
+    public function actionIndex()
+    {
+        if (Yii::$app->user->isGuest)
+        {
+            throw new HttpException(404, 'You have to login.');
+        }
+
+        return parent::actionIndex();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function actionCreate()
     {
         if (Yii::$app->user->isGuest)
