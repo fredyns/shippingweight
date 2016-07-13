@@ -4,6 +4,10 @@
     footer: html_footer_container;
 }
 
+td {
+    vertical-align: top;
+}
+
 #qrcode {
     width: 120px;
     height: 120px;

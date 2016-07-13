@@ -110,7 +110,7 @@ AppAsset::register($this);
 
         <footer class="footer">
             <div class="container">
-                <p class="pull-left">Badan Klasifikasi Indonesia <?= date('Y') ?></p>
+                <p class="pull-left">Biro Klasifikasi Indonesia <?= date('Y') ?></p>
 
                 <!--
                 <p class="pull-right"><?= Yii::powered() ?></p>

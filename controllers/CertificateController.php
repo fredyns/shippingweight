@@ -155,7 +155,7 @@ class CertificateController extends Controller
 
         if ($viewing)
         {
-            return $this->render('pdf', ['model' => $model]);
+            return $this->render('pdf-sample', ['model' => $model]);
         }
 
         $content = $this->renderPartial('pdf-sample', ['model' => $model]);
@@ -228,7 +228,7 @@ class CertificateController extends Controller
 
                     if ($date)
                     {
-                        $model['weighing_date'] = $date->format('M jS, Y');
+                        $model['weighing_date'] = $date->format('M d, Y');
                     }
                 }
             }

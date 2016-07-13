@@ -13,7 +13,7 @@ $certificateUrl = Url::to(['/certificate/pdf-sample']);
     <div class="jumbotron">
         <h1><b>BKI VGM</b></h1>
 
-        <p class="lead">Verified Gross Mass oleh Badan Klasifikasi Indonesia</p>
+        <p class="lead">Verified Gross Mass oleh Biro Klasifikasi Indonesia</p>
 
     </div>
 

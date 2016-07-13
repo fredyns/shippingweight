@@ -90,7 +90,7 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        Method 2
+                        Method 1
                     </td>
                 </tr>
                 <tr>
@@ -133,7 +133,7 @@ $headerQrcodeUrl = Url::to([
                                 {
                                     $date = DateTime::createFromFormat('Y-m-d', $model->weighing_date);
 
-                                    echo $date->format('F yS, Y');
+                                    echo $date->format('F d----, Y');
                                 }
                             }
                             else
@@ -146,6 +146,16 @@ $headerQrcodeUrl = Url::to([
                             echo ArrayHelper::getValue($model, 'weighing_date', '............');
                         }
                         ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        References
+                    </td>
+                    <td>: &nbsp;</td>
+                    <td>
+                        - IMO SOLAS 1972 Regulation VI/2<br/>
+                        - Director General of Sea Transportation Ind., Reg. Hk.103/2/4/DTP2_16
                     </td>
                 </tr>
                 <tr>
@@ -195,7 +205,7 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        Badan Klasifikasi Indonesia
+                        Biro Klasifikasi Indonesia
                     </td>
                 </tr>
                 <tr>
@@ -246,7 +256,7 @@ $headerQrcodeUrl = Url::to([
                     <p align="center">
                         <u>Y o h a n i s</u>
                         <br/>
-                        NIP: 69408-KI
+                        NUP: 69408-KI
                     </p>
                 </td>
             </tr>
@@ -269,7 +279,7 @@ $headerQrcodeUrl = Url::to([
                 </li>
                 <li>
                     The gross mass declared on this document is
-                    the “Verified Gross Mass” as obtained by using method 2
+                    the “Verified Gross Mass” as obtained by using method 1
                 </li>
             </ol>
         </div>
