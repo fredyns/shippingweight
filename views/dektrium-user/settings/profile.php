@@ -33,32 +33,39 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="panel-body">
                 <?php
                 $form                          = \yii\widgets\ActiveForm::begin([
-                        'id'                     => 'profile-form',
-                        'options'                => ['class' => 'form-horizontal'],
-                        'fieldConfig'            => [
+                        'id'                   => 'profile-form',
+                        'options'              => ['class' => 'form-horizontal'],
+                        'fieldConfig'          => [
                             'template'     => "{label}\n<div class=\"col-lg-9\">{input}</div>\n<div class=\"col-sm-offset-3 col-lg-9\">{error}\n{hint}</div>",
                             'labelOptions' => ['class' => 'col-lg-3 control-label'],
                         ],
-                        'enableAjaxValidation'   => true,
-                        'enableClientValidation' => false,
-                        'validateOnBlur'         => false,
+                        'enableAjaxValidation' => true,
+                        //'enableClientValidation' => false,
+                        //'validateOnBlur'       => false,
                 ]);
                 ?>
 
                 <?= $form->field($model, 'name') ?>
 
+                <?= $form->field($model, 'location') ?>
+
+                <?= $form->field($model, 'npwp') ?>
+
+                <?= $form->field($model, 'cp') ?>
+
+                <?= $form->field($model, 'phone') ?>
+
                 <?= $form->field($model, 'public_email') ?>
 
                 <?= $form->field($model, 'website') ?>
 
-                <?= $form->field($model, 'location') ?>
-
                 <?=
-                $form->field($model, 'gravatar_email')->hint(\yii\helpers\Html::a(Yii::t('user',
-                            'Change your avatar at Gravatar.com'), 'http://gravatar.com'))
+                    $form
+                    ->field($model, 'gravatar_email')
+                    ->hint(
+                        \yii\helpers\Html::a(Yii::t('user', 'Change your avatar at Gravatar.com'), 'http://gravatar.com')
+                    )
                 ?>
-
-                <?= $form->field($model, 'bio')->textarea() ?>
 
                 <div class="form-group">
                     <div class="col-lg-offset-3 col-lg-9">

@@ -16,6 +16,9 @@ use app\behaviors\ShipperBehavior;
 class ContainerForm extends Container
 {
     public $shipper_address;
+    public $shipper_npwp;
+    public $shipper_cp;
+    public $shipper_phone;
     public $shipper_email;
 
     /**
@@ -41,7 +44,7 @@ class ContainerForm extends Container
             /* required */
             [['shipper_id', 'number', 'booking_number'], 'required'],
             [
-                ['shipper_address', 'shipper_email'],
+                ['shipper_address', 'shipper_npwp', 'shipper_cp', 'shipper_phone', 'shipper_email'],
                 'required',
                 'when' => function ($model, $attribute)
             {
@@ -60,7 +63,7 @@ class ContainerForm extends Container
             [['status', 'certificate_file', 'shipper_address', 'shipper_email'], 'string'],
             [['grossmass'], 'number'],
             [['weighing_date'], 'date', 'format' => 'php:Y-m-d'],
-            [['number'], 'string', 'max' => 64],
+            [['number', 'shipper_npwp'], 'string', 'max' => 64],
             [
                 'shipper_id',
                 'string',
@@ -71,7 +74,7 @@ class ContainerForm extends Container
                 },
             ],
             ['shipper_email', 'email'],
-            [['shipper_email'], 'string', 'max' => 255],
+            [['shipper_cp', 'shipper_phone', 'shipper_email'], 'string', 'max' => 255],
             /* value limitation */
             ['status', 'in', 'range' => [
                     static::STATUS_REGISTERED,
@@ -109,12 +112,47 @@ class ContainerForm extends Container
     /**
      * @inheritdoc
      */
+    public function attributeLabels()
+    {
+        return ArrayHelper::merge(
+                parent::attributeLabels(),
+                [
+                'shipper_address' => 'Shipper Address',
+                'shipper_npwp'    => 'Shipper NPWP',
+                'shipper_cp'      => 'Shipper Contact Person',
+                'shipper_phone'   => 'Shipper Phone',
+                'shipper_email'   => 'Shipper Email',
+                ]
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function scenarios()
     {
         return ArrayHelper::merge(parent::scenarios(),
                 [
-                'create'  => ['shipper_id', 'shipper_address', 'shipper_email', 'booking_number', 'number'],
-                'update'  => ['shipper_id', 'shipper_address', 'shipper_email', 'booking_number', 'number'],
+                'create'  => [
+                    'shipper_id',
+                    'shipper_address',
+                    'shipper_npwp',
+                    'shipper_cp',
+                    'shipper_phone',
+                    'shipper_email',
+                    'booking_number',
+                    'number',
+                ],
+                'update'  => [
+                    'shipper_id',
+                    'shipper_address',
+                    'shipper_npwp',
+                    'shipper_cp',
+                    'shipper_phone',
+                    'shipper_email',
+                    'booking_number',
+                    'number',
+                ],
                 'payment' => ['bill'],
         ]);
     }

@@ -21,6 +21,12 @@ use yii\web\JsExpression;
     <?php
     $form = ActiveForm::begin([
             'id'                     => 'Shipper',
+            'options'                => ['class' => 'form-horizontal'],
+            'fieldConfig'            => [
+                'template'     => "{label}\n<div class=\"col-lg-9\">{input}</div>\n<div class=\"col-sm-offset-3 col-lg-9\">{error}\n{hint}</div>",
+                'labelOptions' => ['class' => 'col-lg-3 control-label'],
+                'hintOptions'  => ['class' => 'col-lg-9'],
+            ],
             'layout'                 => 'horizontal',
             'enableClientValidation' => true,
             'errorSummaryCssClass'   => 'error-summary alert alert-error'
@@ -64,6 +70,8 @@ use yii\web\JsExpression;
             <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'address')->textarea(['rows' => 6]) ?>
+
+            <?= $form->field($model, 'npwp')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'cp')->textInput(['maxlength' => true]) ?>
 

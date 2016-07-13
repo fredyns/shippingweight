@@ -62,7 +62,8 @@ $config  = [
             'enableUnconfirmedLogin' => TRUE,
             'admins'                 => ['admin', 'fredy.ns'],
             'modelMap'               => [
-                'User' => 'app\models\User',
+                'User'    => 'app\models\User',
+                'Profile' => 'app\models\Profile',
             ],
             'controllerMap'          => [
                 'registration' => [

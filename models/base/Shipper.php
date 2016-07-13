@@ -15,6 +15,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $user_id
  * @property string $name
  * @property string $address
+ * @property string $npwp
  * @property string $cp
  * @property string $phone
  * @property string $email
@@ -65,6 +66,7 @@ abstract class Shipper extends \yii\db\ActiveRecord
             [['user_id'], 'integer'],
             [['address'], 'string'],
             [['name', 'cp', 'phone', 'email'], 'string', 'max' => 255],
+            [['npwp'], 'string', 'max' => 64],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Profile::className(), 'targetAttribute' => ['user_id' => 'user_id']]
         ];
     }
@@ -79,6 +81,7 @@ abstract class Shipper extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'name' => 'Name',
             'address' => 'Address',
+            'npwp' => 'Npwp',
             'cp' => 'Cp',
             'phone' => 'Phone',
             'email' => 'Email',

@@ -17,6 +17,20 @@ class Shipper extends BaseShipper
     /**
      * @inheritdoc
      */
+    public function rules()
+    {
+
+        return ArrayHelper::merge(
+                parent::rules(),
+                [
+                [['name', 'address', 'npwp', 'cp', 'phone', 'email'], 'required'],
+                ]
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function attributeLabels()
     {
         return [
@@ -24,7 +38,8 @@ class Shipper extends BaseShipper
             'user_id'    => 'User',
             'name'       => 'Name',
             'address'    => 'Address',
-            'cp'         => 'CP',
+            'npwp'       => 'NPWP',
+            'cp'         => 'Contact Person',
             'phone'      => 'Phone',
             'email'      => 'Email',
             'created_by' => 'Created By',

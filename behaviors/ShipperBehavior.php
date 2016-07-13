@@ -24,6 +24,9 @@ class ShipperBehavior extends AttributeBehavior
 {
     public $shipperAttribute        = 'shipper_id';
     public $shipperAddressAttribute = 'shipper_address';
+    public $shipperNpwpAttribute    = 'shipper_npwp';
+    public $shipperCpAttribute      = 'shipper_cp';
+    public $shipperPhoneAttribute   = 'shipper_phone';
     public $shipperEmailAttribute   = 'shipper_email';
     public $value;
 
@@ -76,6 +79,9 @@ class ShipperBehavior extends AttributeBehavior
                 'user_id' => $user_id,
                 'name'    => $value,
                 'address' => ArrayHelper::getValue($this->owner, $this->shipperAddressAttribute),
+                'npwp'    => ArrayHelper::getValue($this->owner, $this->shipperNpwpAttribute),
+                'cp'      => ArrayHelper::getValue($this->owner, $this->shipperCpAttribute),
+                'phone'   => ArrayHelper::getValue($this->owner, $this->shipperPhoneAttribute),
                 'email'   => ArrayHelper::getValue($this->owner, $this->shipperEmailAttribute),
             ]);
 

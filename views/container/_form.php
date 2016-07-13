@@ -17,11 +17,23 @@ use yii\web\JsExpression;
  */
 ?>
 
+<style>
+    .greynote {
+        color: grey;
+    }
+</style>
+
 <div class="container-form">
 
     <?php
     $form = ActiveForm::begin([
             'id'                     => 'Container',
+            'options'                => ['class' => 'form-horizontal'],
+            'fieldConfig'            => [
+                'template'     => "{label}\n<div class=\"col-lg-9\">{input}</div>\n<div class=\"col-sm-offset-3 col-lg-9\">{error}\n{hint}</div>",
+                'labelOptions' => ['class' => 'col-lg-3 control-label'],
+                'hintOptions'  => ['class' => 'col-lg-9'],
+            ],
             'layout'                 => 'horizontal',
             'enableClientValidation' => true,
             'errorSummaryCssClass'   => 'error-summary alert alert-error'
@@ -30,7 +42,8 @@ use yii\web\JsExpression;
     ?>
 
     <div class="">
-        <?php $this->beginBlock('main'); ?>
+
+        <?php $this->beginBlock('shipper'); ?>
 
         <p>
 
@@ -83,9 +96,27 @@ HTML;
             ]);
             ?>
 
-            <?= $form->field($model, 'shipper_address')->textarea(['rows' => 6]) ?>
+            <?=
+                $form
+                ->field($model, 'shipper_address')
+                ->textarea(['rows' => 6])
+                ->hint('<i class="greynote">*sesuai yang tertera di NPWP</i>')
+            ?>
+
+            <?= $form->field($model, 'shipper_npwp')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model, 'shipper_cp')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model, 'shipper_phone')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'shipper_email')->textInput(['maxlength' => true]) ?>
+
+        </p>
+        <?php $this->endBlock(); ?>
+
+        <?php $this->beginBlock('container'); ?>
+
+        <p>
 
             <?= $form->field($model, 'number')->textInput(['maxlength' => true]) ?>
 
@@ -99,8 +130,22 @@ HTML;
             'encodeLabels' => false,
             'items'        => [
                 [
-                    'label'   => Yii::t('app', StringHelper::basename('app\models\Container')),
-                    'content' => $this->blocks['main'],
+                    'label'   => 'Shipper',
+                    'content' => $this->blocks['shipper'],
+                    'active'  => true,
+                ],
+            ],
+        ]);
+        ?>
+        <hr/>
+
+        <?=
+        Tabs::widget([
+            'encodeLabels' => false,
+            'items'        => [
+                [
+                    'label'   => 'Container',
+                    'content' => $this->blocks['container'],
                     'active'  => true,
                 ],
             ],
@@ -145,12 +190,18 @@ HTML;
     function shipperDetail_show()
     {
         $('.field-containerform-shipper_address').show('blind');
+        $('.field-containerform-shipper_npwp').show('blind');
+        $('.field-containerform-shipper_cp').show('blind');
+        $('.field-containerform-shipper_phone').show('blind');
         $('.field-containerform-shipper_email').show('blind');
     }
 
     function shipperDetail_hide()
     {
         $('.field-containerform-shipper_address').hide('blind');
+        $('.field-containerform-shipper_npwp').hide('blind');
+        $('.field-containerform-shipper_cp').hide('blind');
+        $('.field-containerform-shipper_phone').hide('blind');
         $('.field-containerform-shipper_email').hide('blind');
     }
 
@@ -161,6 +212,9 @@ $js = <<<JS
 
 	$(function () {
         $('.field-containerform-shipper_address').hide();
+        $('.field-containerform-shipper_npwp').hide();
+        $('.field-containerform-shipper_cp').hide();
+        $('.field-containerform-shipper_phone').hide();
         $('.field-containerform-shipper_email').hide();
 
         $('select').on('select2:select', function (evt) {
