@@ -130,8 +130,8 @@ HTML;
             'encodeLabels' => false,
             'items'        => [
                 [
-                    'label'   => 'Shipper',
-                    'content' => $this->blocks['shipper'],
+                    'label'   => 'Container',
+                    'content' => $this->blocks['container'],
                     'active'  => true,
                 ],
             ],
@@ -144,8 +144,8 @@ HTML;
             'encodeLabels' => false,
             'items'        => [
                 [
-                    'label'   => 'Container',
-                    'content' => $this->blocks['container'],
+                    'label'   => 'Shipper',
+                    'content' => $this->blocks['shipper'],
                     'active'  => true,
                 ],
             ],

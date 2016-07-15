@@ -86,6 +86,7 @@ class ContainerForm extends Container
             [
                 'number',
                 'unique',
+                //* /
                 'filter' => [
                     'status' => [
                         static::STATUS_REGISTERED,
@@ -93,6 +94,7 @@ class ContainerForm extends Container
                         static::STATUS_ALERT,
                     ],
                 ],
+            // */
             ],
             /* value references */
             [

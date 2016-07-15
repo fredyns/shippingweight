@@ -24,15 +24,15 @@ class Profile extends BaseProfile
         return ArrayHelper::merge(
                 parent::rules(),
                 [
-                'nameRequired'         => ['name', 'required'],
-                'locationRequired'     => ['location', 'required'],
-                'npwpRequired'         => ['npwp', 'required'],
-                'cpRequired'           => ['cp', 'required'],
-                'phoneRequired'        => ['phone', 'required'],
-                'public_emailRequired' => ['public_email', 'required'],
-                'npwpLength'           => ['npwp', 'string', 'max' => 64],
-                'cpLength'             => ['cp', 'string', 'max' => 255],
-                'phoneLength'          => ['phone', 'string', 'max' => 255],
+                'nameRequired'     => ['name', 'required'],
+                'locationRequired' => ['location', 'required'],
+                'npwpRequired'     => ['npwp', 'required'],
+                'cpRequired'       => ['cp', 'required'],
+                'phoneRequired'    => ['phone', 'required'],
+                //'public_emailRequired' => ['public_email', 'required'],
+                'npwpLength'       => ['npwp', 'string', 'max' => 64],
+                'cpLength'         => ['cp', 'string', 'max' => 255],
+                'phoneLength'      => ['phone', 'string', 'max' => 255],
                 ]
         );
     }

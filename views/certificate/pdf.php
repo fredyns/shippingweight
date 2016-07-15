@@ -117,9 +117,9 @@ $headerImageUrl = Url::to(['/image/bki-logo-sm.jpg']);
                         {
                             if ($model->weighing_date)
                             {
-                                $date = DateTime::createFromFormat('Y-m-d', $model->weighing_date);
+                                $date = DateTime::createFromFormat('Y-m-d H:i:s', $model->weighing_date);
 
-                                echo $date->format('F d, Y');
+                                echo $date->format('F d, Y  H:i');
                             }
                         }
                         else
@@ -136,7 +136,7 @@ $headerImageUrl = Url::to(['/image/bki-logo-sm.jpg']);
                     <td>: &nbsp;</td>
                     <td>
                         - IMO SOLAS 1972 Regulation VI/2<br/>
-                        - Director General of Sea Transportation Ind., Reg. Hk.103/2/4/DTP2_16
+                        - Directorate General of Sea Transportation Ind., Reg. Hk.103/2/4/DTP2_16
                     </td>
                 </tr>
                 <tr>
@@ -195,7 +195,7 @@ $headerImageUrl = Url::to(['/image/bki-logo-sm.jpg']);
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        12 Jl. Pamularsih
+                        Jl. Pamularsih No.12
                     </td>
                 </tr>
                 <tr>

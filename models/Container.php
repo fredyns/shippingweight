@@ -24,7 +24,7 @@ class Container extends BaseContainer
             'id'               => 'ID',
             'shipper_id'       => 'Shipper',
             'number'           => 'Container Number',
-            'booking_number'   => 'Job Order',
+            'booking_number'   => 'Booking Number',
             'status'           => 'Status',
             'bill'             => 'Bill',
             'grossmass'        => 'Grossmass',

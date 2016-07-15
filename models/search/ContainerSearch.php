@@ -98,7 +98,7 @@ class ContainerSearch extends Container
             ->andFilterWhere(['like', static::tableName().'.number', $this->number])
             ->andFilterWhere(['like', static::tableName().'.status', $this->status]);
 
-        if ($this->user_id && Yii::$app->user->identity->isAdmin)
+        if ($this->user_id)
         {
             if (is_numeric($this->user_id))
             {

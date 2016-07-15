@@ -124,28 +124,7 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?php
-                        if ($model instanceof Certificate)
-                        {
-                            if ($model->status == Certificate::STATUS_VERIFIED)
-                            {
-                                if ($model->weighing_date)
-                                {
-                                    $date = DateTime::createFromFormat('Y-m-d', $model->weighing_date);
-
-                                    echo $date->format('F d----, Y');
-                                }
-                            }
-                            else
-                            {
-                                echo '<i>unverified</i>';
-                            }
-                        }
-                        else
-                        {
-                            echo ArrayHelper::getValue($model, 'weighing_date', '............');
-                        }
-                        ?>
+                        <?= ArrayHelper::getValue($model, 'weighing_date', '............'); ?>
                     </td>
                 </tr>
                 <tr>
@@ -155,7 +134,7 @@ $headerQrcodeUrl = Url::to([
                     <td>: &nbsp;</td>
                     <td>
                         - IMO SOLAS 1972 Regulation VI/2<br/>
-                        - Director General of Sea Transportation Ind., Reg. Hk.103/2/4/DTP2_16
+                        - Directorate General of Sea Transportation Ind., Reg. Hk.103/2/4/DTP2_16
                     </td>
                 </tr>
                 <tr>
@@ -214,7 +193,7 @@ $headerQrcodeUrl = Url::to([
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        12 Jl. Pamularsih
+                        Jl. Pamularsih No.12
                     </td>
                 </tr>
                 <tr>
