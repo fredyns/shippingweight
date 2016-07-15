@@ -82,13 +82,17 @@ $certificateUrl = Url::to(['/certificate/pdf-sample']);
 
             </div>
             <div class="col-lg-4">
-                <h2>Penerapan</h2>
+                <h2>Sosialisasi Teknis</h2>
 
                 <p>
-                    <b>Kedepan</b>,
-                    proses VGM akan diakomodasi melalui portal ini.
-                    Mulai dari pendataan kontainer hingga akses cetak sertifikat secara online.
-                    Dengan tidak mengubah proses yang telah berjalan di TPKS.
+                    Pengenalan &amp; latihan tata cara penerbitan VGM dilakukan tanggal 14-19 Juli.
+                    Bertempat di kantor DPW ALFI Semarang
+                    Jl.Rukan Semarang Indah Blok d XI /1 C Jl. Madukoro Raya Semarang.
+                    Waktu pukul 09.00 pagi dan 14.00 siang.
+                </p>
+
+                <p>
+                    Materi Presentasi dapat didownload di <a href="https://goo.gl/Pcu0kA" target="_blank">https://goo.gl/Pcu0kA</a>.
                 </p>
 
             </div>
