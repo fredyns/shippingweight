@@ -44,7 +44,7 @@ class ContainerForm extends Container
             /* required */
             [['shipper_id', 'number', 'booking_number'], 'required'],
             [
-                ['shipper_address', 'shipper_npwp', 'shipper_cp', 'shipper_phone', 'shipper_email'],
+                ['shipper_address', 'shipper_npwp', 'shipper_cp', 'shipper_phone'],
                 'required',
                 'when' => function ($model, $attribute)
             {
@@ -119,6 +119,7 @@ class ContainerForm extends Container
         return ArrayHelper::merge(
                 parent::attributeLabels(),
                 [
+                'shipper_id'      => 'Shipper Name',
                 'shipper_address' => 'Shipper Address',
                 'shipper_npwp'    => 'Shipper NPWP',
                 'shipper_cp'      => 'Shipper Contact Person',
