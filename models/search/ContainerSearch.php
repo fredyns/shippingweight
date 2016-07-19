@@ -55,7 +55,10 @@ class ContainerSearch extends Container
     public function search($params)
     {
         $query = Container::find()
-            ->joinWith('shipper');
+            ->joinWith('shipper')
+            ->orderBy([
+            static::tableName().'.id' => SORT_DESC,
+        ]);
 
         if (Yii::$app->user->identity->isAdmin)
         {
