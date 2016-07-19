@@ -96,6 +96,14 @@ class ContainerForm extends Container
                 ],
             // */
             ],
+            [
+                ['number', 'booking_number'],
+                'filter',
+                'filter' => function($value)
+            {
+                return strtoupper($value);
+            },
+            ],
             /* value references */
             [
                 ['shipper_id'],
