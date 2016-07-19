@@ -23,7 +23,7 @@ class Shipper extends BaseShipper
         return ArrayHelper::merge(
                 parent::rules(),
                 [
-                [['name', 'address', 'npwp', 'cp', 'phone', 'email'], 'required'],
+                [['name', 'address', 'npwp', 'cp', 'phone'], 'required'],
                 ]
         );
     }
