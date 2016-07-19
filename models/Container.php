@@ -74,7 +74,7 @@ class Container extends BaseContainer
 
             // simpan hasil timbangan ke data kontainer
             $this->grossmass     = $weighing->grossmass;
-            $this->weighing_date = ($vgmDate ? $vgmDate->format('Y-m-d') : null);
+            $this->weighing_date = ($vgmDate ? $vgmDate->format('Y-m-d H:i:s') : null);
             $this->checked_by    = Yii::$app->user->id;
             $this->checked_at    = time();
 
