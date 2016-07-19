@@ -164,15 +164,17 @@ $headerImageUrl = Url::to(['/image/bki-logo-sm.jpg']);
                         <?= ArrayHelper::getValue($model, 'shipper.address', '-'); ?>
                     </td>
                 </tr>
+                <!--
                 <tr>
                     <td>
                         E-mail
                     </td>
                     <td>: &nbsp;</td>
                     <td>
-                        <?= ArrayHelper::getValue($model, 'shipper.email', '-'); ?>
+                <?= ArrayHelper::getValue($model, 'shipper.email', '-'); ?>
                     </td>
                 </tr>
+                -->
                 <tr>
                     <td colspan="=3">
                         <div class="detail-title">
