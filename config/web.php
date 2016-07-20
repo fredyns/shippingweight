@@ -9,7 +9,7 @@ $config  = [
     'components' => [
         'request'      => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'kH7m#iH!3<FB',
+            'cookieValidationKey' => $params['cookieValidationKey'],
         ],
         'session'      => [
             'class'        => 'yii\web\DbSession',
@@ -60,7 +60,7 @@ $config  = [
         'user' => [
             'class'                  => 'dektrium\user\Module',
             'enableUnconfirmedLogin' => TRUE,
-            'admins'                 => ['admin', 'fredy.ns'],
+            'admins'                 => $params['admins'],
             'modelMap'               => [
                 'User'    => 'app\models\User',
                 'Profile' => 'app\models\Profile',
