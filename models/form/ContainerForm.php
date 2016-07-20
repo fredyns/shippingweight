@@ -84,17 +84,9 @@ class ContainerForm extends Container
                 ]
             ],
             [
-                'number',
+                ['number', 'booking_number'],
                 'unique',
-                //* /
-                'filter' => [
-                    'status' => [
-                        static::STATUS_REGISTERED,
-                        static::STATUS_READY,
-                        static::STATUS_ALERT,
-                    ],
-                ],
-            // */
+                'targetAttribute' => ['number', 'booking_number'],
             ],
             [
                 ['number', 'booking_number'],
