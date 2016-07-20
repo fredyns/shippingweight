@@ -44,7 +44,7 @@ class ContainerForm extends Container
             /* required */
             [['shipper_id', 'number', 'booking_number'], 'required'],
             [
-                ['shipper_address', 'shipper_npwp', 'shipper_cp', 'shipper_phone'],
+                ['shipper_address'],
                 'required',
                 'when' => function ($model, $attribute)
             {
