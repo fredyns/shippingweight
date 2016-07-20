@@ -82,17 +82,13 @@ $certificateUrl = Url::to(['/certificate/pdf-sample']);
 
             </div>
             <div class="col-lg-4">
-                <h2>Sosialisasi Teknis</h2>
+                <h2>Kontak Kami</h2>
 
                 <p>
-                    Pengenalan &amp; latihan tata cara penerbitan VGM dilakukan tanggal 14-19 Juli.
-                    Bertempat di kantor DPW ALFI Semarang
-                    Jl.Rukan Semarang Indah Blok d XI /1 C Jl. Madukoro Raya Semarang.
-                    Waktu pukul 09.00 pagi dan 14.00 siang.
-                </p>
-
-                <p>
-                    Materi Presentasi dapat didownload di <a href="https://goo.gl/Pcu0kA" target="_blank">https://goo.gl/Pcu0kA</a>.
+                    Kantor Biro Klasifikasi Indonesia Cabang Semarang<br/>
+                    Jl. Pamularsih No. 12 Semarang<br/>
+                    (samping SD Al-Azhar)<br/>
+                    Telp. (024) 7610744
                 </p>
 
             </div>
