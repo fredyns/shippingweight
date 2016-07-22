@@ -15,25 +15,21 @@ $certificateUrl = Url::to(['/certificate/pdf-sample']);
 
         <p class="lead">Verified Gross Mass oleh Biro Klasifikasi Indonesia</p>
 
+        <?php
+        if (Yii::$app->user->isGuest)
+        {
+            echo Html::a("Daftar Sekarang", ["/user/register"], ['class' => 'btn btn-lg btn-success']);
+            echo ' &nbsp; ';
+            echo Html::a("Masuk", ["/user/login"], ['class' => 'btn btn-lg btn-info']);
+        }
+        else
+        {
+            echo Html::a("Container Baru", ["/container/create"], ['class' => 'btn btn-lg btn-success']);
+            echo ' &nbsp; ';
+            echo Html::a("Semua Container", ["/container/index"], ['class' => 'btn btn-lg btn-info']);
+        }
+        ?>
     </div>
-
-    <form action="<?= $certificateUrl ?>" method="get">
-        <div class="row">
-            <div class="col-lg-6 col-md-offset-3">
-                <div class="input-group">
-                    <input name="container_number" type="text" class="form-control input-lg" placeholder="isikan nomor container">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default btn-lg" type="submit">
-                            <span class="glyphicon glyphicon-scale"></span> Check
-                        </button>
-                    </span>
-                </div><!-- /input-group -->
-                <div style="text-align: center; color: gray; ">
-                    <i> masa uji coba</i>
-                </div>
-            </div><!-- /.col-lg-6 -->
-        </div><!-- /.row -->
-    </form>
 
     <br/>
     <br/>
