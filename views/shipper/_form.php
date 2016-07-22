@@ -40,7 +40,7 @@ use yii\web\JsExpression;
         <p>
 
             <?php
-            if (Yii::$app->user->identity->isAdmin == FALSE)
+            if (Yii::$app->user->identity->isAdmin)
             {
                 echo $form
                     ->field($model, 'user_id')
