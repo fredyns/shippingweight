@@ -11,6 +11,8 @@ use app\libraries\TPKS;
 
 /**
  * This is the model class for table "container".
+ *
+ * @property \app\models\Weighing $weighing
  */
 class Container extends BaseContainer
 {
@@ -47,6 +49,14 @@ class Container extends BaseContainer
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWeighing()
+    {
+        return $this->hasOne(\app\models\Weighing::className(), ['container_id' => 'id'])->orderBy(['id' => SORT_DESC]);
+    }
+
     public function checkVGM()
     {
         // init transaction
@@ -55,9 +65,10 @@ class Container extends BaseContainer
         try
         {
             // tarik data
-            $vgm     = TPKS::container($this->number);
-            $vgmTime = ArrayHelper::getValue($vgm, 'GROSS_VERIFIED_TIME');
-            $vgmDate = ($vgmTime) ? date_create_from_format('d-m-Y H:i:s', $vgmTime) : null;
+            $vgm      = TPKS::container($this->number);
+            $verified = (ArrayHelper::getValue($vgm, 'IS_GROSS_VERIFIED') == 'Y');
+            $vgmTime  = ArrayHelper::getValue($vgm, 'GROSS_VERIFIED_TIME');
+            $vgmDate  = ($vgmTime) ? date_create_from_format('d-m-Y H:i:s', $vgmTime) : null;
 
             // simpan data penimbangan
             $weighing = new Weighing([
@@ -78,7 +89,7 @@ class Container extends BaseContainer
             $this->checked_by    = Yii::$app->user->id;
             $this->checked_at    = time();
 
-            if ($this->status == static::STATUS_READY)
+            if ($this->status == static::STATUS_READY && $verified)
             {
                 $this->status               = static::STATUS_VERIFIED;
                 $this->certificate_sequence = CertificateCounter::newSequence();
@@ -92,7 +103,7 @@ class Container extends BaseContainer
             // commit data processing
             $transaction->commit();
 
-            return TRUE;
+            return $weighing->grossmass;
         }
         catch (\Exception $e)
         {

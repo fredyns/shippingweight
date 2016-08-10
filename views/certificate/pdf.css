@@ -56,6 +56,12 @@ td {
     color: gray;
 }
 
+#acc{
+    background-image: url("<?=\yii\helpers\Url::to(['/image/acc-yohanis-90']);?>");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 #footer{
     text-align: right;
     padding-right: 45px;

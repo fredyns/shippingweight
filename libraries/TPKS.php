@@ -80,6 +80,11 @@ class TPKS
 
         if (is_array($response) == FALSE)
         {
+            if (Yii::$app->user->identity->isAdmin)
+            {
+                exit('<pre>'.print_r($rawResponse, TRUE).print_r($response, TRUE));
+            }
+
             throw new UnprocessableEntityHttpException('Response error.');
         }
 
@@ -160,7 +165,8 @@ class TPKS
     public static function container($number)
     {
         // alamat API
-        $uri = static::URI_CONTAINER.'/'.$number;
+        $number = trim($number);
+        $uri    = static::URI_CONTAINER.'/'.$number.'?hit='.time();
 
         // get container
         return static::getData($uri, 'data_vgm', TRUE);

@@ -136,7 +136,7 @@ class ContainerForm extends Container
     {
         return ArrayHelper::merge(parent::scenarios(),
                 [
-                'create'  => [
+                'create'      => [
                     'shipper_id',
                     'shipper_address',
                     'shipper_npwp',
@@ -146,7 +146,7 @@ class ContainerForm extends Container
                     'booking_number',
                     'number',
                 ],
-                'update'  => [
+                'update'      => [
                     'shipper_id',
                     'shipper_address',
                     'shipper_npwp',
@@ -156,7 +156,16 @@ class ContainerForm extends Container
                     'booking_number',
                     'number',
                 ],
-                'payment' => ['bill'],
+                'semi-update' => [
+                    'shipper_id',
+                    'shipper_address',
+                    'shipper_npwp',
+                    'shipper_cp',
+                    'shipper_phone',
+                    'shipper_email',
+                    'booking_number',
+                ],
+                'payment'     => ['bill'],
         ]);
     }
 

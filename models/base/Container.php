@@ -33,6 +33,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $verified_at
  * @property integer $sentOwner_at
  * @property integer $sentShipper_at
+ * @property integer $transfer_id
  * @property integer $created_by
  * @property integer $updated_by
  * @property integer $created_at
@@ -40,6 +41,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property \app\models\Shipper $shipper
  * @property \app\models\Payment $payment
+ * @property \app\models\Transfer $transfer
  * @property string $aliasModel
  */
 abstract class Container extends \yii\db\ActiveRecord
@@ -86,13 +88,14 @@ abstract class Container extends \yii\db\ActiveRecord
     {
         return [
             [['shipper_id', 'number'], 'required'],
-            [['shipper_id', 'payment_id', 'bill', 'certificate_sequence', 'billed_by', 'verified_by', 'checked_by', 'sentOwner_by', 'sentShipper_by', 'billed_at', 'checked_at', 'verified_at', 'sentOwner_at', 'sentShipper_at'], 'integer'],
+            [['shipper_id', 'payment_id', 'bill', 'certificate_sequence', 'billed_by', 'verified_by', 'checked_by', 'sentOwner_by', 'sentShipper_by', 'billed_at', 'checked_at', 'verified_at', 'sentOwner_at', 'sentShipper_at', 'transfer_id'], 'integer'],
             [['status', 'certificate_file'], 'string'],
             [['grossmass'], 'number'],
             [['weighing_date'], 'safe'],
             [['number', 'booking_number', 'certificate_number'], 'string', 'max' => 64],
             [['shipper_id'], 'exist', 'skipOnError' => true, 'targetClass' => Shipper::className(), 'targetAttribute' => ['shipper_id' => 'id']],
             [['payment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Payment::className(), 'targetAttribute' => ['payment_id' => 'id']],
+            [['transfer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Transfer::className(), 'targetAttribute' => ['transfer_id' => 'id']],
             ['status', 'in', 'range' => [
                     self::STATUS_REGISTERED,
                     self::STATUS_READY,
@@ -135,6 +138,7 @@ abstract class Container extends \yii\db\ActiveRecord
             'verified_at' => 'Verified At',
             'sentOwner_at' => 'Sent Owner At',
             'sentShipper_at' => 'Sent Shipper At',
+            'transfer_id' => 'Transfer ID',
         ];
     }
 
@@ -152,6 +156,14 @@ abstract class Container extends \yii\db\ActiveRecord
     public function getPayment()
     {
         return $this->hasOne(\app\models\Payment::className(), ['id' => 'payment_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTransfer()
+    {
+        return $this->hasOne(\app\models\Transfer::className(), ['id' => 'transfer_id']);
     }
 
 

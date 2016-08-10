@@ -16,7 +16,10 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "2amigos/yii2-qrcode-helper": "^1.0",
-        "kartik-v/yii2-mpdf": "^1.0"
+        "kartik-v/yii2-mpdf": "^1.0",
+        "kartik-v/yii2-grid": "^3.1",
+        "jino5577/yii2-date-range-picker": "^1.0",
+        "kartik-v/yii2-widget-datetimepicker": "^1.4"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

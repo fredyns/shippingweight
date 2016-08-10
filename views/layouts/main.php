@@ -60,9 +60,21 @@ AppAsset::register($this);
                         'visible' => $isAdmin,
                     ],
                     [
-                        'label'   => 'EMKL',
-                        'url'     => ['/emkl'],
+                        'label'   => 'Transfer',
+                        'url'     => ['/transfer'],
                         'visible' => $isAdmin,
+                    ],
+                    [
+                        'label'   => 'Daily Report',
+                        'url'     => ['/report-daily'],
+                        'visible' => $isAdmin,
+                    ],
+                    [
+                        'label' => 'Legal',
+                        'url'   => '#',
+                        'items' => [
+                            ['label' => 'Kesepakatan Bersama VGM', 'url' => ['/content/kesepakatan-bersama-vgm-semarang.pdf']],
+                        ],
                     ],
                     ['label' => 'About', 'url' => ['/site/about']],
                 ],

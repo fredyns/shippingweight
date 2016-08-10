@@ -38,8 +38,11 @@ class ContainerMenu extends \yii\jui\Widget
                     [
                     '/container/payment',
                     'id' => $this->model->id,
-                    ], [
-                    'class' => 'btn btn-primary',
+                    ],
+                    [
+                    'class'     => 'btn btn-primary',
+                    'target'    => '_blank',
+                    'data-pjax' => 0,
                     ]
                 )
                 .'&nbsp;';
@@ -63,8 +66,11 @@ class ContainerMenu extends \yii\jui\Widget
                     [
                     '/container/check',
                     'id' => $this->model->id,
-                    ], [
-                    'class' => 'btn btn-primary',
+                    ],
+                    [
+                    'class'     => 'btn btn-primary',
+                    'target'    => '_blank',
+                    'data-pjax' => 0,
                     ]
                 )
                 .'&nbsp;';
@@ -91,13 +97,30 @@ class ContainerMenu extends \yii\jui\Widget
                     'container_number' => $this->model->number,
                     ],
                     [
-                    'class'  => 'btn btn-success',
-                    'title'  => 'cetak sertifikat VGM',
-                    'target' => '_blank',
+                    'class'     => 'btn btn-success',
+                    'title'     => 'cetak sertifikat VGM',
+                    'target'    => '_blank',
+                    'data-pjax' => 0,
                     ]
                 )
                 .'&nbsp;';
 
+                if ($permit)
+                {
+                    echo Html::a(
+                        '<span class="glyphicon glyphicon-scale"></span> Recheck',
+                        [
+                        '/container/check',
+                        'id' => $this->model->id,
+                        ],
+                        [
+                        'class'     => 'btn btn-primary',
+                        'target'    => '_blank',
+                        'data-pjax' => 0,
+                        ]
+                    )
+                    .'&nbsp;';
+                }
                 /* /
                   echo Html::a(
                   '<span class="glyphicon glyphicon-send"></span> Send VGM',
@@ -106,6 +129,8 @@ class ContainerMenu extends \yii\jui\Widget
                   'id' => $this->model->id,
                   ], [
                   'class' => 'btn btn-info',
+                  'target'    => '_blank',
+                  'data-pjax' => 0,
                   ]
                   )
                   .'&nbsp;';
@@ -131,8 +156,11 @@ class ContainerMenu extends \yii\jui\Widget
                     [
                     '/container/check',
                     'id' => $this->model->id,
-                    ], [
-                    'class' => 'btn btn-primary',
+                    ],
+                    [
+                    'class'     => 'btn btn-primary',
+                    'target'    => '_blank',
+                    'data-pjax' => 0,
                     ]
                 )
                 .'&nbsp;';

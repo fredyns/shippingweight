@@ -54,7 +54,7 @@ if (Yii::$app->user->isGuest == FALSE)
     <h1>
         <?= Yii::t('app', 'Containers') ?>
         <small>
-            List
+            Listing
         </small>
     </h1>
 
@@ -166,6 +166,7 @@ if (Yii::$app->user->isGuest == FALSE)
                 [
                     'attribute' => 'status',
                     'options'   => [],
+                    //'hidden'    => TRUE,
                     'format'    => 'html',
                     'value'     => function ($model)
                 {

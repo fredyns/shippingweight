@@ -134,7 +134,7 @@ $headerQrcodeUrl = Url::to([
                     <td>: &nbsp;</td>
                     <td>
                         - IMO SOLAS 1972 Regulation VI/2<br/>
-                        - Directorate General of Sea Transportation Ind., Reg. Hk.103/2/4/DTP2_16
+                        - Directorate General of Sea Transportation Ind., Reg. Hk.103/2/4/DJPL_16
                     </td>
                 </tr>
                 <tr>

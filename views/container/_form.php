@@ -9,6 +9,7 @@ use yii\helpers\Url;
 use kartik\widgets\Select2;
 use kartik\depdrop\DepDrop;
 use yii\web\JsExpression;
+use app\models\Container;
 
 /**
  * @var yii\web\View $this
@@ -118,9 +119,25 @@ HTML;
 
         <p>
 
-            <?= $form->field($model, 'number')->textInput(['maxlength' => true]) ?>
-
             <?= $form->field($model, 'booking_number')->textInput(['maxlength' => true]) ?>
+
+            <?php
+            if ($model->status == Container::STATUS_VERIFIED)
+            {
+                echo $form
+                    ->field($model, 'number')
+                    ->textInput([
+                        'maxlength' => true,
+                        'readonly'  => 'readonly',
+                        'disabled'  => 'disabled',
+                    ])
+                    ->hint('<i>Sudah ter-sertifikasi, tidak dapat diubah.</i>');
+            }
+            else
+            {
+                echo $form->field($model, 'number')->textInput(['maxlength' => true]);
+            }
+            ?>
 
         </p>
         <?php $this->endBlock(); ?>

@@ -15,6 +15,8 @@ use app\models\User;
 class ContainerSearch extends Container
 {
     public $user_id;
+    public $created_at_range;
+    public $verified_at_range;
 
     /**
      * @inheritdoc
@@ -23,7 +25,7 @@ class ContainerSearch extends Container
     {
         return [
             [['id', 'bill'], 'integer'],
-            [['user_id', 'shipper_id', 'number', 'status'], 'safe'],
+            [['user_id', 'shipper_id', 'booking_number', 'number', 'status', 'created_at_range', 'verified_at_range'], 'safe'],
             [['grossmass'], 'number'],
             [['weighing_date'], 'date', 'format' => 'php:Y-m-d'],
             [
@@ -98,6 +100,7 @@ class ContainerSearch extends Container
         ]);
 
         $query
+            ->andFilterWhere(['like', static::tableName().'.booking_number', $this->booking_number])
             ->andFilterWhere(['like', static::tableName().'.number', $this->number])
             ->andFilterWhere(['like', static::tableName().'.status', $this->status]);
 
@@ -126,6 +129,46 @@ class ContainerSearch extends Container
             else
             {
                 $query->andFilterWhere(['like', Shipper::tableName().'.name', $this->shipper_id]);
+            }
+        }
+
+        if (!empty($this->created_at_range) && strpos($this->created_at_range, '-') !== false)
+        {
+            list($start_date, $end_date) = explode(' - ', $this->created_at_range);
+
+            $start_date = trim($start_date);
+            $end_date   = trim($end_date);
+            $start      = date_create_from_format('m/d/Y', $start_date);
+            $end        = date_create_from_format('m/d/Y', $end_date);
+
+            if ($start && $end)
+            {
+                $query->andFilterWhere([
+                    'between',
+                    static::tableName().'.created_at',
+                    $start->getTimestamp(),
+                    $end->getTimestamp(),
+                ]);
+            }
+        }
+
+        if (!empty($this->verified_at_range) && strpos($this->verified_at_range, '-') !== false)
+        {
+            list($start_date, $end_date) = explode(' - ', $this->verified_at_range);
+
+            $start_date = trim($start_date);
+            $end_date   = trim($end_date);
+            $start      = date_create_from_format('m/d/Y', $start_date);
+            $end        = date_create_from_format('m/d/Y', $end_date);
+
+            if ($start && $end)
+            {
+                $query->andFilterWhere([
+                    'between',
+                    static::tableName().'.weighing_date',
+                    $start->format('Y-m-d 00:00:00'),
+                    $end->format('Y-m-d 23:59:59'),
+                ]);
             }
         }
 

@@ -17,6 +17,8 @@ use yii\web\ServerErrorHttpException;
 use yii\web\UnprocessableEntityHttpException;
 use yii\web\UnauthorizedHttpException;
 use yii\web\GoneHttpException;
+use app\models\search\ContainerSearch;
+use dmstr\bootstrap\Tabs;
 
 /**
  * This is the class for controller "ContainerController".
@@ -40,6 +42,28 @@ class ContainerController extends \app\controllers\base\ContainerController
                 ],
             ],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function actionIndex()
+    {
+        $searchModel  = new ContainerSearch;
+        $dataProvider = $searchModel->search($_GET);
+
+        Tabs::clearLocalStorage();
+
+        Url::remember();
+        \Yii::$app->session['__crudReturnUrl'] = null;
+
+        $view = 'index';
+
+        return $this->render($view,
+                [
+                'dataProvider' => $dataProvider,
+                'searchModel'  => $searchModel,
+        ]);
     }
 
     /**
@@ -90,12 +114,9 @@ class ContainerController extends \app\controllers\base\ContainerController
             throw new UnauthorizedHttpException('This Container is not yours to update.');
         }
 
-        if ($model->status == Container::STATUS_VERIFIED)
-        {
-            throw new HttpException(404, 'This Container has already Verified.');
-        }
+        $scenario = ($model->status == Container::STATUS_VERIFIED) ? 'semi-update' : 'update';
 
-        $model->setScenario('update');
+        $model->setScenario($scenario);
 
         if ($model->load($_POST) && $model->save())
         {
@@ -114,30 +135,38 @@ class ContainerController extends \app\controllers\base\ContainerController
      */
     public function actionDelete($id)
     {
+        if (Yii::$app->user->isGuest)
+        {
+            $admin = FALSE;
+        }
+        else
+        {
+            $admin = Yii::$app->user->identity->isAdmin;
+        }
+
         try
         {
             $model        = $this->findModel($id);
-            $login        = (Yii::$app->user->isGuest == FALSE);
-            $owned        = ($model->shipper->user_id == Yii::$app->user->id);
-            $permit       = ($owned OR Yii::$app->user->identity->isAdmin);
-            $registerOnly = ($model->status == Container::STATUS_REGISTERED);
+            $owned        = ($model->created_by == Yii::$app->user->id);
+            $statusPermit = ($model->status !== Container::STATUS_VERIFIED);
+            $selfDelete   = ($owned && $statusPermit);
 
-            if ($login && $permit && $registerOnly)
+            if ($admin OR $selfDelete)
             {
                 $model->delete();
             }
 
-            if ($login == FALSE)
+            if (Yii::$app->user->isGuest)
             {
                 throw new HttpException(404, 'You have to login.');
             }
 
-            if ($permit == FALSE)
+            if ($owned == FALSE)
             {
                 throw new HttpException(404, 'This container is not yours to delete.');
             }
 
-            if ($registerOnly == FALSE)
+            if ($statusPermit == FALSE)
             {
                 throw new HttpException(404, 'This container alrady paid or verified.');
             }
@@ -214,6 +243,14 @@ class ContainerController extends \app\controllers\base\ContainerController
         }
     }
 
+    public function actionApi($container_number)
+    {
+
+        $vgm = TPKS::container($container_number);
+
+        return '<pre>'.print_r($vgm, TRUE);
+    }
+
     public function actionCheck($id)
     {
         // buka data
@@ -236,7 +273,7 @@ class ContainerController extends \app\controllers\base\ContainerController
         }
         elseif ($model->status == Container::STATUS_VERIFIED)
         {
-            throw new GoneHttpException('This Container is already Verified.');
+            //throw new GoneHttpException('This Container is already Verified.');
         }
         elseif ($model->status != Container::STATUS_READY)
         {
@@ -245,9 +282,7 @@ class ContainerController extends \app\controllers\base\ContainerController
 
         try
         {
-            $model = $this->findModel($id);
-
-            $model->checkVGM();
+            $result = $model->checkVGM();
         }
         catch (\Exception $e)
         {
