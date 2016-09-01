@@ -66,6 +66,7 @@ else
                 //'day',
                 'registerCount',
                 'certificateCount',
+                'paidCount',
             ],
             'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
             'headerRowOptions' => ['class' => 'kartik-sheet-style'],

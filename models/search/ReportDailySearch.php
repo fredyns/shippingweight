@@ -21,7 +21,7 @@ class ReportDailySearch extends ReportDaily
     {
         return [
             [['day'], 'safe'],
-            [['registerCount', 'certificateCount'], 'integer'],
+            [['registerCount', 'certificateCount', 'paidCount'], 'integer'],
             [['created_at_range'], 'safe'],
         ];
     }

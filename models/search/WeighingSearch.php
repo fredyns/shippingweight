@@ -43,7 +43,7 @@ class WeighingSearch extends Weighing
      */
     public function search($params)
     {
-        $query = Weighing::find();
+        $query = Weighing::find()->orderBy(['id' => SORT_DESC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

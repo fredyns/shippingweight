@@ -12,6 +12,7 @@ use Yii;
  * @property string $day
  * @property integer $registerCount
  * @property integer $certificateCount
+ * @property integer $paidCount
  * @property string $aliasModel
  */
 abstract class ReportDaily extends \yii\db\ActiveRecord
@@ -35,7 +36,7 @@ abstract class ReportDaily extends \yii\db\ActiveRecord
     {
         return [
             [['day'], 'required'],
-            [['registerCount', 'certificateCount'], 'integer'],
+            [['registerCount', 'certificateCount', 'paidCount'], 'integer'],
             [['day'], 'string', 'max' => 10]
         ];
     }
@@ -49,6 +50,7 @@ abstract class ReportDaily extends \yii\db\ActiveRecord
             'day' => 'Day',
             'registerCount' => 'Register Count',
             'certificateCount' => 'Certificate Count',
+            'paidCount' => 'Paid Count',
         ];
     }
 

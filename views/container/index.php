@@ -104,6 +104,19 @@ if (Yii::$app->user->isGuest == FALSE)
                 [
                     'attribute' => 'number',
                     'label'     => 'Container',
+                    'options'   => [],
+                    'format'    => 'raw',
+                    'value'     => function ($model)
+                {
+                    $out = $model->number;
+
+                    if ($model->transfer_id > 0)
+                    {
+                        $out .= ' <b class="text-success">&check;</b>';
+                    }
+
+                    return $out;
+                },
                 ],
                 [
                     'attribute' => 'shipper_id',
@@ -220,8 +233,8 @@ if (Yii::$app->user->isGuest == FALSE)
             'persistResize'    => false,
             'exportConfig'     => [
                 \kartik\grid\GridView::EXCEL => ['label' => 'Save as EXCEL'],
-                \kartik\grid\GridView::PDF   => ['label' => 'Save as PDF'],
-                \kartik\grid\GridView::HTML  => ['label' => 'Save as HTML'],
+            //\kartik\grid\GridView::PDF   => ['label' => 'Save as PDF'],
+            //\kartik\grid\GridView::HTML  => ['label' => 'Save as HTML'],
             ],
         ]);
         ?>

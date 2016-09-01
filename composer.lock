@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "aace4292a13f57e57fa89bcae5716e66",
-    "content-hash": "ba50cd7be82bde28b2f0fe1fdcfa2a49",
+    "hash": "1e7b60d7ed7d331d6dbdd3dd7ddbdca7",
+    "content-hash": "c7d2d2ff21d9ea084e6395c376452de2",
     "packages": [
         {
             "name": "2amigos/yii2-qrcode-helper",
@@ -479,6 +479,47 @@
                 "html"
             ],
             "time": "2015-08-05 01:03:42"
+        },
+        {
+            "name": "fredyns/yii2-components",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fredyns/yii2-components.git",
+                "reference": "624fdbaee5a2c3d8c9f03c03cd4cc133dcfcfcc2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fredyns/yii2-components/zipball/624fdbaee5a2c3d8c9f03c03cd4cc133dcfcfcc2",
+                "reference": "624fdbaee5a2c3d8c9f03c03cd4cc133dcfcfcc2",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "fredyns\\components\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fredy Nurman Saleh",
+                    "email": "email@fredyns.net"
+                }
+            ],
+            "description": "extend base Yii2 functionality",
+            "keywords": [
+                "components",
+                "extension",
+                "yii2"
+            ],
+            "time": "2016-08-10 14:50:45"
         },
         {
             "name": "jino5577/yii2-date-range-picker",
@@ -3849,6 +3890,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "fredyns/yii2-components": 20,
         "dektrium/yii2-user": 20,
         "schmunk42/yii2-giiant": 20
     },

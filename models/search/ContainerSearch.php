@@ -138,8 +138,8 @@ class ContainerSearch extends Container
 
             $start_date = trim($start_date);
             $end_date   = trim($end_date);
-            $start      = date_create_from_format('m/d/Y', $start_date);
-            $end        = date_create_from_format('m/d/Y', $end_date);
+            $start      = date_create_from_format('m/d/Y H:i:s', $start_date.' 00:00:00');
+            $end        = date_create_from_format('m/d/Y H:i:s', $end_date.' 23:59:59');
 
             if ($start && $end)
             {

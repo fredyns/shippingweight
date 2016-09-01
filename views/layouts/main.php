@@ -122,7 +122,15 @@ AppAsset::register($this);
 
         <footer class="footer">
             <div class="container">
-                <p class="pull-left">Biro Klasifikasi Indonesia <?= date('Y') ?></p>
+                <p>
+                    Biro Klasifikasi Indonesia cabang Semarang
+                    <br/>
+                    <span style="font-size: 0.9em;">
+                        Jl. Pamularsih No. 12 Semarang
+                        (samping SD Al-Azhar)
+                        Telp. 024-7610744
+                    </span>
+                </p>
 
                 <!--
                 <p class="pull-right"><?= Yii::powered() ?></p>

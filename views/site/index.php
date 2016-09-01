@@ -8,7 +8,27 @@ use yii\helpers\Url;
 $this->title    = 'BKIVGM.com';
 $certificateUrl = Url::to(['/certificate/pdf-sample']);
 ?>
+<style>
+    p {
+        text-align: justify;
+    }
+</style>
 <div class="site-index">
+
+    <div class="row">
+
+        <div class="col-lg-4 pull-right">
+            <b>Callcenter:</b>
+            <ul>
+                <li><b>(024) 7643-3240</b></li>
+                <li><b>0822-1111-2958 (sms/telp/wa)</b></li>
+                <li><b>0877-7750-3058 (sms/telp/wa)</b></li>
+                <li><b>vgm.smc@gmail.com</b></li>
+            </ul>
+
+        </div>
+    </div>
+
 
     <div class="jumbotron">
         <h1><b>BKI VGM</b></h1>
@@ -39,18 +59,13 @@ $certificateUrl = Url::to(['/certificate/pdf-sample']);
     </p>
 
     <p>
-        <b>Besok</b> adalah batas akhir pembayaran untuk layanan VGM periode tanggal 1 sampai 7 Agustus.
-    </p>
-
-    <p>
         Pembayaran kontainer melalui transfer ke rekening Mandiri nomor <b>135-00-57000059</b>
         (an. PT Biro Klasifikasi Indonesia - MP VGM).
     </p>
 
     <p>
-        Bukti pembayaran dikirim ke <b>vgm.smc@gmail.com</b> beserta jumlah kontainer yang dibayar.
-        Lampirkan juga alamat email/username yg digunakan untuk registrasi VGM
-        (bila email yg digunakan berbeda).
+        Bukti pembayaran dikirim ke <b>vgm.smc@gmail.com</b> beserta file (excel) rekap kontainer yang dibayar.
+        File rekap tersebut dapat didownload pada menu container dengan mengeklik tombol "export".
     </p>
 
     <p>
@@ -66,63 +81,82 @@ $certificateUrl = Url::to(['/certificate/pdf-sample']);
 
         <div class="row">
             <div class="col-lg-4">
-                <h2>Verified Gross Mass</h2>
+                <h2>Container Belum VGM?</h2>
 
                 <p>
-                    Adalah pemberlakuan verifikasi berat kotor kontainer ekspor demi keamanan dan keselamatan.
-                    Sebagaimana yang tertera pada Safety of Life at Sea (SOLAS) Convention.
+                    Umumnya terjadi karena
+                    Truk <b>melewatkan</b> proses <b>penimbangan</b> di <b>Gate-Out</b>.
+                    Cek juga data Container di web TPKS, menu "Container Search", apakah statusnya sudah VGM.
+                    Jika statusnya sudah VGM maka sudah dapat diterbitkan sertifikat VGM.
                 </p>
 
+                <P>
+                    Konfirmasi ke sopir truk apakah dia sudah menjalani penimbangan di Gate-Out.
+                    Bila timbangan Gate-out masih kosong berarti Truk harus kembali ke Gate-Out untuk
+                    <b>ditimbang ulang</b>.
+                </P>
+
                 <p>
-                    Setiap kontainer akan diverifikasi massa aktualnya sebelum naik ke kapal.
-                    Dengan VGM akan mempermudah pengaturan kontainer diatas kapal (stowage plan).
-                    Sekaligus meningkatkan keamanan kapal.
+                    Untuk Fumigasi / Karantina Export yang containernya diangkut oleh truk Kuda Inti
+                    dapat menghubungi BKI atau TPKS bila setelah 1 jam masuk CY status container belum VGM.
                 </p>
 
             </div>
             <div class="col-lg-4">
-                <h2>Trial &amp; Peralihan</h2>
+                <h2>Penimbangan Gate-Out</h2>
 
                 <p>
-                    Penerapan VGM akan dilakukan bertahap.
-                    Selama belum diterapkan Sertifikasi VGM dari BKI,
-                    maka proses loading barang akan menggunakan timbangan TPKS sebagai VGM.
+                    Di Gate-Out, operator melakukan input data <b>nomor polisi</b> truk
+                    & hasil <b>timbangan</b>.
+                    Untuk proses penimbangan (ulang) di Gate-out dapat menggunakan Gate-Ticket
+                    atau menggunakan <b>nomor polisi</b> truk
+                    (bisa ditulis di kertas sebagai pengganti Gate-Ticket).
                 </p>
 
                 <p>
-                    <b>
-                        Pada masa transisi proses loading kontainer akan dilakukan seperti biasa.
-                    </b>
-                    Pada saat kendaraan pengangkut keluar dari terminal akan dilakukan penimbangan
-                    agar didapat massa kontainer aktual.
+                    Khusus truk Kuda Inti, yang diinput adalah <b>nomor lambung</b>, bukan nomor polisi.
                 </p>
-
-                <p>
-                    Selain itu akan dilakukan sosialisasi &amp; training kepada semua pihak sebelum penerapan VGM sepenuhnya.
-                </p>
-
 
             </div>
             <div class="col-lg-4">
-                <h2>Call Center</h2>
+                <h2>Container ditolak?</h2>
 
                 <p>
-                    Jika ada pertanyaan/permasalahan dapat menghubungi Call Center kami.
-
-                <ul>
-                    <li><b>(024) 7643-3240</b></li>
-                    <li><b>0822-1111-2958 (sms/telp/wa)</b></li>
-                    <li><b>0877-7750-3058 (sms/telp/wa)</b></li>
-                    <li><b>vgm.smc@gmail.com</b></li>
-                </ul>
-
+                    <b>BKI tidak</b> dapat <b>memutuskan</b> suatu container akan naik atau ditolak oleh pihak pelayaran.
+                    Layanan VGM ini hanya bertujuan mendapatkan timbangan aktual
+                    sebelum container dikirimkan pihak pelayaran.
                 </p>
 
                 <p>
-                    Kantor Biro Klasifikasi Indonesia Cabang Semarang<br/>
-                    Jl. Pamularsih No. 12 Semarang<br/>
-                    (samping SD Al-Azhar)
+                    Container dapat ditolak oleh pihak pelayaran bila <b>melebihi</b> batas <b>Payload</b>
+                    yang tertera di masing-masing container.
+                    Beberapa pelayaran sangat teliti dengan hal ini, bahkan selisih beberapa kwintal dapat menyebabkan
+                    container ditolak.
                 </p>
+
+                <p>
+                    Maka dari itu dihimbau untuk semua exportir untuk memperhatikan bobot container secara keseluruhan.
+                    Termasuk berat netto cargo serta alat pengaman lainnya yang masuk ke dalam container.
+                </p>
+                <p>
+                    Disarankan agar tidak stuffing container hingga penuh, mendekati batas payload.
+                    Sisakan beban sekitar 1 ton dari batas payload container.
+                    Sehingga container tidak ditolak pelayaran hanya karna selisih beberapa kwintal saja.
+
+                </p>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <h2>Container Payload</h2>
+
+                <p>
+                    Perhatikan spesifikasi di masing-masing kontainer.
+                </p>
+
+                <image src="http://bkivgm.com/image/container-payload.jpg"/>
 
             </div>
         </div>

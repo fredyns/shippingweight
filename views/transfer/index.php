@@ -81,7 +81,7 @@ else
                 'from',
                 'amount',
                 [
-                    'label'     => 'Container',
+                    'label'     => 'Quantity',
                     'attribute' => 'containerCount',
                 ],
                 [
