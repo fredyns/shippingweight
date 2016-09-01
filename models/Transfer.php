@@ -32,15 +32,56 @@ class Transfer extends BaseTransfer
         {
             return (strpos($val, '(') === FALSE);
         });
+
+        sort($containerNumbers);
+
+        $containerInputQty = array_count_values($containerNumbers);
+        $containerInputQty = array_filter($containerInputQty,
+            function ($val)
+        {
+            return ($val > 1);
+        });
+
+        if ($containerInputQty)
+        {
+            $containerNumbers = array_unique($containerNumbers);
+            $duplicate        = [];
+
+            foreach ($containerInputQty as $contNumber => $qty)
+            {
+                $duplicate[] = $contNumber.' ('.$qty.')';
+            }
+
+            $this->note .= chr(13).chr(13).'Input ganda: '.implode(', ', $duplicate).'.';
+        }
+
         $this->containerList_all = implode(', ', $containerNumbers);
 
-        $containers = Container::findAll(['number' => $containerNumbers, 'transfer_id' => null]);
+        $containers = Container::find()
+            ->where(['number' => $containerNumbers, 'transfer_id' => null])
+            ->orderBy(['id' => SORT_DESC])
+            ->all();
 
         $containerConfirmed   = [];
+        $containerDuplicate   = [];
         $this->containerCount = 0;
 
         foreach ($containers as $container)
         {
+            if (in_array($container->number, $containerConfirmed))
+            {
+                if (array_key_exists($container->number, $containerDuplicate))
+                {
+                    $containerDuplicate[$container->number] ++;
+                }
+                else
+                {
+                    $containerDuplicate[$container->number] = 2;
+                }
+
+                continue;
+            }
+
             $this->containerCount++;
             $container->transfer_id = $this->id;
             $containerConfirmed[]   = $container->number;
@@ -48,10 +89,27 @@ class Transfer extends BaseTransfer
             $container->save(FALSE);
         }
 
+        if ($containerDuplicate)
+        {
+            $duplicate = [];
+
+            foreach ($containerDuplicate as $contNumber => $qty)
+            {
+                $duplicate[] = $contNumber.' ('.$qty.')';
+            }
+
+            $this->note .= chr(13).chr(13).'Kontainer ganda: '.implode(', ', $duplicate).'.';
+        }
+
         $containerList_missed          = array_diff($containerNumbers, $containerConfirmed);
-        $this->containerList_all       = implode(', ', $containerNumbers).chr(13).'( '.count($containerNumbers).' )';
-        $this->containerList_confirmed = implode(', ', $containerConfirmed).chr(13).'( '.count($containerConfirmed).' )';
-        $this->containerList_missed    = trim(implode(', ', $containerList_missed).chr(13).'( '.count($containerList_missed).' )');
+        $this->containerList_all       = implode(', ', $containerNumbers).chr(13).'('.count($containerNumbers).')';
+        $this->containerList_confirmed = implode(', ', $containerConfirmed).chr(13).'('.count($containerConfirmed).')';
+        $this->containerList_missed    = trim(implode(', ', $containerList_missed).chr(13).'('.count($containerList_missed).')');
+
+        if (is_numeric($this->amount) == FALSE)
+        {
+            $this->amount = $this->containerCount * 66000;
+        }
 
         $this->save(FALSE);
     }
