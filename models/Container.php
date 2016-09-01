@@ -72,14 +72,15 @@ class Container extends BaseContainer
 
             // simpan data penimbangan
             $weighing = new Weighing([
-                'container_number'  => $this->number,
-                'container_id'      => $this->id,
-                'grossmass'         => ArrayHelper::getValue($vgm, 'GROSS_KG'),
-                'job_order'         => ArrayHelper::getValue($vgm, 'JOB_ORDER_NO'),
-                'stack_datetime'    => ($vgmDate ? $vgmDate->format('Y-m-d H:i:s') : null),
-                'emkl_id'           => ArrayHelper::getValue($vgm, 'CUSTOMER_ID'),
-                'gatein_grossmass'  => ArrayHelper::getValue($vgm, 'WEIGHT_IN_KG'),
-                'gateout_grossmass' => ArrayHelper::getValue($vgm, 'WEIGHT_OUT_KG'),
+                'container_number'   => $this->number,
+                'container_id'       => $this->id,
+                'grossmass'          => ArrayHelper::getValue($vgm, 'GROSS_KG'),
+                'job_order'          => ArrayHelper::getValue($vgm, 'JOB_ORDER_NO'),
+                'stack_datetime'     => ($vgmDate ? $vgmDate->format('Y-m-d H:i:s') : null),
+                'emkl_id'            => ArrayHelper::getValue($vgm, 'CUSTOMER_ID'),
+                'gatein_grossmass'   => ArrayHelper::getValue($vgm, 'WEIGHT_IN_KG'),
+                'gateout_grossmass'  => ArrayHelper::getValue($vgm, 'WEIGHT_OUT_KG'),
+                'gatein_tracknumber' => ArrayHelper::getValue($vgm, 'TRUCK_ID'),
             ]);
             $weighing->save(FALSE);
 
