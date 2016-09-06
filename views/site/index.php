@@ -59,6 +59,12 @@ $certificateUrl = Url::to(['/certificate/pdf-sample']);
     </p>
 
     <p>
+        Mohon maaf atas kesalahan teknis yang terjadi tadi pagi sehingga Anda tidak dapat
+        melakukan cetak sertifikat VGM. Namun kendala tersebut <b>sudah diperbaiki</b>.
+        Dan layanan penerbitan sertifikat VGM dapat berjalan kembali.
+    </p>
+
+    <p>
         Pembayaran kontainer melalui transfer ke rekening Mandiri nomor <b>135-00-57000059</b>
         (an. PT Biro Klasifikasi Indonesia - MP VGM).
     </p>

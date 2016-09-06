@@ -133,7 +133,7 @@ $this->params['breadcrumbs'][] = 'View';
     .\yii\grid\GridView::widget([
         'layout'       => '{summary}{pager}<br/>{items}{pager}',
         'dataProvider' => new \yii\data\ActiveDataProvider([
-            'query'      => $model->getContainers(),
+            'query'      => $model->getContainers()->orderBy(['number' => SORT_ASC]),
             'pagination' => [
                 'pageSize'  => 20,
                 'pageParam' => 'page-containers',
