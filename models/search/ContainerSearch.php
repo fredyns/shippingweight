@@ -3,6 +3,8 @@
 namespace app\models\search;
 
 use Yii;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Container;
@@ -17,6 +19,7 @@ class ContainerSearch extends Container
     public $user_id;
     public $created_at_range;
     public $verified_at_range;
+    public $paid;
 
     /**
      * @inheritdoc
@@ -24,7 +27,8 @@ class ContainerSearch extends Container
     public function rules()
     {
         return [
-            [['id', 'bill'], 'integer'],
+            [['paid'], 'default', 'value' => 1],
+            [['id', 'bill', 'paid'], 'integer'],
             [['user_id', 'shipper_id', 'booking_number', 'number', 'status', 'created_at_range', 'verified_at_range'], 'safe'],
             [['grossmass'], 'number'],
             [['weighing_date'], 'date', 'format' => 'php:Y-m-d'],
@@ -172,7 +176,54 @@ class ContainerSearch extends Container
             }
         }
 
+        if ($this->paid == 0)
+        {
+            $query->andWhere(static::tableName().'.transfer_id IS NULL');
+        }
+
         return $dataProvider;
+    }
+
+    public static function debt($limit = '1 month ago')
+    {
+        $dtoLimit     = new \DateTime($limit);
+        $params       = [
+            'verified_at_range' => '08/01/2016 - '.$dtoLimit->format('m/d/Y'),
+            'paid'              => 0,
+        ];
+        $search       = new static();
+        $dataProvider = $search->search(['ContainerSearch' => $params]);
+
+        // base query
+
+        $dataProvider->query->select([
+            'quantity'     => 'count(*)',
+            'weighing_min' => 'min(weighing_date)',
+            'weighing_max' => 'max(weighing_date)',
+        ]);
+
+        // debt
+
+        $debt = $dataProvider->query->createCommand()->queryOne();
+
+        // olah data
+
+        $weighing_min      = ArrayHelper::getValue($debt, 'weighing_min');
+        $weighing_max      = ArrayHelper::getValue($debt, 'weighing_max');
+        $debt['dtoVgmMin'] = ($weighing_min) ? date_create($weighing_min) : null;
+        $debt['dtoVgmMax'] = ($weighing_max) ? date_create($weighing_max) : null;
+        $debt['dayVgmMin'] = ($debt['dtoVgmMin']) ? $debt['dtoVgmMin']->format('d M') : null;
+        $debt['dayVgmMax'] = ($debt['dtoVgmMax']) ? $debt['dtoVgmMax']->format('d M') : null;
+
+        $url = [
+            '/container',
+            'ContainerSearch' => $params,
+        ];
+
+        $debt['range'] = 'Kontainer terhitung  sejak '.$debt['dayVgmMin'].' hingga '.$debt['dayVgmMax'].'.<br/>'
+            .Html::a('daftar kontainer yang belum dibayar', $url, ['target' => '_blank', 'title' => 'lihat container']).'<br/>';
+
+        return $debt;
     }
 
 }

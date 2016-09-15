@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use app\models\base\Container as BaseContainer;
 use app\models\Weighing;
 use app\models\CertificateCounter;
@@ -129,23 +130,94 @@ class Container extends BaseContainer
 
     public static function debt()
     {
+        $start     = new \DateTime('2016-08-01 00:00:00');
         $datelimit = new \DateTime;
 
         $datelimit->modify('-7 days');
         $datelimit->setTime(0, 0, 0);
 
         $user_id    = Yii::$app->user->id;
+        $stampstart = $start->getTimestamp();
         $stamplimit = $datelimit->getTimestamp();
         $timelimit  = $datelimit->format('Y-m-d H:i:s');
         $query      = new Query;
 
 
         $query
-            ->select('count(*) quantity, min(created_at) created_min, max(created_at) created_max')
+            ->select('count(*) quantity, min(created_at) created_min, max(created_at) created_max, min(weighing_date) weighing_min, max(weighing_date) weighing_max')
             ->from('container')
-            ->where("created_by={$user_id} and transfer_id is null and (created_at <= {$stamplimit} OR weighing_date <= '{$timelimit}')");
+            ->andWhere(['transfer_id' => null])
+            ->andWhere("(created_at <= {$stamplimit} OR weighing_date <= '{$timelimit}')")
+            ->andWhere("(weighing_date >= '2016-08-01' OR (weighing_date is null and created_at >= {$stampstart}))");
+
+        if (Yii::$app->user->identity->isAdmin == FALSE)
+        {
+            $query->andWhere(['created_by' => $user_id]);
+        }
 
         return $query->createCommand()->queryOne();
+    }
+
+    public static function debtUntil($limit = '1 month ago 23:59')
+    {
+        $user_id    = Yii::$app->user->id;
+        $timeOffset = '2016-08-01 00:00:00';
+        $dtoLimit   = new \DateTime($limit);
+
+        $timeLimit = $dtoLimit->format('Y-m-d H:i:s');
+        $query     = new Query;
+
+        // base query
+
+        $query
+            ->select([
+                'quantity'     => 'count(*)',
+                'weighing_min' => 'min(weighing_date)',
+                'weighing_max' => 'max(weighing_date)',
+            ])
+            ->from('container')
+            ->andWhere(['transfer_id' => null]);
+
+        // user filter
+
+        if (Yii::$app->user->identity->isAdmin == FALSE)
+        {
+            $query->andWhere(['created_by' => $user_id]);
+        }
+
+        // time offset
+
+        $query->andWhere("weighing_date >= '{$timeOffset}'");
+
+        // time limit
+
+        $query->andWhere("weighing_date <= '{$timeLimit}'");
+
+        // debt
+
+        $debt = $query->createCommand()->queryOne();
+
+        // olah data
+
+        $weighing_min      = ArrayHelper::getValue($debt, 'weighing_min');
+        $weighing_max      = ArrayHelper::getValue($debt, 'weighing_max');
+        $debt['dtoVgmMin'] = ($weighing_min) ? date_create($weighing_min) : null;
+        $debt['dtoVgmMax'] = ($weighing_max) ? date_create($weighing_max) : null;
+        $debt['dayVgmMin'] = ($debt['dtoVgmMin']) ? $debt['dtoVgmMin']->format('d M') : null;
+        $debt['dayVgmMax'] = ($debt['dtoVgmMax']) ? $debt['dtoVgmMax']->format('d M') : null;
+
+        $url = [
+            '/container',
+            'ContainerSearch' => [
+                'verified_at_range' => $debt['dtoVgmMin']->format('m/d/Y').' - '.$debt['dtoVgmMax']->format('m/d/Y'),
+                'paid'              => 0,
+            ],
+        ];
+
+        $debt['range'] = 'Terhitung  sejak '.$debt['dayVgmMin'].' hingga '.$debt['dayVgmMax'].'.<br/>'
+            .Html::a('daftar kontainer', $url, ['target' => '_blank', 'title' => 'lihat container']).'<br/>';
+
+        return $debt;
     }
 
 }
