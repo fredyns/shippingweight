@@ -220,7 +220,7 @@ class ContainerSearch extends Container
             'ContainerSearch' => $params,
         ];
 
-        $debt['range'] = 'Kontainer terhitung  sejak '.$debt['dayVgmMin'].' hingga '.$debt['dayVgmMax'].'.<br/>'
+        $debt['range'] = 'Perhitungan sertifikat VGM  tertanggal '.$debt['dayVgmMin'].' hingga '.$debt['dayVgmMax'].'.<br/>'
             .Html::a('daftar kontainer yang belum dibayar', $url, ['target' => '_blank', 'title' => 'lihat container']).'<br/>';
 
         return $debt;
