@@ -40,6 +40,13 @@ if (Yii::$app->user->isGuest == FALSE)
 }
 ?>
 
+<?php
+if (Yii::$app->user->isGuest == FALSE)
+{
+    echo $this->render('@app/views/widget/debt_alert');
+}
+?>
+
 <div class="giiant-crud container-index">
 
     <?php

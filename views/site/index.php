@@ -27,8 +27,15 @@ $certificateUrl = Url::to(['/certificate/pdf-sample']);
             </ul>
 
         </div>
+        <div class="col-lg-4 pull-left">
+            <?php
+            if (Yii::$app->user->isGuest == FALSE)
+            {
+                echo $this->render('@app/views/widget/debt_alert');
+            }
+            ?>
+        </div>
     </div>
-
 
     <div class="jumbotron">
         <h1><b>BKI VGM</b></h1>

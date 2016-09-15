@@ -206,6 +206,7 @@ if ($autorefresh)
                     }
                     ],
                     [
+                        'label'          => 'Gross Ton',
                         'attribute'      => 'GROSS_KG',
                         'headerOptions'  => [
                             'class' => 'text-right',
@@ -214,6 +215,7 @@ if ($autorefresh)
                             'class' => 'text-right',
                             'style' => 'font-weight: bolder; font-family: monospace;',
                         ],
+                        'format'         => ['integer'],
                     ],
                     [
                         'attribute'      => 'IS_GROSS_VERIFIED',

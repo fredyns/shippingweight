@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use app\models\base\Container as BaseContainer;
 use app\models\Weighing;
@@ -124,6 +125,27 @@ class Container extends BaseContainer
 
             return FALSE;
         }
+    }
+
+    public static function debt()
+    {
+        $datelimit = new \DateTime;
+
+        $datelimit->modify('-7 days');
+        $datelimit->setTime(0, 0, 0);
+
+        $user_id    = Yii::$app->user->id;
+        $stamplimit = $datelimit->getTimestamp();
+        $timelimit  = $datelimit->format('Y-m-d H:i:s');
+        $query      = new Query;
+
+
+        $query
+            ->select('count(*) quantity, min(created_at) created_min, max(created_at) created_max')
+            ->from('container')
+            ->where("created_by={$user_id} and transfer_id is null and (created_at <= {$stamplimit} OR weighing_date <= '{$timelimit}')");
+
+        return $query->createCommand()->queryOne();
     }
 
 }
