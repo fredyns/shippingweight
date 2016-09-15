@@ -1,5 +1,5 @@
 -- MySQL Workbench Synchronization
--- Generated: 2016-07-13 10:19
+-- Generated: 2016-09-14 13:47
 -- Model: New Model
 -- Version: 1.0
 -- Project: Name of the project
@@ -9,8 +9,8 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
-ALTER TABLE `shippingweight`.`shipper` 
-ADD COLUMN `npwp` VARCHAR(64) NULL DEFAULT NULL AFTER `address`;
+ALTER TABLE `shippingweight`.`weighing` 
+ADD COLUMN `feed` TEXT NULL DEFAULT NULL AFTER `gateout_tracknumber`;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

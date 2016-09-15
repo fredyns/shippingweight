@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1e7b60d7ed7d331d6dbdd3dd7ddbdca7",
-    "content-hash": "c7d2d2ff21d9ea084e6395c376452de2",
+    "hash": "7b6e18ba361e73e59b1a155a7b28a465",
+    "content-hash": "9a713381991114e2bfc73f06c33a453d",
     "packages": [
         {
             "name": "2amigos/yii2-qrcode-helper",
@@ -435,6 +435,52 @@
                 "markdown-extra"
             ],
             "time": "2016-06-20 21:09:53"
+        },
+        {
+            "name": "cornernote/yii2-returnurl",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cornernote/yii2-returnurl.git",
+                "reference": "2ee1d461f8d484044c936ceee81cd6f2e32c87e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cornernote/yii2-returnurl/zipball/2ee1d461f8d484044c936ceee81cd6f2e32c87e4",
+                "reference": "2ee1d461f8d484044c936ceee81cd6f2e32c87e4",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "scrutinizer/ocular": "~1.1"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "cornernote\\returnurl\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Brett O'Donnell",
+                    "email": "cornernote@gmail.com",
+                    "homepage": "http://mrphp.com.au/"
+                }
+            ],
+            "description": "ReturnUrl helper for tab-aware nested redirection in Yii2.",
+            "keywords": [
+                "returnUrl",
+                "url",
+                "yii2"
+            ],
+            "time": "2016-08-14 02:52:21"
         },
         {
             "name": "ezyang/htmlpurifier",

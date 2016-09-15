@@ -57,6 +57,7 @@ else
             'dataProvider' => $dataProvider,
             'filterModel'  => $searchModel,
             'columns'      => [
+                'id',
                 [
                     'attribute' => 'time',
                     'options'   => [],

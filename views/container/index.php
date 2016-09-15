@@ -112,7 +112,10 @@ if (Yii::$app->user->isGuest == FALSE)
 
                     if ($model->transfer_id > 0)
                     {
-                        $out .= ' <b class="text-success">&check;</b>';
+                        $out .= ' '.Html::a(
+                                '<b class="text-success">&check;</b>', ['transfer/view', 'id' => $model->transfer_id,],
+                                ['data-pjax' => 0, 'target' => '_blank']
+                        );
                     }
 
                     return $out;

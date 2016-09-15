@@ -65,9 +65,22 @@ AppAsset::register($this);
                         'visible' => $isAdmin,
                     ],
                     [
-                        'label'   => 'Daily Report',
-                        'url'     => ['/report-daily'],
+                        'label'   => 'Tool',
+                        'url'     => '#',
                         'visible' => $isAdmin,
+                        'items'   => [
+                            [
+                                'label' => 'Daily Report',
+                                'url'   => ['/report-daily'],
+                            ],
+                            [
+                                'label' => 'TPKS',
+                                'url'   => '#',
+                                'items' => [
+                                    ['label' => 'Receiving', 'url' => ['/tpks/receiving']],
+                                ],
+                            ],
+                        ],
                     ],
                     [
                         'label' => 'Legal',

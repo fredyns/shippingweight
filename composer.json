@@ -20,7 +20,8 @@
         "kartik-v/yii2-grid": "^3.1",
         "jino5577/yii2-date-range-picker": "^1.0",
         "kartik-v/yii2-widget-datetimepicker": "^1.4",
-        "fredyns/yii2-components": "dev-master"
+        "fredyns/yii2-components": "dev-master",
+        "cornernote/yii2-returnurl": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

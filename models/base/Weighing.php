@@ -18,8 +18,10 @@ use yii\behaviors\TimestampBehavior;
  * @property string $job_order
  * @property string $stack_datetime
  * @property integer $emkl_id
+ * @property string $gatein_datetime
  * @property double $gatein_grossmass
  * @property string $gatein_tracknumber
+ * @property string $gateout_datetime
  * @property double $gateout_grossmass
  * @property string $gateout_tracknumber
  * @property integer $created_by
@@ -66,7 +68,7 @@ abstract class Weighing extends \yii\db\ActiveRecord
             [['container_number'], 'required'],
             [['container_id', 'emkl_id'], 'integer'],
             [['grossmass', 'gatein_grossmass', 'gateout_grossmass'], 'number'],
-            [['stack_datetime'], 'safe'],
+            [['stack_datetime', 'gatein_datetime', 'gateout_datetime'], 'safe'],
             [['container_number'], 'string', 'max' => 64],
             [['job_order', 'gatein_tracknumber', 'gateout_tracknumber'], 'string', 'max' => 255]
         ];
@@ -85,8 +87,10 @@ abstract class Weighing extends \yii\db\ActiveRecord
             'job_order' => 'Job Order',
             'stack_datetime' => 'Stack Datetime',
             'emkl_id' => 'Emkl ID',
+            'gatein_datetime' => 'Gatein Datetime',
             'gatein_grossmass' => 'Gatein Grossmass',
             'gatein_tracknumber' => 'Gatein Tracknumber',
+            'gateout_datetime' => 'Gateout Datetime',
             'gateout_grossmass' => 'Gateout Grossmass',
             'gateout_tracknumber' => 'Gateout Tracknumber',
             'created_by' => 'Created By',

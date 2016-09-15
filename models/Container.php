@@ -68,7 +68,11 @@ class Container extends BaseContainer
             $vgm      = TPKS::container($this->number);
             $verified = (ArrayHelper::getValue($vgm, 'IS_GROSS_VERIFIED') == 'Y');
             $vgmTime  = ArrayHelper::getValue($vgm, 'GROSS_VERIFIED_TIME');
+            $inTime   = ArrayHelper::getValue($vgm, 'GATE_IN_TIME');
+            $outTime  = ArrayHelper::getValue($vgm, 'GATE_OUT_TIME');
             $vgmDate  = ($vgmTime) ? date_create_from_format('d-m-Y H:i:s', $vgmTime) : null;
+            $inDate   = ($inTime) ? date_create_from_format('d-m-Y H:i:s', $inTime) : null;
+            $outDate  = ($outTime) ? date_create_from_format('d-m-Y H:i:s', $outTime) : null;
 
             // simpan data penimbangan
             $weighing = new Weighing([
@@ -77,6 +81,8 @@ class Container extends BaseContainer
                 'grossmass'          => ArrayHelper::getValue($vgm, 'GROSS_KG'),
                 'job_order'          => ArrayHelper::getValue($vgm, 'JOB_ORDER_NO'),
                 'stack_datetime'     => ($vgmDate ? $vgmDate->format('Y-m-d H:i:s') : null),
+                'gatein_datetime'    => ($inDate ? $inDate->format('Y-m-d H:i:s') : null),
+                'gateout_datetime'   => ($outDate ? $outDate->format('Y-m-d H:i:s') : null),
                 'emkl_id'            => ArrayHelper::getValue($vgm, 'CUSTOMER_ID'),
                 'gatein_grossmass'   => ArrayHelper::getValue($vgm, 'WEIGHT_IN_KG'),
                 'gateout_grossmass'  => ArrayHelper::getValue($vgm, 'WEIGHT_OUT_KG'),

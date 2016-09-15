@@ -2,12 +2,11 @@
 
 use dmstr\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\widgets\DetailView;
 use yii\widgets\Pjax;
 use dmstr\bootstrap\Tabs;
 use app\widget\ContainerMenu;
-use jino5577\daterangepicker\DateRangePicker;
 
 /**
  * @var yii\web\View $this
@@ -28,6 +27,15 @@ $this->params['breadcrumbs'][] = 'View';
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span></button>
             <?= \Yii::$app->session->getFlash('deleteError') ?>
+        </span>
+    <?php endif; ?>
+
+    <!-- flash message -->
+    <?php if (\Yii::$app->session->getFlash('error') !== null) : ?>
+        <span class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+            <?= \Yii::$app->session->getFlash('error') ?>
         </span>
     <?php endif; ?>
 
@@ -128,104 +136,149 @@ $this->params['breadcrumbs'][] = 'View';
         'clientOptions'      => ['pjax:success' => 'function(){alert("yo")}'],
     ])
     ?>
-    <?=
-    '<div class="table-responsive">'
-    .\yii\grid\GridView::widget([
-        'layout'       => '{summary}{pager}<br/>{items}{pager}',
-        'dataProvider' => new \yii\data\ActiveDataProvider([
-            'query'      => $model->getContainers()->orderBy(['number' => SORT_ASC]),
-            'pagination' => [
-                'pageSize'  => 20,
-                'pageParam' => 'page-containers',
-            ],
-            ]),
-        'pager'        => [
-            'class'          => yii\widgets\LinkPager::className(),
-            'firstPageLabel' => 'First',
-            'lastPageLabel'  => 'Last',
-        ],
-        'columns'      => [
-            [
-                'label'     => 'User',
-                'attribute' => 'user_id',
-                'options'   => [],
-                'visible'   => Yii::$app->user->identity->isAdmin,
-                'value'     => function ($model)
-            {
-                if ($model->shipper)
+    <div class="table-responsive">
+
+        <?=
+        GridView::widget([
+            'id'           => 'kv-grid-container',
+            'dataProvider' => new \yii\data\ActiveDataProvider([
+                'query'      => $model->getContainers()->orderBy(['number' => SORT_ASC]),
+                'pagination' => [
+                    'pageSize'  => 20,
+                    'pageParam' => 'page-containers',
+                ],
+                ]),
+            'columns'      => [
+                [
+                    'label'     => 'User',
+                    'attribute' => 'user_id',
+                    'options'   => [],
+                    'visible'   => Yii::$app->user->identity->isAdmin,
+                    'value'     => function ($model)
                 {
-                    if ($model->shipper->userAccount)
+                    if ($model->shipper)
                     {
-                        return $model->shipper->userAccount->username;
+                        if ($model->shipper->userAccount)
+                        {
+                            return $model->shipper->userAccount->username;
+                        }
                     }
-                }
 
-                return '';
-            },
-            ],
-            [
-                'attribute' => 'booking_number',
-                'label'     => 'Booking',
-            ],
-            [
-                'attribute' => 'number',
-                'label'     => 'Container',
-            ],
-            [
-                'attribute' => 'shipper_id',
-                'options'   => [],
-                'format'    => 'raw',
-                'value'     => function ($model)
-            {
-                if ($rel = $model->getShipper()->one())
-                {
-                    return Html::a($rel->name, ['shipper/view', 'id' => $rel->id,], ['data-pjax' => 0]);
-                }
-                else
-                {
                     return '';
-                }
-            },
-            ],
-            'grossmass',
-            // created
-            [
-                'attribute' => 'created_at',
-                'label'     => 'Registered',
-                'options'   => [],
-                'value'     => function ($model)
-            {
-                return date('Y-m-d', $model->created_at);
-            },
-            ],
-            // verified
-            [
-                'attribute' => 'weighing_date',
-                'label'     => 'Verified',
-                'options'   => [],
-                'value'     => function ($model)
-            {
-                if ($model->weighing_date)
+                },
+                ],
+                [
+                    'attribute' => 'booking_number',
+                    'label'     => 'Booking',
+                ],
+                [
+                    'attribute' => 'number',
+                    'label'     => 'Container',
+                ],
+                [
+                    'attribute' => 'shipper_id',
+                    'options'   => [],
+                    'format'    => 'raw',
+                    'value'     => function ($model)
                 {
-                    return substr($model->weighing_date, 0, 10);
-                }
+                    if ($rel = $model->getShipper()->one())
+                    {
+                        return Html::a($rel->name, ['shipper/view', 'id' => $rel->id,], ['data-pjax' => 0]);
+                    }
+                    else
+                    {
+                        return '';
+                    }
+                },
+                ],
+                'grossmass',
+                // created
+                [
+                    'attribute' => 'created_at',
+                    'label'     => 'Registered',
+                    'options'   => [],
+                    'value'     => function ($model)
+                {
+                    return date('Y-m-d', $model->created_at);
+                },
+                ],
+                // verified
+                [
+                    'attribute' => 'weighing_date',
+                    'label'     => 'Verified',
+                    'options'   => [],
+                    'value'     => function ($model)
+                {
+                    if ($model->weighing_date)
+                    {
+                        return substr($model->weighing_date, 0, 10);
+                    }
 
-                return '-';
-            },
+                    return '-';
+                },
+                ],
+                [
+                    'attribute' => 'status',
+                    'options'   => [],
+                    'format'    => 'html',
+                    'value'     => function ($model)
+                {
+                    return ContainerMenu::widget(['model' => $model]);
+                }
+                ],
+                [
+                    'class'      => 'kartik\grid\ActionColumn',
+                    'options'    => [],
+                    'template'   => "{view} {update} {delete}",
+                    'urlCreator' => function($action, $model, $key, $index)
+                {
+                    // using the column name as key, not mapping to 'id' like the standard generator
+                    $params    = is_array($key) ? $key : [$model->primaryKey()[0] => (string) $key];
+                    $params[0] = 'container'.'/'.$action;
+                    return Url::toRoute($params);
+                },
+                    'contentOptions' => ['nowrap' => 'nowrap']
+                ],
             ],
-            [
-                'attribute' => 'status',
-                'options'   => [],
-                'format'    => 'html',
-                'value'     => function ($model)
-            {
-                return ContainerMenu::widget(['model' => $model]);
-            }
+            'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
+            'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+            'filterRowOptions' => ['class' => 'kartik-sheet-style'],
+            'pjax'             => FALSE, // pjax is set to always true for this demo
+            // set your toolbar
+            'toolbar'          => [
+                [
+                    'content' => Html::a(
+                        '<i class="glyphicon glyphicon-repeat"></i>', ['grid-demo'],
+                        ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => 'Reset Grid']
+                    ),
+                ],
+                '{export}',
+                '{toggleData}',
             ],
-        ]
-    ])
-    .'</div>'
-    ?>
+            // set export properties
+            'export'           => [
+                'icon'  => 'export',
+                'label' => 'Export',
+            ],
+            // parameters from the demo form
+            'bordered'         => true,
+            'striped'          => true,
+            'condensed'        => true,
+            'responsive'       => true,
+            'hover'            => true,
+            'showPageSummary'  => true,
+            'panel'            => [
+                'type'    => GridView::TYPE_PRIMARY,
+                'heading' => 'Containers',
+            ],
+            'persistResize'    => false,
+            'exportConfig'     => [
+                GridView::EXCEL => ['label' => 'Save as EXCEL'],
+            ],
+        ]);
+        ?>
+    </div>
+
     <?php Pjax::end() ?>
     <?php $this->endBlock() ?>
 

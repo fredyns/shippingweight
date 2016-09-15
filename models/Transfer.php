@@ -35,6 +35,11 @@ class Transfer extends BaseTransfer
 
         sort($containerNumbers);
 
+        if (!$this->containerCount)
+        {
+            $this->containerCount = count($containerNumbers);
+        }
+
         $containerInputQty = array_count_values($containerNumbers);
         $containerInputQty = array_filter($containerInputQty,
             function ($val)
@@ -44,8 +49,8 @@ class Transfer extends BaseTransfer
 
         if ($containerInputQty)
         {
-            $containerNumbers = array_unique($containerNumbers);
-            $duplicate        = [];
+            //$containerNumbers = array_unique($containerNumbers);
+            $duplicate = [];
 
             foreach ($containerInputQty as $contNumber => $qty)
             {
@@ -62,9 +67,9 @@ class Transfer extends BaseTransfer
             ->orderBy(['id' => SORT_DESC])
             ->all();
 
-        $containerConfirmed   = [];
-        $containerDuplicate   = [];
-        $this->containerCount = 0;
+        $containerConfirmed = [];
+        $containerDuplicate = [];
+        //$this->containerCount = 0;
 
         foreach ($containers as $container)
         {
@@ -79,10 +84,10 @@ class Transfer extends BaseTransfer
                     $containerDuplicate[$container->number] = 2;
                 }
 
-                continue;
+                //continue;
             }
 
-            $this->containerCount++;
+            //$this->containerCount++;
             $container->transfer_id = $this->id;
             $containerConfirmed[]   = $container->number;
 
@@ -91,6 +96,8 @@ class Transfer extends BaseTransfer
 
         if ($containerDuplicate)
         {
+            ksort($containerDuplicate);
+
             $duplicate = [];
 
             foreach ($containerDuplicate as $contNumber => $qty)
@@ -101,7 +108,11 @@ class Transfer extends BaseTransfer
             $this->note .= chr(13).chr(13).'Kontainer ganda: '.implode(', ', $duplicate).'.';
         }
 
-        $containerList_missed          = array_diff($containerNumbers, $containerConfirmed);
+        $containerList_missed = array_diff($containerNumbers, $containerConfirmed);
+
+        sort($containerConfirmed);
+        sort($containerList_missed);
+
         $this->containerList_all       = implode(', ', $containerNumbers).chr(13).'('.count($containerNumbers).')';
         $this->containerList_confirmed = implode(', ', $containerConfirmed).chr(13).'('.count($containerConfirmed).')';
         $this->containerList_missed    = trim(implode(', ', $containerList_missed).chr(13).'('.count($containerList_missed).')');

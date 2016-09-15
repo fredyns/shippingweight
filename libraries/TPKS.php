@@ -95,7 +95,7 @@ class TPKS
 
         if ($response['status'] == FALSE)
         {
-            $message = 'TPKS: '.ArrayHelper::getValue($response, 'error', 'Data not found.');
+            $message = $uri.chr(13).'TPKS: '.ArrayHelper::getValue($response, 'message', 'Data not found.');
 
             throw new UserException($message);
         }
@@ -196,6 +196,22 @@ class TPKS
 
         // get container
         return static::getData($uri, 'data_customer', TRUE);
+    }
+
+    /**
+     * search gate in receiving at time interval
+     *
+     * @param DateTime $from
+     * @param DateTime $to
+     * @return array
+     */
+    public static function gateIn(DateTime $from, DateTime $to)
+    {
+        // parameter
+        $uri = 'http://api.tpks.co.id/api/api/find_data_vgm_by_gate_in_time/time_from/'.$from->format('YmdHi').'/time_to/'.$to->format('YmdHi');
+
+        // get all containers
+        return static::getData($uri, 'data_vgm');
     }
 
 }

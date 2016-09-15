@@ -99,12 +99,14 @@ $this->params['breadcrumbs'][] = 'View';
             ],
             //* /
             [
-                'label' => 'Gate In',
-                'value' => (($model->weighing) ? $model->weighing->gatein_grossmass : '-'),
+                'label'   => 'Gate In',
+                'value'   => (($model->weighing) ? $model->weighing->gatein_datetime : '-'),
+                'visible' => (Yii::$app->user->identity->isAdmin),
             ],
             [
-                'label' => 'Gate Out',
-                'value' => (($model->weighing) ? $model->weighing->gateout_grossmass : '-'),
+                'label'   => 'Gate Out',
+                'value'   => (($model->weighing) ? $model->weighing->gateout_datetime : '-'),
+                'visible' => (Yii::$app->user->identity->isAdmin),
             ],
         // */
         ],

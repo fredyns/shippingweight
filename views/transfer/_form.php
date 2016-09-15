@@ -32,17 +32,15 @@ use kartik\datetime\DateTimePicker;
 
             <?=
                 $form->field($model, 'time')
-                ->widget(DateTimePicker::classname(),
+                ->widget(\yii\jui\DatePicker::classname(),
                     [
-                    'type'          => DateTimePicker::TYPE_COMPONENT_APPEND,
-                    'options'       => ['placeholder' => 'Enter time ...'],
-                    'pluginOptions' => [
-                        'autoclose' => true
-                    ],
-            ]);
+                    'dateFormat' => 'yyyy-MM-dd',
+                ])
+                ->label('Transfer Date');
             ?>
-            <?= $form->field($model, 'from')->textInput(['maxlength' => true]) ?>
-            <?= $form->field($model, 'amount')->textInput() ?>
+            <?= $form->field($model, 'from')->textInput(['maxlength' => true])->label('From Customer') ?>
+            <?= $form->field($model, 'amount')->textInput()->label('Transfer Amount') ?>
+            <?= $form->field($model, 'containerCount')->textInput()->label('Container Quantity') ?>
             <?= $form->field($model, 'containerList_all')->textarea(['rows' => 10])->label('Container List')->hint('nomor kontainer dipisahkan tanda koma atau spasi.') ?>
             <?= $form->field($model, 'note')->textarea(['rows' => 4]) ?>
 

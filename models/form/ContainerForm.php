@@ -93,7 +93,7 @@ class ContainerForm extends Container
                 'filter',
                 'filter' => function($value)
             {
-                return strtoupper($value);
+                return trim(strtoupper($value));
             },
             ],
             /* value references */
