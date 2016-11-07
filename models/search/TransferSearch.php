@@ -20,9 +20,11 @@ class TransferSearch extends Transfer
     public function rules()
     {
         return [
-            [['id', 'amount', 'containerCount', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['time', 'from', 'containerList_all', 'containerList_confirmed', 'containerList_missed', 'note', 'time_at_range'],
-                'safe'],
+            [['amount', 'containerCount', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [
+                ['id', 'time', 'from', 'containerList_all', 'containerList_confirmed', 'containerList_missed', 'note', 'time_at_range'],
+                'safe',
+            ],
         ];
     }
 
@@ -60,7 +62,6 @@ class TransferSearch extends Transfer
         }
 
         $query->andFilterWhere([
-            'id'             => $this->id,
             'time'           => $this->time,
             'amount'         => $this->amount,
             'containerCount' => $this->containerCount,
@@ -69,6 +70,8 @@ class TransferSearch extends Transfer
             'created_at'     => $this->created_at,
             'updated_at'     => $this->updated_at,
         ]);
+
+        $this->filteringId($query, $this->id);
 
         $query
             ->andFilterWhere(['like', 'from', $this->from])
@@ -98,6 +101,54 @@ class TransferSearch extends Transfer
         }
 
         return $dataProvider;
+    }
+
+    public function filteringId(\yii\db\ActiveQuery $query, $id)
+    {
+        if (empty($id))
+        {
+            return;
+        }
+
+        $list = explode(',', $id);
+
+        if (empty($list))
+        {
+            return;
+        }
+
+        $criteria = [];
+
+        foreach ($list as $item)
+        {
+            if (strstr($item, '-'))
+            {
+                list($start, $end) = explode('-', $item);
+                $start = (int) trim($start);
+                $end   = (int) trim($end);
+
+                if ($start > 0 && $end > $start)
+                {
+                    $criteria[] = ['between', 'id', $start, $end];
+                }
+            }
+            else
+            {
+                $item = trim($item);
+
+                if (is_numeric($item))
+                {
+                    $criteria[] = ['id' => $item];
+                }
+            }
+        }
+
+        if (empty($criteria) == FALSE)
+        {
+            array_unshift($criteria, "or");
+
+            $query->andFilterWhere($criteria);
+        }
     }
 
 }
