@@ -2,7 +2,7 @@
 
 use app\models\search\ContainerSearch;
 
-$debt = ContainerSearch::debt('7 days ago');
+$debt = ContainerSearch::debt('14 days ago');
 ?>
 
 <?php if ($debt['quantity'] > 0) : ?>

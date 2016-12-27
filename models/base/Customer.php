@@ -5,24 +5,22 @@
 namespace app\models\base;
 
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the base-model class for table "customer".
  *
- * @property integer $id
- * @property string $name
- * @property string $address
- * @property string $phone
- * @property integer $user_id
- * @property integer $created_by
- * @property integer $updated_by
- * @property integer $created_at
- * @property integer $updated_at
- *
- * @property \app\models\Profile $user
- * @property \app\models\Payment[] $payments
+ * @property string $ID_CUSTOMER
+ * @property string $CUSTOMER
+ * @property string $CUSTOMER_TYPE
+ * @property string $EMAIL
+ * @property string $ADDR1
+ * @property string $ADDR2
+ * @property string $ADDR3
+ * @property string $PHONE
+ * @property string $AGENT
+ * @property string $CONTACT_NAME
+ * @property string $TAX_NO_NPWP
+ * @property string $BLOCKED
  * @property string $aliasModel
  */
 abstract class Customer extends \yii\db\ActiveRecord
@@ -30,6 +28,12 @@ abstract class Customer extends \yii\db\ActiveRecord
 
 
 
+    /**
+    * ENUM field values
+    */
+    const BLOCKED_YES = 'YES';
+    const BLOCKED_NO = 'NO';
+    var $enum_labels = false;
     /**
      * @inheritdoc
      */
@@ -42,28 +46,22 @@ abstract class Customer extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => BlameableBehavior::className(),
-            ],
-            [
-                'class' => TimestampBehavior::className(),
-            ],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-            [['address'], 'string'],
-            [['user_id'], 'integer'],
-            [['name', 'phone'], 'string', 'max' => 255],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Profile::className(), 'targetAttribute' => ['user_id' => 'user_id']]
+            [['BLOCKED'], 'string'],
+            [['ID_CUSTOMER'], 'string', 'max' => 6],
+            [['CUSTOMER', 'ADDR2'], 'string', 'max' => 50],
+            [['CUSTOMER_TYPE', 'ADDR3'], 'string', 'max' => 14],
+            [['EMAIL'], 'string', 'max' => 39],
+            [['ADDR1'], 'string', 'max' => 98],
+            [['PHONE', 'TAX_NO_NPWP'], 'string', 'max' => 20],
+            [['AGENT', 'CONTACT_NAME'], 'string', 'max' => 4],
+            ['BLOCKED', 'in', 'range' => [
+                    self::BLOCKED_YES,
+                    self::BLOCKED_NO,
+                ]
+            ]
         ];
     }
 
@@ -73,35 +71,47 @@ abstract class Customer extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'address' => 'Address',
-            'phone' => 'Phone',
-            'user_id' => 'User ID',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'ID_CUSTOMER' => 'Id  Customer',
+            'CUSTOMER' => 'Customer',
+            'CUSTOMER_TYPE' => 'Customer  Type',
+            'EMAIL' => 'Email',
+            'ADDR1' => 'Addr1',
+            'ADDR2' => 'Addr2',
+            'ADDR3' => 'Addr3',
+            'PHONE' => 'Phone',
+            'AGENT' => 'Agent',
+            'CONTACT_NAME' => 'Contact  Name',
+            'TAX_NO_NPWP' => 'Tax  No  Npwp',
+            'BLOCKED' => 'Blocked',
         ];
     }
 
+
+
+
     /**
-     * @return \yii\db\ActiveQuery
+     * get column BLOCKED enum value label
+     * @param string $value
+     * @return string
      */
-    public function getUser()
-    {
-        return $this->hasOne(\app\models\Profile::className(), ['user_id' => 'user_id']);
+    public static function getBLOCKEDValueLabel($value){
+        $labels = self::optsBLOCKED();
+        if(isset($labels[$value])){
+            return $labels[$value];
+        }
+        return $value;
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * column BLOCKED ENUM value labels
+     * @return array
      */
-    public function getPayments()
+    public static function optsBLOCKED()
     {
-        return $this->hasMany(\app\models\Payment::className(), ['customer_id' => 'id']);
+        return [
+            self::BLOCKED_YES => self::BLOCKED_YES,
+            self::BLOCKED_NO => self::BLOCKED_NO,
+        ];
     }
-
-
-
 
 }

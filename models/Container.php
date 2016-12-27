@@ -9,7 +9,9 @@ use yii\helpers\Html;
 use app\models\base\Container as BaseContainer;
 use app\models\Weighing;
 use app\models\CertificateCounter;
+use app\models\Customer;
 use app\libraries\TPKS;
+use yii\web\ForbiddenHttpException;
 
 /**
  * This is the model class for table "container".
@@ -25,29 +27,29 @@ class Container extends BaseContainer
     public function attributeLabels()
     {
         return [
-            'id'               => 'ID',
-            'shipper_id'       => 'Shipper',
-            'number'           => 'Container Number',
-            'booking_number'   => 'Booking Number',
-            'status'           => 'Status',
-            'bill'             => 'Bill',
-            'grossmass'        => 'Grossmass',
-            'weighing_date'    => 'Weighing Date',
+            'id' => 'ID',
+            'shipper_id' => 'Shipper',
+            'number' => 'Container Number',
+            'booking_number' => 'Booking Number',
+            'status' => 'Status',
+            'bill' => 'Bill',
+            'grossmass' => 'Grossmass',
+            'weighing_date' => 'Weighing Date',
             'certificate_file' => 'Certificate File',
-            'created_by'       => 'Created By',
-            'updated_by'       => 'Updated By',
-            'billed_by'        => 'Billed By',
-            'verified_by'      => 'Verified By',
-            'checked_by'       => 'Checked By',
-            'sentOwner_by'     => 'Sent Owner By',
-            'sentShipper_by'   => 'Sent Shipper By',
-            'created_at'       => 'Created At',
-            'updated_at'       => 'Updated At',
-            'billed_at'        => 'Billed At',
-            'checked_at'       => 'Checked At',
-            'verified_at'      => 'Verified At',
-            'sentOwner_at'     => 'Sent Owner At',
-            'sentShipper_at'   => 'Sent Shipper At',
+            'created_by' => 'Created By',
+            'updated_by' => 'Updated By',
+            'billed_by' => 'Billed By',
+            'verified_by' => 'Verified By',
+            'checked_by' => 'Checked By',
+            'sentOwner_by' => 'Sent Owner By',
+            'sentShipper_by' => 'Sent Shipper By',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'billed_at' => 'Billed At',
+            'checked_at' => 'Checked At',
+            'verified_at' => 'Verified At',
+            'sentOwner_at' => 'Sent Owner At',
+            'sentShipper_at' => 'Sent Shipper At',
         ];
     }
 
@@ -64,47 +66,62 @@ class Container extends BaseContainer
         // init transaction
         $transaction = Yii::$app->db->beginTransaction();
 
-        try
-        {
+        try {
             // tarik data
-            $vgm      = TPKS::container($this->number);
+            $vgm = TPKS::container($this->number);
             $verified = (ArrayHelper::getValue($vgm, 'IS_GROSS_VERIFIED') == 'Y');
-            $vgmTime  = ArrayHelper::getValue($vgm, 'GROSS_VERIFIED_TIME');
-            $inTime   = ArrayHelper::getValue($vgm, 'GATE_IN_TIME');
-            $outTime  = ArrayHelper::getValue($vgm, 'GATE_OUT_TIME');
-            $vgmDate  = ($vgmTime) ? date_create_from_format('d-m-Y H:i:s', $vgmTime) : null;
-            $inDate   = ($inTime) ? date_create_from_format('d-m-Y H:i:s', $inTime) : null;
-            $outDate  = ($outTime) ? date_create_from_format('d-m-Y H:i:s', $outTime) : null;
+            $vgmTime = ArrayHelper::getValue($vgm, 'GROSS_VERIFIED_TIME');
+            $inTime = ArrayHelper::getValue($vgm, 'GATE_IN_TIME');
+            $outTime = ArrayHelper::getValue($vgm, 'GATE_OUT_TIME');
+            $vgmDate = ($vgmTime) ? date_create_from_format('d-m-Y H:i:s', $vgmTime) : null;
+            $inDate = ($inTime) ? date_create_from_format('d-m-Y H:i:s', $inTime) : null;
+            $outDate = ($outTime) ? date_create_from_format('d-m-Y H:i:s', $outTime) : null;
+            $customer_id = ArrayHelper::getValue($vgm, 'CUSTOMER_ID');
+            $customer = Customer::findOne(['ID_CUSTOMER' => $customer_id]);
+
+            if ($customer) {
+                if (Yii::$app->user->identity->isAdmin) {
+                    Yii::$app->getSession()->addFlash('info', 'Customer : '.$customer->CUSTOMER);
+
+                    if ($customer->BLOCKED == Customer::BLOCKED_YES) {
+                        $msg = "VGM Petikemas Job-Order atas nama '".$customer->CUSTOMER."' telah diblokir.";
+
+                        throw new ForbiddenHttpException($msg);
+                    }
+                }
+            } elseif (Yii::$app->user->identity->isAdmin) {
+                Yii::$app->getSession()->addFlash('error', 'Customer baru / tidak dikenal.');
+            }
+
 
             // simpan data penimbangan
             $weighing = new Weighing([
-                'container_number'   => $this->number,
-                'container_id'       => $this->id,
-                'grossmass'          => ArrayHelper::getValue($vgm, 'GROSS_KG'),
-                'job_order'          => ArrayHelper::getValue($vgm, 'JOB_ORDER_NO'),
-                'stack_datetime'     => ($vgmDate ? $vgmDate->format('Y-m-d H:i:s') : null),
-                'gatein_datetime'    => ($inDate ? $inDate->format('Y-m-d H:i:s') : null),
-                'gateout_datetime'   => ($outDate ? $outDate->format('Y-m-d H:i:s') : null),
-                'emkl_id'            => ArrayHelper::getValue($vgm, 'CUSTOMER_ID'),
-                'gatein_grossmass'   => ArrayHelper::getValue($vgm, 'WEIGHT_IN_KG'),
-                'gateout_grossmass'  => ArrayHelper::getValue($vgm, 'WEIGHT_OUT_KG'),
+                'container_number' => $this->number,
+                'container_id' => $this->id,
+                'grossmass' => ArrayHelper::getValue($vgm, 'GROSS_KG'),
+                'job_order' => ArrayHelper::getValue($vgm, 'JOB_ORDER_NO'),
+                'stack_datetime' => ($vgmDate ? $vgmDate->format('Y-m-d H:i:s') : null),
+                'gatein_datetime' => ($inDate ? $inDate->format('Y-m-d H:i:s') : null),
+                'gateout_datetime' => ($outDate ? $outDate->format('Y-m-d H:i:s') : null),
+                'emkl_id' => ArrayHelper::getValue($vgm, 'CUSTOMER_ID'),
+                'gatein_grossmass' => ArrayHelper::getValue($vgm, 'WEIGHT_IN_KG'),
+                'gateout_grossmass' => ArrayHelper::getValue($vgm, 'WEIGHT_OUT_KG'),
                 'gatein_tracknumber' => ArrayHelper::getValue($vgm, 'TRUCK_ID'),
             ]);
             $weighing->save(FALSE);
 
             // simpan hasil timbangan ke data kontainer
-            $this->grossmass     = $weighing->grossmass;
+            $this->grossmass = $weighing->grossmass;
             $this->weighing_date = ($vgmDate ? $vgmDate->format('Y-m-d H:i:s') : null);
-            $this->checked_by    = Yii::$app->user->id;
-            $this->checked_at    = time();
+            $this->checked_by = Yii::$app->user->id;
+            $this->checked_at = time();
 
-            if ($this->status == static::STATUS_READY && $verified)
-            {
-                $this->status               = static::STATUS_VERIFIED;
+            if ($this->status == static::STATUS_READY && $verified) {
+                $this->status = static::STATUS_VERIFIED;
                 $this->certificate_sequence = CertificateCounter::newSequence();
-                $this->certificate_number   = CertificateCounter::newNumber($this->certificate_sequence);
-                $this->verified_by          = Yii::$app->user->id;
-                $this->verified_at          = time();
+                $this->certificate_number = CertificateCounter::newNumber($this->certificate_sequence);
+                $this->verified_by = Yii::$app->user->id;
+                $this->verified_at = time();
             }
 
             $this->save(FALSE);
@@ -113,9 +130,7 @@ class Container extends BaseContainer
             $transaction->commit();
 
             return $weighing->grossmass;
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             // cancel all processed data
             $transaction->rollback();
 
@@ -124,23 +139,26 @@ class Container extends BaseContainer
 
             $this->save(FALSE);
 
+            $error = (isset($e->errorInfo[2])) ? $e->errorInfo[2] : $e->getMessage();
+            Yii::$app->getSession()->addFlash('error', $error);
+
             return FALSE;
         }
     }
 
     public static function debt()
     {
-        $start     = new \DateTime('2016-08-01 00:00:00');
+        $start = new \DateTime('2016-08-01 00:00:00');
         $datelimit = new \DateTime;
 
         $datelimit->modify('-7 days');
         $datelimit->setTime(0, 0, 0);
 
-        $user_id    = Yii::$app->user->id;
+        $user_id = Yii::$app->user->id;
         $stampstart = $start->getTimestamp();
         $stamplimit = $datelimit->getTimestamp();
-        $timelimit  = $datelimit->format('Y-m-d H:i:s');
-        $query      = new Query;
+        $timelimit = $datelimit->format('Y-m-d H:i:s');
+        $query = new Query;
 
 
         $query
@@ -150,8 +168,7 @@ class Container extends BaseContainer
             ->andWhere("(created_at <= {$stamplimit} OR weighing_date <= '{$timelimit}')")
             ->andWhere("(weighing_date >= '2016-08-01' OR (weighing_date is null and created_at >= {$stampstart}))");
 
-        if (Yii::$app->user->identity->isAdmin == FALSE)
-        {
+        if (Yii::$app->user->identity->isAdmin == FALSE) {
             $query->andWhere(['created_by' => $user_id]);
         }
 
@@ -160,18 +177,18 @@ class Container extends BaseContainer
 
     public static function debtUntil($limit = '1 month ago 23:59')
     {
-        $user_id    = Yii::$app->user->id;
+        $user_id = Yii::$app->user->id;
         $timeOffset = '2016-08-01 00:00:00';
-        $dtoLimit   = new \DateTime($limit);
+        $dtoLimit = new \DateTime($limit);
 
         $timeLimit = $dtoLimit->format('Y-m-d H:i:s');
-        $query     = new Query;
+        $query = new Query;
 
         // base query
 
         $query
             ->select([
-                'quantity'     => 'count(*)',
+                'quantity' => 'count(*)',
                 'weighing_min' => 'min(weighing_date)',
                 'weighing_max' => 'max(weighing_date)',
             ])
@@ -180,8 +197,7 @@ class Container extends BaseContainer
 
         // user filter
 
-        if (Yii::$app->user->identity->isAdmin == FALSE)
-        {
+        if (Yii::$app->user->identity->isAdmin == FALSE) {
             $query->andWhere(['created_by' => $user_id]);
         }
 
@@ -199,8 +215,8 @@ class Container extends BaseContainer
 
         // olah data
 
-        $weighing_min      = ArrayHelper::getValue($debt, 'weighing_min');
-        $weighing_max      = ArrayHelper::getValue($debt, 'weighing_max');
+        $weighing_min = ArrayHelper::getValue($debt, 'weighing_min');
+        $weighing_max = ArrayHelper::getValue($debt, 'weighing_max');
         $debt['dtoVgmMin'] = ($weighing_min) ? date_create($weighing_min) : null;
         $debt['dtoVgmMax'] = ($weighing_max) ? date_create($weighing_max) : null;
         $debt['dayVgmMin'] = ($debt['dtoVgmMin']) ? $debt['dtoVgmMin']->format('d M') : null;
@@ -210,14 +226,14 @@ class Container extends BaseContainer
             '/container',
             'ContainerSearch' => [
                 'verified_at_range' => $debt['dtoVgmMin']->format('m/d/Y').' - '.$debt['dtoVgmMax']->format('m/d/Y'),
-                'paid'              => 0,
+                'paid' => 0,
             ],
         ];
 
         $debt['range'] = 'Terhitung  sejak '.$debt['dayVgmMin'].' hingga '.$debt['dayVgmMax'].'.<br/>'
-            .Html::a('daftar kontainer', $url, ['target' => '_blank', 'title' => 'lihat container']).'<br/>';
+            .Html::a('klik disini untuk daftar kontainer yang belum ada konfirmasi pembayaran.', $url,
+                ['target' => '_blank', 'title' => 'lihat container']).'<br/>';
 
         return $debt;
     }
-
 }

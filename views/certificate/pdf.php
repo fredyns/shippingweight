@@ -275,7 +275,7 @@ $headerImageUrl = Url::to(['/image/bki-logo-sm.jpg']);
     <div id="footer" class="footer">
         <span id="footer-title">BKI KOMERSIL SEMARANG</span><br/>
         <span class="footer-detail">Jl. Pamularsih  No.12, SEMARANG - 50148</span><br/>
-        <span class="footer-detail">Phone : (62-024) 7610744, Fax (62-024) 76670354</span><br/>
+        <span class="footer-detail">Phone : (024) 7643-3240, 0877-7750-3058, 0822-1111-2958 </span><br/>
         <span class="footer-detail">e-mail : <a href="mailto: smc@bki.co.id">smc@bki.co.id</a></span><br/>
         <span class="footer-detail">ISO 9001 : 2008 CERTIFIED COMPANY</span><br/>
         <br/>

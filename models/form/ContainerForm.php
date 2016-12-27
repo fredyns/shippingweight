@@ -7,6 +7,7 @@ use yii\helpers\ArrayHelper;
 use app\models\Container;
 use app\models\Shipper;
 use app\behaviors\ShipperBehavior;
+use app\helpers\FilterHelper;
 
 /**
  * Description of ContainerForm
@@ -93,7 +94,10 @@ class ContainerForm extends Container
                 'filter',
                 'filter' => function($value)
             {
-                return trim(strtoupper($value));
+                $value = FilterHelper::stripSpaces($value);
+                $value = FilterHelper::utf8($value);
+
+                return (strtoupper($value));
             },
             ],
             /* value references */

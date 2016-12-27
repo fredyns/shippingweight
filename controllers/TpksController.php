@@ -33,7 +33,7 @@ class TpksController extends \app\controllers\base\ContainerController
 
         if ($modMinute > 0)
         {
-            $now->modify("-{$modMinute} minutes");
+            $now->modify("+".(5 - $modMinute)." minutes");
         }
 
         if (empty($from) == FALSE)
@@ -61,7 +61,7 @@ class TpksController extends \app\controllers\base\ContainerController
         {
             $to = clone $now;
 
-            $to->modify('-1 hour');
+            //$to->modify('-1 hour');
         }
 
         // ensure not overlaping
@@ -75,32 +75,41 @@ class TpksController extends \app\controllers\base\ContainerController
 
         // ensure not more than 1 day
 
-        $interval_dto = $to->diff($from);
-        $interval_day = $interval_dto->format('%a');
+        $max_to = clone $from;
+        $max_to->modify('+1 day');
 
-        if ($interval_day > 0)
+        if ($to > $max_to)
         {
-            $to = clone $from;
-
-            $to->modify('+3 hours');
+            $to = $max_to;
         }
 
-        // gate in data
+        try
+        {
+            // gate in data
 
-        $containers = $this->gateInData($from, $to);
+            $containers = $this->gateInData($from, $to);
+            $error      = null;
 
-        // certify
+            // certify
 
-        $this->parseGatein($containers);
+            $this->parseGatein($containers);
+        }
+        catch (\Exception $e)
+        {
+            $containers = [];
+            $error      = (isset($e->errorInfo[2])) ? $e->errorInfo[2] : $e->getMessage();
+        }
 
         // view
 
         return $this->render('receiving',
                 [
+                'now'         => $now,
                 'from'        => $from,
                 'to'          => $to,
                 'containers'  => $containers,
                 'autorefresh' => $autorefresh,
+                'error'       => $error,
         ]);
     }
 

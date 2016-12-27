@@ -2,6 +2,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -27,55 +28,55 @@ AppAsset::register($this);
             <?php
             NavBar::begin([
                 'brandLabel' => 'BKI VGM',
-                'brandUrl'   => Yii::$app->homeUrl,
-                'options'    => [
+                'brandUrl' => Yii::$app->homeUrl,
+                'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
 
             $isAdmin = FALSE;
+            $monitor = (ArrayHelper::getValue(Yii::$app->user, 'identity.profile.role') == 'monitor');
 
-            if (Yii::$app->user->isGuest == FALSE)
-            {
+            if (Yii::$app->user->isGuest == FALSE) {
                 $isAdmin = Yii::$app->user->identity->isAdmin;
             }
 
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-left'],
-                'items'   => [
+                'items' => [
                     ['label' => 'Home', 'url' => ['/site/index']],
                     [
-                        'label'   => 'Shipper',
-                        'url'     => ['/shipper'],
+                        'label' => 'Shipper',
+                        'url' => ['/shipper'],
                         'visible' => (Yii::$app->user->isGuest == FALSE),
                     ],
                     [
-                        'label'   => 'Container',
-                        'url'     => ['/container'],
+                        'label' => 'Container',
+                        'url' => ['/container'],
                         'visible' => (Yii::$app->user->isGuest == FALSE),
                     ],
                     [
-                        'label'   => 'Weighing',
-                        'url'     => ['/weighing'],
+                        'label' => 'Weighing',
+                        'url' => ['/weighing'],
                         'visible' => $isAdmin,
                     ],
                     [
-                        'label'   => 'Transfer',
-                        'url'     => ['/transfer'],
+                        'label' => 'Transfer',
+                        'url' => ['/transfer'],
                         'visible' => $isAdmin,
                     ],
                     [
-                        'label'   => 'Tool',
-                        'url'     => '#',
-                        'visible' => $isAdmin,
-                        'items'   => [
+                        'label' => 'Tool',
+                        'url' => '#',
+                        'visible' => ($isAdmin OR $monitor),
+                        'items' => [
                             [
                                 'label' => 'Daily Report',
-                                'url'   => ['/report-daily'],
+                                'url' => ['/report-daily'],
                             ],
                             [
                                 'label' => 'TPKS',
-                                'url'   => '#',
+                                'url' => '#',
                                 'items' => [
                                     ['label' => 'Receiving', 'url' => ['/tpks/receiving']],
                                 ],
@@ -84,7 +85,7 @@ AppAsset::register($this);
                     ],
                     [
                         'label' => 'Legal',
-                        'url'   => '#',
+                        'url' => '#',
                         'items' => [
                             ['label' => 'Kesepakatan Bersama VGM', 'url' => ['/content/kesepakatan-bersama-vgm-semarang.pdf']],
                         ],
@@ -93,21 +94,18 @@ AppAsset::register($this);
                 ],
             ]);
 
-            if (Yii::$app->user->isGuest)
-            {
+            if (Yii::$app->user->isGuest) {
                 echo Nav::widget([
                     'options' => ['class' => 'navbar-nav navbar-right'],
-                    'items'   => [
+                    'items' => [
                         ['label' => 'Login', 'url' => ['/user/security/login']],
                         ['label' => 'Register', 'url' => ['/user/registration/register']],
                     ],
                 ]);
-            }
-            else
-            {
+            } else {
                 echo Nav::widget([
                     'options' => ['class' => 'navbar-nav navbar-right'],
-                    'items'   => [
+                    'items' => [
                         ['label' => 'My Profile', 'url' => ['/user/settings/profile']],
                         '<li>'
                         .Html::beginForm(['/user/security/logout'], 'post', ['class' => 'navbar-form'])
@@ -141,7 +139,7 @@ AppAsset::register($this);
                     <span style="font-size: 0.9em;">
                         Jl. Pamularsih No. 12 Semarang
                         (samping SD Al-Azhar)
-                        Telp. 024-7610744
+                        Telp. (024) 7643-3240
                     </span>
                 </p>
 

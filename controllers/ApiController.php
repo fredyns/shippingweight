@@ -136,8 +136,8 @@ class ApiController extends Controller
     public function actionCertification($token = null, $containers = null)
     {
         // setup
-        $token                       = Yii::$app->request->post('token');
-        $containers                  = Yii::$app->request->post('containers');
+        //$token                       = Yii::$app->request->post('token');
+        //$containers                  = Yii::$app->request->post('containers');
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         $response = [

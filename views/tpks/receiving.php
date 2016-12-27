@@ -14,16 +14,31 @@ use app\models\Container;
  * @var yii\data\ActiveDataProvider $dataProvider
  * @var app\models\search\ContainerSearch $searchModel
  */
-$this->title                   = Yii::t('app', 'Receiving');
+$this->title = Yii::t('app', 'Receiving');
 $this->params['breadcrumbs'][] = 'TPKS';
 $this->params['breadcrumbs'][] = $this->title;
 
 $from_value = $from->format('Y-m-d H:i');
-$to_value   = $to->format('Y-m-d H:i');
+$to_value = $to->format('Y-m-d H:i');
+$missed = 0;
 
-if ($autorefresh)
-{
-    $this->title .= ' - '.date('H:i');
+if ($autorefresh) {
+    $this->title .= ' ['.date('H:i').']';
+}
+
+if ($containers) {
+    foreach ($containers as $container) {
+        $status = ArrayHelper::getValue($container, 'CTR_STATUS');
+        $vgm = ArrayHelper::getValue($container, 'IS_GROSS_VERIFIED');
+
+        if ($vgm != 'Y' && $status == 'FCL') {
+            $missed++;
+        }
+    }
+}
+
+if ($missed > 0) {
+    $this->title = "({$missed})".$this->title;
 }
 ?>
 
@@ -41,7 +56,7 @@ if ($autorefresh)
     <hr />
 
     <?php
-    $form   = ActiveForm::begin([
+    $form = ActiveForm::begin([
             'action' => ['receiving'],
             'method' => 'get',
     ]);
@@ -55,15 +70,15 @@ if ($autorefresh)
 
             <?=
             DateTimePicker::widget([
-                'id'            => 'from',
-                'name'          => 'from',
-                'type'          => DateTimePicker::TYPE_INLINE,
-                'value'         => $from_value,
+                'id' => 'from',
+                'name' => 'from',
+                'type' => DateTimePicker::TYPE_INLINE,
+                'value' => $from_value,
                 'pluginOptions' => [
                     'initialDate' => $from_value,
-                    'format'      => 'yyyy-mm-dd hh:ii',
-                    'endDate'     => date('Y-m-d H:i'),
-                    'startView'   => 0,
+                    'format' => 'yyyy-mm-dd hh:ii',
+                    'endDate' => date('Y-m-d H:i'),
+                    'startView' => 0,
                 ]
             ]);
             ?>
@@ -76,15 +91,15 @@ if ($autorefresh)
 
             <?=
             DateTimePicker::widget([
-                'id'            => 'to',
-                'name'          => 'to',
-                'type'          => DateTimePicker::TYPE_INLINE,
-                'value'         => $to_value,
+                'id' => 'to',
+                'name' => 'to',
+                'type' => DateTimePicker::TYPE_INLINE,
+                'value' => $to_value,
                 'pluginOptions' => [
                     'initialDate' => $to_value,
-                    'format'      => 'yyyy-mm-dd hh:ii',
-                    'endDate'     => date('Y-m-d H:i'),
-                    'startView'   => 0,
+                    'format' => 'yyyy-mm-dd hh:ii',
+                    'endDate' => $now->format('Y-m-d H:i'),
+                    'startView' => 0,
                 ]
             ]);
             ?>
@@ -97,40 +112,36 @@ if ($autorefresh)
 
     <div class="form-group">
 
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton('Search', ['class' => 'btn btn-primary btn-lg']) ?>
+
+        &nbsp; &nbsp; &nbsp;
 
         <?php
-        $missed = 0;
+        if ($containers) {
+            if ($missed == 0) {
+                echo 'all containers already Gate-Out.';
+            } elseif ($missed == 1) {
+                echo '<span class="label label-danger">'.$missed.'</span> container <b>NOT</b> Gate-Out.';
+            } else {
+                echo '<span class="label label-danger">'.$missed.'</span> containers <b>NOT</b> Gate-Out.';
+            }
 
-        foreach ($containers as $container)
-        {
-            $status = ArrayHelper::getValue($container, 'CTR_STATUS');
-            $vgm    = ArrayHelper::getValue($container, 'IS_GROSS_VERIFIED');
-
-            if ($vgm != 'Y' && $status == 'FCL')
-            {
-                $missed++;
+            if ($autorefresh) {
+                echo '&nbsp; Checked '.date('d M Y, H:i');
             }
         }
-
-        if ($missed == 0)
-        {
-            echo '&nbsp; &nbsp; &nbsp; all containers already Gate-Out.';
-        }
-        elseif ($missed == 1)
-        {
-            echo '&nbsp; &nbsp; &nbsp; <span class="label label-danger">'.$missed.'</span> container <b>NOT</b> Gate-Out.';
-        }
-        else
-        {
-            echo '&nbsp; &nbsp; &nbsp; <span class="label label-danger">'.$missed.'</span> containers <b>NOT</b> Gate-Out.';
-        }
-
-        if ($autorefresh)
-        {
-            echo '&nbsp; Checked '.date('d M Y, H:i');
-        }
         ?>
+
+        <?php if ($error) : ?>
+
+            <div class="alert alert-danger alert-dismissible pull-right" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <?= $error; ?>
+            </div>
+
+        <?php endif; ?>
 
     </div>
 
@@ -149,221 +160,283 @@ if ($autorefresh)
     <div class="table-responsive">
 
         <?php
-        if ($from->format('d') == $to->format('d'))
-        {
-            $day  = $from->format('d');
+        if ($from->format('d') == $to->format('d')) {
+            $day = $from->format('d');
             $time = 'From '.$from->format('H:i').' to '.$to->format('H:i');
-        }
-        else
-        {
-            $day  = $from->format('d').'-'.$to->format('d');
+        } else {
+            $day = $from->format('d').'-'.$to->format('d');
             $time = 'From '.$from->format('d M H:i').' to '.$to->format('d M H:i');
         }
 
         echo GridView::widget([
-            'id'           => 'receiving-containers',
+            'id' => 'receiving-containers',
             'dataProvider' => new ArrayDataProvider(['allModels' => $containers, 'pagination' => FALSE]),
-            'columns'      => [
+            'columns' => [
+                ['class' => '\kartik\grid\CheckboxColumn'],
                 [
-                    'class' => '\kartik\grid\SerialColumn'
-                ],
-                [
-                    'label'     => 'Container',
+                    'label' => 'Container',
                     'attribute' => 'CONTAINER_NO',
-                    'format'    => 'raw',
-                    'value'     => function ($model)
-                    {
+                    'options' => [],
+                    'format' => 'raw',
+                    'value' => function ($model) {
                         $containerNumber = ArrayHelper::getValue($model, 'CONTAINER_NO');
-                        $label           = '<span style="font-family: monospace; font-weight: bolder;">'.$containerNumber.'</span>';
-                        $container       = ArrayHelper::getValue($model, 'container');
-                        $containers      = ArrayHelper::getValue($model, 'containers');
-                        $parsed          = ArrayHelper::getValue($model, 'parsed');
-                        $value           = $label;
+                        $label = '<span style="font-family: monospace; font-weight: bolder;">'.$containerNumber.'</span>';
+                        $container = ArrayHelper::getValue($model, 'container');
+                        $containers = ArrayHelper::getValue($model, 'containers');
+                        $parsed = ArrayHelper::getValue($model, 'parsed');
+                        $value = $label;
 
-                        if (empty($container) == FALSE)
-                        {
+                        if (empty($container) == FALSE) {
                             $value = Html::a(
                                     $containerNumber, ['/container/view', 'id' => $container->id,],
                                     ['data-pjax' => 0, 'target' => '_blank', 'title' => 'lihat pendaftaran VGM', 'style' => "font-family: monospace; font-weight: bolder;"]
                             );
                         }
 
-                        if (count($containers) > 1)
-                        {
-                            $value .= '&nbsp; '.Html::a(
-                                    '<span class="glyphicon glyphicon-exclamation-sign"></span>',
+                        if (count($containers) > 1) {
+                            $value .= ' '.Html::a(
+                                    '<span class="glyphicon glyphicon-duplicate" title="registrasi vgm duplikat"></span>',
                                     ['/container', 'ContainerSearch' => ['number' => $containerNumber]],
                                     ['data-pjax' => 0, 'target' => '_blank', 'title' => 'kontainer ganda']
                             );
                         }
 
-                        if ($parsed)
-                        {
-                            $value .= ' &check; ';
+                        if ($parsed) {
+                            $value .= ' <span class="glyphicon glyphicon-scale" title="data timbangan baru"></span> ';
                         }
 
                         return $value;
                     }
+                ],
+                [
+                    'label' => 'Gross Ton',
+                    'attribute' => 'GROSS_KG',
+                    'headerOptions' => [
+                        'class' => 'text-right',
                     ],
-                    [
-                        'label'          => 'Gross Ton',
-                        'attribute'      => 'GROSS_KG',
-                        'headerOptions'  => [
-                            'class' => 'text-right',
-                        ],
-                        'contentOptions' => [
-                            'class' => 'text-right',
-                            'style' => 'font-weight: bolder; font-family: monospace;',
-                        ],
-                        'format'         => ['integer'],
-                    ],
-                    [
-                        'attribute'      => 'IS_GROSS_VERIFIED',
-                        'label'          => 'VGM',
-                        'format'         => 'raw',
-                        'headerOptions'  => [
-                            'style' => 'text-align: center;',
-                        ],
-                        'contentOptions' => [
-                            'style' => 'text-align: center; font-weight: bolder;',
-                        ],
-                        'value'          => function ($model)
-                    {
+                    'contentOptions' => function ($model, $key, $index, $column) {
+                        $grossmass = ArrayHelper::getValue($model, 'GROSS_KG', 0);
                         $status = ArrayHelper::getValue($model, 'CTR_STATUS');
-                        $value  = ArrayHelper::getValue($model, 'IS_GROSS_VERIFIED');
+                        $size = ArrayHelper::getValue($model, 'CTR_SIZE');
+                        $type = ArrayHelper::getValue($model, 'CTR_TYPE');
+                        $verified = ArrayHelper::getValue($model, 'IS_GROSS_VERIFIED');
+                        $minimum = ($size == 40) ? 4000 : 2000;
+                        $maximum = ($type == 'DRY') ? 32500 : 35000;
 
-                        if ($value == 'Y')
-                        {
-                            return '<span class="label label-success">'.$value.'</span>';
+                        if ($verified != 'Y' && $status == 'FCL') {
+                            return [
+                                'class' => 'text-right label-default',
+                                'style' => 'font-weight: bolder; font-family: monospace;',
+                            ];
                         }
-                        elseif ($status == 'MTY')
-                        {
+
+                        if (($minimum < $grossmass && $grossmass <= $maximum) OR $status == 'MTY') {
+                            return [
+                                'class' => 'text-right',
+                                'style' => 'font-weight: bolder; font-family: monospace;',
+                            ];
+                        }
+
+                        return [
+                            'class' => 'text-right label-warning',
+                            'style' => 'font-weight: bolder; font-family: monospace;',
+                        ];
+                    },
+                    'format' => ['integer'],
+                ],
+                [
+                    'attribute' => 'IS_GROSS_VERIFIED',
+                    'label' => 'VGM',
+                    'format' => 'raw',
+                    'headerOptions' => [
+                        'style' => 'text-align: center;',
+                    ],
+                    'contentOptions' => [
+                        'style' => 'text-align: center; font-weight: bolder;',
+                    ],
+                    'value' => function ($model) {
+                        $status = ArrayHelper::getValue($model, 'CTR_STATUS');
+                        $value = ArrayHelper::getValue($model, 'IS_GROSS_VERIFIED');
+
+                        if ($value == 'Y') {
+                            return '<span class="label label-success">'.$value.'</span>';
+                        } elseif ($status == 'MTY') {
                             return '<span class="label label-default">'.$value.'</span>';
                         }
 
                         return '<span class="label label-danger">'.$value.'</span>';
                     }
+                ],
+                [
+                    'attribute' => 'CTR_SIZE',
+                    'label' => 'Size',
+                    'headerOptions' => [
+                        'style' => 'text-align: center;',
                     ],
-                    [
-                        'attribute'      => 'CTR_SIZE',
-                        'label'          => 'Size',
-                        'headerOptions'  => [
-                            'style' => 'text-align: center;',
-                        ],
-                        'contentOptions' => [
-                            'style' => 'text-align: center;',
-                        ],
+                    'contentOptions' => [
+                        'style' => 'text-align: center;',
                     ],
-                    [
-                        'attribute'      => 'CTR_STATUS',
-                        'label'          => 'Status',
-                        'headerOptions'  => [
-                            'style' => 'text-align: center;',
-                        ],
-                        'contentOptions' => [
-                            'style' => 'text-align: center;',
-                        ],
+                ],
+                [
+                    'label' => 'Truck',
+                    'attribute' => 'TRUCK_ID',
+                    'format' => 'raw',
+                    'contentOptions' => [
+                        'style' => 'font-family: monospace;',
                     ],
-                    [
-                        'label'          => 'Truck',
-                        'attribute'      => 'TRUCK_ID',
-                        'format'         => 'raw',
-                        'contentOptions' => [
-                            'style' => 'font-family: monospace;',
-                        ],
-                    ],
-                    [
-                        'label'   => 'Gate In',
-                        'options' => [],
-                        'format'  => 'raw',
-                        'value'   => function ($model)
-                    {
+                ],
+                [
+                    'label' => 'Gate In',
+                    'options' => [],
+                    'format' => 'raw',
+                    'value' => function ($model) {
                         $value = ArrayHelper::getValue($model, 'GATE_IN_TIME');
 
-                        if ($value)
-                        {
+                        if ($value) {
                             $date = date_create_from_format('d-m-Y H:i:s', $value);
 
-                            if ($date)
-                            {
+                            if ($date) {
                                 return '<span style="display: none;">'.$date->format('Y-m-d').'</span> '.$date->format('H:i');
                             }
                         }
 
                         return NULL;
                     }
-                    ],
-                    [
-                        'label'   => 'Gate Out',
-                        'options' => [],
-                        'format'  => 'raw',
-                        'value'   => function ($model)
-                    {
-                        $value = ArrayHelper::getValue($model, 'GATE_OUT_TIME');
+                ],
+                [
+                    'label' => 'Gate Out',
+                    'options' => [],
+                    'format' => 'raw',
+                    'value' => function ($model) {
+                        $gate_out = ArrayHelper::getValue($model, 'GATE_OUT_TIME');
 
-                        if ($value)
-                        {
-                            $date = date_create_from_format('d-m-Y H:i:s', $value);
+                        if ($gate_out) {
+                            $date_out = date_create_from_format('d-m-Y H:i:s', $gate_out);
 
-                            if ($date)
-                            {
-                                return '<span style="display: none;">'.$date->format('Y-m-d').'</span> '.$date->format('H:i');
+                            if ($date_out) {
+                                return '<span style="display: none;">'.$date_out->format('Y-m-d').'</span> '.$date_out->format('H:i');
                             }
                         }
 
                         return NULL;
-                    }
+                    },
+                    'contentOptions' => function ($model, $key, $index, $column) {
+                        $gate_in = ArrayHelper::getValue($model, 'GATE_IN_TIME');
+                        $gate_out = ArrayHelper::getValue($model, 'GATE_OUT_TIME');
+
+                        if ($gate_in && $gate_out) {
+                            $max_out = date_create_from_format('d-m-Y H:i:s', $gate_in);
+                            $date_out = date_create_from_format('d-m-Y H:i:s', $gate_out);
+
+                            if ($max_out && $date_out) {
+                                $max_out->modify("+3 hours");
+
+                                if ($date_out > $max_out) {
+                                    return [
+                                        'class' => 'label-warning',
+                                    ];
+                                }
+                            }
+                        }
+
+                        return [];
+                    },
+                ],
+                [
+                    'attribute' => 'WEIGHT_IN_KG',
+                    'label' => 'Weight In',
+                    'headerOptions' => [
+                        'class' => 'text-right',
                     ],
-                    [
-                        'attribute'      => 'WEIGHT_IN_KG',
-                        'label'          => 'Weight In',
-                        'headerOptions'  => [
-                            'class' => 'text-right',
-                        ],
-                        'contentOptions' => [
-                            'class' => 'text-right',
-                        ],
-                    ],
-                    [
-                        'attribute'      => 'WEIGHT_OUT_KG',
-                        'label'          => 'Weight Out',
-                        'headerOptions'  => [
-                            'class' => 'text-right',
-                        ],
-                        'contentOptions' => [
-                            'class' => 'text-right',
-                        ],
+                    'contentOptions' => [
+                        'class' => 'text-right',
                     ],
                 ],
-                'containerOptions'    => ['style' => 'overflow: auto'], // only set when $responsive = false
-                'headerRowOptions'    => ['class' => 'kartik-sheet-style'],
-                'filterRowOptions'    => ['class' => 'kartik-sheet-style'],
-                'pjax'                => FALSE, // pjax is set to always true for this demo
-                // set your toolbar
-                'toolbar'             => [
-                    '{export}',
+                [
+                    'attribute' => 'WEIGHT_OUT_KG',
+                    'label' => 'Weight Out',
+                    'headerOptions' => [
+                        'class' => 'text-right',
+                    ],
+                    'contentOptions' => function ($model, $key, $index, $column) {
+                        $outmass = ArrayHelper::getValue($model, 'WEIGHT_OUT_KG', 0);
+                        $status = ArrayHelper::getValue($model, 'CTR_STATUS');
+                        $verified = ArrayHelper::getValue($model, 'IS_GROSS_VERIFIED');
+
+                        if ($verified != 'Y' && $status == 'FCL') {
+                            return [
+                                'class' => 'text-right label-default',
+                            ];
+                        }
+
+                        if (6000 < $outmass OR $status == 'MTY') {
+                            return [
+                                'class' => 'text-right',
+                            ];
+                        }
+
+                        return [
+                            'class' => 'text-right label-warning',
+                        ];
+                    },
                 ],
-                // set export properties
-                'export'              => [
-                    'icon'  => 'export',
-                    'label' => 'Export',
+                [
+                    'attribute' => 'CTR_TYPE',
+                    'label' => 'Type',
+                    'headerOptions' => [
+                        'style' => 'text-align: center;',
+                    ],
+                    'contentOptions' => [
+                        'style' => 'text-align: center;',
+                    ],
                 ],
-                // parameters from the demo form
-                'bordered'            => true,
-                'striped'             => true,
-                'condensed'           => true,
-                'responsive'          => true,
-                'hover'               => true,
-                'showPageSummary'     => true,
-                'panel'               => [
-                    'type'    => \kartik\grid\GridView::TYPE_PRIMARY,
-                    'heading' => 'Receiving '.$day.$from->format(' F Y'),
+                [
+                    'attribute' => 'CTR_STATUS',
+                    'label' => 'Cargo',
+                    'headerOptions' => [
+                        'style' => 'text-align: center;',
+                    ],
+                    'contentOptions' => [
+                        'style' => 'text-align: center;',
+                    ],
                 ],
-                'persistResize'       => false,
-                'exportConfig'        => [
-                    \kartik\grid\GridView::EXCEL => ['label' => 'Save as EXCEL'],
+            ],
+            'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
+            'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+            'filterRowOptions' => ['class' => 'kartik-sheet-style'],
+            'pjax' => FALSE, // pjax is set to always true for this demo
+            // set your toolbar
+            'toolbar' => [
+                '{export}',
+            ],
+            // set export properties
+            'export' => [
+                'icon' => 'export',
+                'label' => 'Export',
+            ],
+            // parameters from the demo form
+            'bordered' => true,
+            'striped' => true,
+            'condensed' => true,
+            'responsive' => true,
+            'hover' => true,
+            'showPageSummary' => true,
+            'panel' => [
+                'type' => \kartik\grid\GridView::TYPE_PRIMARY,
+                'heading' => 'Receiving '.$day.$from->format(' F Y'),
+            ],
+            'persistResize' => false,
+            'exportConfig' => [
+                \kartik\grid\GridView::EXCEL => [
+                    'label' => 'Save as EXCEL',
+                    'filename' => $from_value,
                 ],
-                'panelBeforeTemplate' => $time.'
+                \kartik\grid\GridView::PDF => [
+                    'label' => 'Save as PDF',
+                    'filename' => $from_value,
+                ],
+            ],
+            'panelBeforeTemplate' => $time.'
 
                 <div class="pull-right">
                     <div class="btn-toolbar kv-grid-toolbar" role="toolbar">
@@ -373,26 +446,22 @@ if ($autorefresh)
                 {before}
                 <div class="clearfix"></div>
             ',
-                //'floatHeader'         => true,
-                'rowOptions'          => function($model, $key, $index, $grid)
-            {
+            //'floatHeader'         => true,
+            'rowOptions' => function($model, $key, $index, $grid) {
                 $status = ArrayHelper::getValue($model, 'CTR_STATUS');
-                $vgm    = ArrayHelper::getValue($model, 'IS_GROSS_VERIFIED');
+                $vgm = ArrayHelper::getValue($model, 'IS_GROSS_VERIFIED');
                 $gatein = ArrayHelper::getValue($model, 'GATE_IN_TIME');
-                $now    = new \DateTime;
+                $now = new \DateTime;
 
-                if ($gatein)
-                {
+                if ($gatein) {
                     $datein = date_create_from_format('d-m-Y H:i:s', $gatein);
 
-                    if ($datein)
-                    {
+                    if ($datein) {
                         $TRT_interval = $now->diff($datein);
-                        $TRT_hour     = $TRT_interval->format('%h');
-                        $TRT_minute   = $TRT_interval->format('%i');
+                        $TRT_hour = $TRT_interval->format('%h');
+                        $TRT_minute = $TRT_interval->format('%i');
 
-                        if ($vgm != 'Y' && $status != 'MTY' && ($TRT_hour > 1 OR ( $TRT_hour > 0 && $TRT_minute > 30) ))
-                        {
+                        if ($vgm != 'Y' && $status != 'MTY' && ($TRT_hour > 1 OR ( $TRT_hour > 0 && $TRT_minute > 30) )) {
                             return ['class' => GridView::TYPE_DANGER];
                         }
                     }
@@ -401,27 +470,21 @@ if ($autorefresh)
 
                 return [];
             },
-            ]);
-            ?>
-
-        </div>
-
-        <?php
-        if ($autorefresh)
-        {
-            echo '<p>Generated: '.date('d F Y, H:i:s').'</p>';
-        }
+        ]);
         ?>
 
     </div>
 
     <?php
-    $script = <<< JS
-    setInterval(function(){ location.reload(); }, (1000*60*15));
-JS;
-
-    if ($autorefresh)
-    {
-        $this->registerJs($script);
+    if ($autorefresh) {
+        echo '<p>Generated: '.date('d F Y, H:i:s').'</p>';
     }
     ?>
+
+</div>
+
+<?php
+if ($autorefresh OR $missed > 0) {
+    $this->registerJs('setInterval(function(){ location.reload(); }, (1000*60*15));');
+}
+?>

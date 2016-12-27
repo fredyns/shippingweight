@@ -17,6 +17,10 @@ use Yii;
  * @property string $location
  * @property string $website
  * @property string $bio
+ * @property string $npwp
+ * @property string $cp
+ * @property string $phone
+ * @property string $role
  *
  * @property \app\models\User $user
  * @property \app\models\Shipper[] $shippers
@@ -45,8 +49,9 @@ abstract class Profile extends \yii\db\ActiveRecord
             [['user_id'], 'required'],
             [['user_id'], 'integer'],
             [['bio'], 'string'],
-            [['name', 'public_email', 'gravatar_email', 'location', 'website'], 'string', 'max' => 255],
-            [['gravatar_id'], 'string', 'max' => 32],
+            [['name', 'public_email', 'gravatar_email', 'location', 'website', 'cp', 'phone'], 'string', 'max' => 255],
+            [['gravatar_id', 'role'], 'string', 'max' => 32],
+            [['npwp'], 'string', 'max' => 64],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']]
         ];
     }
@@ -65,6 +70,10 @@ abstract class Profile extends \yii\db\ActiveRecord
             'location' => 'Location',
             'website' => 'Website',
             'bio' => 'Bio',
+            'npwp' => 'Npwp',
+            'cp' => 'Cp',
+            'phone' => 'Phone',
+            'role' => 'Role',
         ];
     }
 

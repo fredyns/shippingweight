@@ -33,7 +33,7 @@ class Transfer extends BaseTransfer
             return (strpos($val, '(') === FALSE);
         });
 
-        sort($containerNumbers);
+        //sort($containerNumbers);
 
         if (!$this->containerCount)
         {

@@ -5,7 +5,7 @@ use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 
-$this->title    = 'BKIVGM.com';
+$this->title = 'BKIVGM.com';
 $certificateUrl = Url::to(['/certificate/pdf-sample']);
 ?>
 <style>
@@ -29,8 +29,7 @@ $certificateUrl = Url::to(['/certificate/pdf-sample']);
         </div>
         <div class="col-lg-4 pull-left">
             <?php
-            if (Yii::$app->user->isGuest == FALSE)
-            {
+            if (Yii::$app->user->isGuest == FALSE) {
                 echo $this->render('@app/views/widget/debt_alert');
             }
             ?>
@@ -40,17 +39,14 @@ $certificateUrl = Url::to(['/certificate/pdf-sample']);
     <div class="jumbotron">
         <h1><b>BKI VGM</b></h1>
 
-        <p class="lead">Verified Gross Mass oleh Biro Klasifikasi Indonesia</p>
+        <p class="lead" style="text-align: center;">Verified Gross Mass oleh Biro Klasifikasi Indonesia</p>
 
         <?php
-        if (Yii::$app->user->isGuest)
-        {
+        if (Yii::$app->user->isGuest) {
             echo Html::a("Daftar Sekarang", ["/user/register"], ['class' => 'btn btn-lg btn-success']);
             echo ' &nbsp; ';
             echo Html::a("Masuk", ["/user/login"], ['class' => 'btn btn-lg btn-info']);
-        }
-        else
-        {
+        } else {
             echo Html::a("Container Baru", ["/container/create"], ['class' => 'btn btn-lg btn-success']);
             echo ' &nbsp; ';
             echo Html::a("Semua Container", ["/container/index"], ['class' => 'btn btn-lg btn-info']);
@@ -63,12 +59,6 @@ $certificateUrl = Url::to(['/certificate/pdf-sample']);
 
     <p>
         <b>Pengumuman</b>
-    </p>
-
-    <p>
-        Mohon maaf atas kesalahan teknis yang terjadi tadi pagi sehingga Anda tidak dapat
-        melakukan cetak sertifikat VGM. Namun kendala tersebut <b>sudah diperbaiki</b>.
-        Dan layanan penerbitan sertifikat VGM dapat berjalan kembali.
     </p>
 
     <p>

@@ -18,9 +18,9 @@ use yii\base\UserException;
 class TPKS
 {
     const URI_CONTAINERLIST = 'http://api.tpks.co.id/api/api/find_data_vgm_by_time';
-    const URI_CONTAINER     = 'http://api.tpks.co.id/api/api/find_data_vgm_by_container_no/container_no';
-    const URI_CUSTOMERLIST  = 'http://api.tpks.co.id/api/api/master_customer';
-    const URI_CUSTOMER      = 'http://api.tpks.co.id/api/api/find_customer/customer_id';
+    const URI_CONTAINER = 'http://api.tpks.co.id/api/api/find_data_vgm_by_container_no/container_no';
+    const URI_CUSTOMERLIST = 'http://api.tpks.co.id/api/api/master_customer';
+    const URI_CUSTOMER = 'http://api.tpks.co.id/api/api/find_customer/customer_id';
 
     /**
      * prepare uri parameters
@@ -33,8 +33,7 @@ class TPKS
     {
         $request = [];
 
-        foreach ($params as $key => $value)
-        {
+        foreach ($params as $key => $value) {
             $request[] = $key.'='.$value;
         }
 
@@ -50,7 +49,7 @@ class TPKS
      */
     public static function curl($uri)
     {
-        $curl        = curl_init();
+        $curl = curl_init();
         $credentials = Yii::$app->params['tpks_username'].':'.Yii::$app->params['tpks_password'];
 
         curl_setopt($curl, CURLOPT_URL, $uri);
@@ -63,39 +62,37 @@ class TPKS
 
         curl_close($curl);
 
-        if (empty($rawResponse))
-        {
+        if (empty($rawResponse)) {
             throw new ServerErrorHttpException('TPKS server is not responding.');
         }
 
-        if (strpos($rawResponse, 'xml') !== FALSE)
-        {
-            $xml      = simplexml_load_string($rawResponse);
+        if (strpos($rawResponse, 'xml') !== FALSE) {
+            $xml = simplexml_load_string($rawResponse);
             $response = json_encode($xml);
-        }
-        else
-        {
+        } else {
             $response = json_decode($rawResponse, TRUE);
         }
 
-        if (is_array($response) == FALSE)
-        {
-            if (Yii::$app->user->identity->isAdmin)
-            {
+        if (is_array($response) == FALSE) {
+            if (Yii::$app->user->identity->isAdmin) {
                 exit('<pre>'.print_r($rawResponse, TRUE).print_r($response, TRUE));
             }
 
             throw new UnprocessableEntityHttpException('Response error.');
         }
 
-        if (isset($response['status']) == FALSE)
-        {
+        if (isset($response['status']) == FALSE) {
             throw new UnprocessableEntityHttpException('Response format error.');
         }
 
-        if ($response['status'] == FALSE)
-        {
-            $message = $uri.chr(13).'TPKS: '.ArrayHelper::getValue($response, 'message', 'Data not found.');
+        if ($response['status'] == FALSE) {
+            $message = ArrayHelper::getValue($response, 'message', 'Data not found.');
+
+            if ($message == 'Data tidak ditemukan') {
+                $message = 'Petikemas belum masuk TPKS atau nomor salah.';
+            } else {
+                $message = 'TPKS: '.ArrayHelper::getValue($response, 'message', 'Data not found.');
+            }
 
             throw new UserException($message);
         }
@@ -121,14 +118,12 @@ class TPKS
         $list = ArrayHelper::getValue($response, $name);
 
         // cek listing
-        if (empty($list) OR is_array($list) == FALSE)
-        {
+        if (empty($list) OR is_array($list) == FALSE) {
             throw new NotFoundHttpException(404, 'Data empty.');
         }
 
         // returning first row only
-        if ($firstRow)
-        {
+        if ($firstRow) {
             return array_shift($list);
         }
 
@@ -148,9 +143,9 @@ class TPKS
         // parameter
         $param = [
             'time_from' => $from->format('YmdHi'),
-            'time_to'   => $to->format('YmdHi'),
+            'time_to' => $to->format('YmdHi'),
         ];
-        $uri   = static::composeUri(static::URI_CONTAINERLIST, $param);
+        $uri = static::composeUri(static::URI_CONTAINERLIST, $param);
 
         // get all containers
         return static::getData($uri, 'data_vgm');
@@ -166,7 +161,7 @@ class TPKS
     {
         // alamat API
         $number = trim($number);
-        $uri    = static::URI_CONTAINER.'/'.$number.'?hit='.time();
+        $uri = static::URI_CONTAINER.'/'.$number.'?hit='.time();
 
         // get container
         return static::getData($uri, 'data_vgm', TRUE);
@@ -213,5 +208,4 @@ class TPKS
         // get all containers
         return static::getData($uri, 'data_vgm');
     }
-
 }
