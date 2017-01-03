@@ -79,21 +79,6 @@ class Container extends BaseContainer
             $customer_id = ArrayHelper::getValue($vgm, 'CUSTOMER_ID');
             $customer = Customer::findOne(['ID_CUSTOMER' => $customer_id]);
 
-            if ($customer) {
-                if (Yii::$app->user->identity->isAdmin) {
-                    Yii::$app->getSession()->addFlash('info', 'Customer : '.$customer->CUSTOMER);
-
-                    if ($customer->BLOCKED == Customer::BLOCKED_YES) {
-                        $msg = "VGM Petikemas Job-Order atas nama '".$customer->CUSTOMER."' telah diblokir.";
-
-                        throw new ForbiddenHttpException($msg);
-                    }
-                }
-            } elseif (Yii::$app->user->identity->isAdmin) {
-                Yii::$app->getSession()->addFlash('error', 'Customer baru / tidak dikenal.');
-            }
-
-
             // simpan data penimbangan
             $weighing = new Weighing([
                 'container_number' => $this->number,
@@ -109,6 +94,20 @@ class Container extends BaseContainer
                 'gatein_tracknumber' => ArrayHelper::getValue($vgm, 'TRUCK_ID'),
             ]);
             $weighing->save(FALSE);
+
+            if ($customer) {
+                if (Yii::$app->user->identity->isAdmin) {
+                    Yii::$app->getSession()->addFlash('info', 'Customer : '.$customer->CUSTOMER);
+                }
+
+                if ($customer->BLOCKED == Customer::BLOCKED_YES) {
+                    $msg = "VGM Petikemas Job-Order atas nama '".$customer->CUSTOMER."' telah diblokir.";
+
+                    throw new ForbiddenHttpException($msg);
+                }
+            } elseif (Yii::$app->user->identity->isAdmin) {
+                Yii::$app->getSession()->addFlash('error', 'Customer baru / tidak dikenal.');
+            }
 
             // simpan hasil timbangan ke data kontainer
             $this->grossmass = $weighing->grossmass;
