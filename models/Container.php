@@ -109,6 +109,18 @@ class Container extends BaseContainer
                 Yii::$app->getSession()->addFlash('error', 'Customer baru / tidak dikenal.');
             }
 
+            // cek berat
+            $type = ArrayHelper::getValue($vgm, 'CTR_TYPE');
+            $size = ArrayHelper::getValue($vgm, 'CTR_SIZE');
+            $max = ($type == 'RFR') ? 35000 : 32500;
+            $min = ($size == 20) ? 2000 : 4000;
+
+            if ($weighing->grossmass < $min) {
+                Yii::$app->getSession()->addFlash('error', "Grossmas terlalu ringan.");
+            } elseif ($weighing->grossmass > $max) {
+                Yii::$app->getSession()->addFlash('error', "Grossmas terlalu berat.");
+            }
+
             // simpan hasil timbangan ke data kontainer
             $this->grossmass = $weighing->grossmass;
             $this->weighing_date = ($vgmDate ? $vgmDate->format('Y-m-d H:i:s') : null);
