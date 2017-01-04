@@ -180,16 +180,19 @@ if ($missed > 0) {
                     'format' => 'raw',
                     'value' => function ($model) {
                         $containerNumber = ArrayHelper::getValue($model, 'CONTAINER_NO');
-                        $label = '<span style="font-family: monospace; font-weight: bolder;">'.$containerNumber.'</span>';
+                        $customer = ArrayHelper::getValue($model, 'customer',
+                                ArrayHelper::getValue($model, 'CUSTOMER_ID', '-'));
+                        $label = '<span style="font-family: monospace; font-weight: bolder;" title="'.$customer.'">'.$containerNumber.'</span>';
                         $container = ArrayHelper::getValue($model, 'container');
                         $containers = ArrayHelper::getValue($model, 'containers');
                         $parsed = ArrayHelper::getValue($model, 'parsed');
+                        $blocked = ArrayHelper::getValue($model, 'blocked');
                         $value = $label;
 
                         if (empty($container) == FALSE) {
                             $value = Html::a(
                                     $containerNumber, ['/container/view', 'id' => $container->id,],
-                                    ['data-pjax' => 0, 'target' => '_blank', 'title' => 'lihat pendaftaran VGM', 'style' => "font-family: monospace; font-weight: bolder;"]
+                                    ['data-pjax' => 0, 'target' => '_blank', 'title' => $customer, 'style' => "font-family: monospace; font-weight: bolder;"]
                             );
                         }
 
@@ -203,6 +206,10 @@ if ($missed > 0) {
 
                         if ($parsed) {
                             $value .= ' <span class="glyphicon glyphicon-scale" title="data timbangan baru"></span> ';
+                        }
+
+                        if ($blocked) {
+                            $value .= ' <span class="glyphicon glyphicon-ban-circle" style="color: red;" title="customer diblokir"></span> ';
                         }
 
                         return $value;
