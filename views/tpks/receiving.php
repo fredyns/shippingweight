@@ -186,7 +186,6 @@ if ($missed > 0) {
                         $container = ArrayHelper::getValue($model, 'container');
                         $containers = ArrayHelper::getValue($model, 'containers');
                         $parsed = ArrayHelper::getValue($model, 'parsed');
-                        $blocked = ArrayHelper::getValue($model, 'blocked');
                         $value = $label;
 
                         if (empty($container) == FALSE) {
@@ -206,10 +205,6 @@ if ($missed > 0) {
 
                         if ($parsed) {
                             $value .= ' <span class="glyphicon glyphicon-scale" title="data timbangan baru"></span> ';
-                        }
-
-                        if ($blocked) {
-                            $value .= ' <span class="glyphicon glyphicon-ban-circle" style="color: red;" title="customer diblokir"></span> ';
                         }
 
                         return $value;
@@ -264,8 +259,11 @@ if ($missed > 0) {
                     'value' => function ($model) {
                         $status = ArrayHelper::getValue($model, 'CTR_STATUS');
                         $value = ArrayHelper::getValue($model, 'IS_GROSS_VERIFIED');
+                        $blocked = ArrayHelper::getValue($model, 'blocked');
 
-                        if ($value == 'Y') {
+                        if ($blocked) {
+                            return '<span class="glyphicon glyphicon-ban-circle" style="color: red; cursor:crosshair;" title="customer diblokir" onclick="alert(\'Customer diblokir\');"></span> ';
+                        } elseif ($value == 'Y') {
                             return '<span class="label label-success">'.$value.'</span>';
                         } elseif ($status == 'MTY') {
                             return '<span class="label label-default">'.$value.'</span>';
