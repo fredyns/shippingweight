@@ -76,7 +76,7 @@ class Container extends BaseContainer
             $vgmDate = ($vgmTime) ? date_create_from_format('d-m-Y H:i:s', $vgmTime) : null;
             $inDate = ($inTime) ? date_create_from_format('d-m-Y H:i:s', $inTime) : null;
             $outDate = ($outTime) ? date_create_from_format('d-m-Y H:i:s', $outTime) : null;
-            $customer_id = ArrayHelper::getValue($vgm, 'CUSTOMER_ID');
+            $customer_id = trim(ArrayHelper::getValue($vgm, 'CUSTOMER_ID'));
             $customer = Customer::findOne(['ID_CUSTOMER' => $customer_id]);
 
             // simpan data penimbangan
@@ -123,6 +123,9 @@ class Container extends BaseContainer
 
             // simpan hasil timbangan ke data kontainer
             $this->grossmass = $weighing->grossmass;
+            $this->customer_id = $customer_id;
+            $this->size = $size;
+            $this->type = $type;
             $this->weighing_date = ($vgmDate ? $vgmDate->format('Y-m-d H:i:s') : null);
             $this->checked_by = Yii::$app->user->id;
             $this->checked_at = time();
